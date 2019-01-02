@@ -1,12 +1,8 @@
 using System;
 namespace com.brgs.orm
 {
-    public class FileStorageFactory : IStorageFactory
+    public class AzureStorageFactory : IStorageFactory
     {
-        public FileStorageFactory()
-        {
-            
-        }
         public T Get<T>()
         {
             throw new NotImplementedException("coming soon");
@@ -17,7 +13,7 @@ namespace com.brgs.orm
         }
         public T Put<T>()
         {
-            throw new NotImplementedException("coming soon");
+            throw new NotImplementedException("coming soon");   
         }
         public int Delete<T>()
         {
