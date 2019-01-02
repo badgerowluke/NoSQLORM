@@ -1,4 +1,5 @@
-
+**/bin
+**/obj
 
 .DS_Store
 ## Ignore Visual Studio temporary files, build results, and
@@ -273,7 +274,3 @@ __pycache__/
 .DS_Store
 
 
-com.brgs.orm/obj/com.brgs.orm.csproj.nuget.cache
-com.brgs.orm/obj/com.brgs.orm.csproj.nuget.cache
-com.brgs.orm/obj/com.brgs.orm.csproj.nuget.cache
-com.brgs.orm/obj/project.assets.json
