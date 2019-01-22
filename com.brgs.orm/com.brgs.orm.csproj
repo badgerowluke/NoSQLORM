@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>com.brgs.orm</AssemblyName>
+    <Title>BRGS.ORM</Title>
+    <Authors>Luke Badgerow</Authors>
+    <Copyright>2019 Luke Badgerow</Copyright>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
