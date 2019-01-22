@@ -5,15 +5,19 @@ using System.Data.SqlClient;
 using System.Reflection;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.WindowsAzure.Storage.Table;
 namespace com.brgs.orm
 {
     public class SQLStorageFactory : IStorageFactory
     {
         private readonly IDbFactory _connection;
+        public string CollectionName { get; set; }
         public SQLStorageFactory(IDbFactory factory)
         {
             _connection = factory;
         }
+        public T Get<T>(string val){ throw new NotImplementedException("coming soon");}
+        public T Get<T>(TableQuery query, string filter) {throw new NotImplementedException("coming soon");}
         public T Get<T>()
         {
             var outVal = (T)Activator.CreateInstance(typeof(T));
@@ -61,6 +65,11 @@ namespace com.brgs.orm
             }
             return outVal;
         }
+        public IEnumerable<T> GetMultiple<T>(string val)
+        {
+            throw new NotImplementedException("we're refactoring this away");
+        }
+        public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
         public T Post<T>()
         {
             throw new NotImplementedException("coming soon");
