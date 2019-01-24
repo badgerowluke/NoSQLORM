@@ -25,10 +25,10 @@ namespace com.brgs.orm.test
                 Latitude = "38.2151103",
                 Longitude = "-80.8881536"
             };
-            var props = river.GetType().GetProperties();
-            var entity = AzureFormatHelpers.BuildTableEntity<River>(props, river);
+
+            var entity = AzureFormatHelpers.BuildTableEntity(river);
             Assert.True(entity.Properties.ContainsKey("Name"));
-            Assert.Equal(entity.RowKey, "River");
+            Assert.Equal("River", entity.RowKey);
             Assert.NotNull(entity.PartitionKey);
         }
 
@@ -45,8 +45,8 @@ namespace com.brgs.orm.test
                 Latitude = "38.2151103",
                 Longitude = "-80.8881536"
             };
-            var props = river.GetType().GetProperties();
-            var entity = AzureFormatHelpers.BuildTableEntity<River>(props, river);
+
+            var entity = AzureFormatHelpers.BuildTableEntity(river);
 
             var testVal = (River)AzureFormatHelpers.RecastEntity(entity, typeof(River));
             Assert.Equal(river.Name, testVal.Name);

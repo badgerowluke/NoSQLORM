@@ -49,33 +49,26 @@ namespace com.brgs.orm.helpers
         public static DynamicTableEntity BuildTableEntity<T>(T record)
         {
             var props = new Dictionary<string, EntityProperty>();
+            var fac = new TableEntityFactory
+            {
+                Properties = props
+            };
+
             var partitionKey = "1";
             foreach (var prop in record.GetType().GetProperties())
             {
+                if(fac.mapper.ContainsKey(prop.PropertyType.ToString()))
+                {
+                    var func = fac.mapper[prop.PropertyType.ToString()];
+                    func.DynamicInvoke(prop.Name, prop.GetValue(record));
+                }
                 // if(prop.Name.ToUpper().Equals("ID"))
                 // {
                 //     partitionKey = prop.GetValue(record).ToString();
                 // }
-                switch (prop.PropertyType.ToString())
-                {
-                    case ("System.String"):
-                        props.Add(prop.Name, new EntityProperty(prop.GetValue(record).ToString()));
-                        break;
-                    case ("System.Boolean"):
-                        props.Add(prop.Name, new EntityProperty((bool?)prop.GetValue(record)));
-                        break;
-                    case ("System.Double"):
-                        props.Add(prop.Name, new EntityProperty((double?)prop.GetValue(record)));
-                        break;
-                    case ("System.Int32"):
-                        props.Add(prop.Name, new EntityProperty((Int32?)prop.GetValue(record)));
-                        break;
-                    case ("System.Int64"):
-                        props.Add(prop.Name, new EntityProperty((Int64?)prop.GetValue(record)));
-                        break;
-                }
+
             }
-            return new DynamicTableEntity(partitionKey, record.GetType().Name, "*", props);
+            return new DynamicTableEntity(partitionKey, record.GetType().Name, "*", fac.Properties);
         }
     }
 }

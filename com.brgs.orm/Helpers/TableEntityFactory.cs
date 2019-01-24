@@ -4,20 +4,21 @@ using System.Reflection;
 using Microsoft.WindowsAzure.Storage.Table;
 namespace com.brgs.orm.helpers
 {
-    public static class TableEntityFactory
+    public class TableEntityFactory
     {
-        private static readonly string[] types = {
-            "System.String", "System.Boolean", "System.Double", "System.Int32", "System.Int64"
+        public readonly Dictionary<string, Delegate> mapper = new Dictionary<string, Delegate>(){
+            { "System.String", new Action<string, dynamic>(AddStringProperty) },
+            { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
+            { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
+            { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
+            { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
         };
-        private static readonly Dictionary<string, Delegate> mapper = new Dictionary<string, Delegate>(){
-            {"System.String", new Action<string, dynamic>(AddStringProperty)},
-            {"System.Boolean", new Action<string, dynamic>(AddBooleanProperty)}
-        };
-            
         private static Dictionary<string, EntityProperty> properties;
-        private static string partitionKey;
-
-        private static void AddInt32Propeerty(string name, dynamic value)
+        public Dictionary<string, EntityProperty> Properties {
+            get { return TableEntityFactory.properties; }
+            set { TableEntityFactory.properties = value; }
+        }
+        private static void AddInt32Property(string name, dynamic value)
         {
             properties.Add(name, new EntityProperty((Int32?)value));
         }
@@ -37,7 +38,5 @@ namespace com.brgs.orm.helpers
         {
             properties.Add(name, new EntityProperty(value.ToString()));
         }
-        
-
     }
 }
