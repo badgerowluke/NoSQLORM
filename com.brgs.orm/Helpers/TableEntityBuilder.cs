@@ -18,9 +18,16 @@ namespace com.brgs.orm.helpers
             { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
         };
         private static Dictionary<string, EntityProperty> properties;
-        public Dictionary<string, EntityProperty> Properties {
-            get { return TableEntityBuilder.properties; }
-            set { TableEntityBuilder.properties = value; }
+        public Dictionary<string, EntityProperty> Properties 
+        {
+            get 
+            { 
+                return TableEntityBuilder.properties; 
+            }
+            set 
+            { 
+                TableEntityBuilder.properties = value; 
+            }
         }
         private static void AddInt32Property(string name, dynamic value)
         {
