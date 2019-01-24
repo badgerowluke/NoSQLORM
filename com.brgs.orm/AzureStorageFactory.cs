@@ -57,12 +57,12 @@ namespace com.brgs.orm
                 {
                     if (outVal.GetType().GetMethod("Add") != null && content != null)
                     {
-                        var val =  AzureFormatHelpers.RecastEntity(entity, content);
-                        outVal.GetType().GetMethod("Add").Invoke(outVal, new[] { val });
+                        var val =  AzureFormatHelper.RecastEntity(entity, content);
+                        outVal.GetType().GetMethod("Add").Invoke(outVal, new object[] { val });
                     }
                     else
                     { 
-                        return (T)AzureFormatHelpers.RecastEntity(entity, typeof(T));
+                        return (T)AzureFormatHelper.RecastEntity(entity, typeof(T));
                     }
                 }
 
@@ -102,9 +102,9 @@ namespace com.brgs.orm
             else
             {
                 //work it into the correct format.
-                var recordProps = record.GetType().GetProperties();
-                AzureFormatHelpers.PartitionKey = PartitionKey;
-                var obj = AzureFormatHelpers.BuildTableEntity(record);
+                var helper = new AzureFormatHelper(PartitionKey);
+
+                var obj = helper.BuildTableEntity(record);
                 
                 TableResult table = PostAsync((ITableEntity) obj).Result;
             }

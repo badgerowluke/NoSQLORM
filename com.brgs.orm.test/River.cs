@@ -1,8 +1,9 @@
 using System;
 namespace com.brgs.orm.test
 {
-        internal class River
+    internal class River
     {
+        public string Id { get; set; }
 		public string Name { get; set; }
 		public string RiverId { get; set; }
 		public string Latitude { get; set; }

@@ -5,49 +5,32 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.helpers
 {
-    public class AzureFormatHelpers
+    public class AzureFormatHelper
     {
-        public static string PartitionKey { get; set; }
+        public string PartitionKey { get; set; }
+        public AzureFormatHelper()
+        {
+            PartitionKey = string.Empty;
+        }
+        public AzureFormatHelper(string key)
+        {
+            PartitionKey = key;
+        }
         public static object RecastEntity(DynamicTableEntity entity, Type type)
         {
             var val = Activator.CreateInstance(type);
+            var decoder = new TableEntityDecoder(type);
             foreach (var property in entity.Properties)
             {
                 var propInfo = val.GetType().GetProperty(property.Key);
-                if (propInfo != null)
+                if (propInfo != null && decoder.Mapper.ContainsKey(propInfo.PropertyType.ToString()))
                 {
-                    switch (propInfo.PropertyType.ToString())
-                    {
-                        case ("System.String"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.StringValue);
-                            break;
-                        case ("System.DateTime"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.DateTime);
-                            break;
-                        case ("System.DateTimeOffset"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.DateTimeOffsetValue);
-                            break;
-                        case ("System.Int32"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.Int32Value);
-                            break;
-                        case ("System.Int64"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.Int64Value);
-                            break;
-                        case ("Systme.Double"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.DoubleValue);
-                            break;
-                        case ("Systme.Boolean"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.BooleanValue);
-                            break;
-                        case ("Systme.Binary"):
-                            val.GetType().GetProperty(property.Key).SetValue(val, property.Value.BinaryValue);
-                            break;
-                    }
+                    decoder.Mapper[propInfo.PropertyType.ToString()].DynamicInvoke(property.Key, property.Value);
                 }
             }
-            return val;
+            return decoder.Value;
         }
-        public static DynamicTableEntity BuildTableEntity<T>(T record)
+        public DynamicTableEntity BuildTableEntity<T>(T record)
         {
             var props = new Dictionary<string, EntityProperty>();
             var fac = new TableEntityBuilder(props);
@@ -56,14 +39,13 @@ namespace com.brgs.orm.helpers
 
             foreach (var prop in record.GetType().GetProperties())
             {
-                if(prop.Name.ToUpper().Equals("ID"))
+                if(prop.Name.ToUpper().Equals("ID") && prop.GetValue(record) != null)
                 {
                     rowKey = prop.GetValue(record).ToString();
                 }
                 if(fac.Mapper.ContainsKey(prop.PropertyType.ToString()))
                 {
-                    var func = fac.Mapper[prop.PropertyType.ToString()];
-                    func.DynamicInvoke(prop.Name, prop.GetValue(record));
+                    fac.Mapper[prop.PropertyType.ToString()].DynamicInvoke(prop.Name, prop.GetValue(record));
                 }
             }
             /* 
