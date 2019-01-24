@@ -102,7 +102,7 @@ namespace com.brgs.orm
             {
                 //work it into the correct format.
                 var recordProps = record.GetType().GetProperties();
-                var obj = AzureFormatHelpers.BuildTableEntity(recordProps, record);
+                var obj = AzureFormatHelpers.BuildTableEntity(record);
                 
                 TableResult table = PostAsync((ITableEntity) obj).Result;
             }

@@ -46,11 +46,11 @@ namespace com.brgs.orm.helpers
             }
             return val;
         }
-        public static DynamicTableEntity BuildTableEntity<T>(PropertyInfo[] recordProps, T record)
+        public static DynamicTableEntity BuildTableEntity<T>(T record)
         {
             var props = new Dictionary<string, EntityProperty>();
             var partitionKey = "1";
-            foreach (var prop in recordProps)
+            foreach (var prop in record.GetType().GetProperties())
             {
                 // if(prop.Name.ToUpper().Equals("ID"))
                 // {
