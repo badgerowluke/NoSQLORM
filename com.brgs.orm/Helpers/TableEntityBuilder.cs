@@ -24,23 +24,38 @@ namespace com.brgs.orm.helpers
         }
         private static void AddInt32Property(string name, dynamic value)
         {
-            properties.Add(name, new EntityProperty((Int32?)value));
+            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            {
+                properties.Add(name, new EntityProperty((Int32?)value));
+            } 
         }
         private static void AddInt64Property(string name, dynamic value)
         {
-            properties.Add(name, new EntityProperty((Int64?)value));
+            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            {
+                properties.Add(name, new EntityProperty((Int64?)value));
+            } 
         }
         private static void AddDoubleProperty(string name, dynamic value)
         {
-            properties.Add(name, new EntityProperty((double?)value));
+            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            {
+                properties.Add(name, new EntityProperty((double?)value));
+            } 
         }
         private static void AddBooleanProperty(string name, dynamic value)
         {
-            properties.Add(name, new EntityProperty((bool?)value));
+            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            {
+                properties.Add(name, new EntityProperty((bool?)value));
+            } 
         }
         private static void AddStringProperty(string name, dynamic value)
         {
-            properties.Add(name, new EntityProperty(value.ToString()));
+            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            {
+                properties.Add(name, new EntityProperty((string) value));
+            } 
         }
     }
 }
