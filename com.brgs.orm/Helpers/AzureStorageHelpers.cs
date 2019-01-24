@@ -51,9 +51,15 @@ namespace com.brgs.orm.helpers
         {
             var props = new Dictionary<string, EntityProperty>();
             var fac = new TableEntityBuilder(props);
+            string rowKey = string.Empty;
+            string delimiter = "||";
 
             foreach (var prop in record.GetType().GetProperties())
             {
+                if(prop.Name.ToUpper().Equals("ID"))
+                {
+                    rowKey = prop.GetValue(record).ToString();
+                }
                 if(fac.Mapper.ContainsKey(prop.PropertyType.ToString()))
                 {
                     var func = fac.Mapper[prop.PropertyType.ToString()];
@@ -61,11 +67,11 @@ namespace com.brgs.orm.helpers
                 }
             }
             /* 
-                TODO in this instance the RowKey will ultimately fail... 
+                TODO lift the delimiter between the partition and entity id (row id).
                 this needs to be lifted up somewhere much closer to the ultimate
                 domain context deveveloper.
             */
-            return new DynamicTableEntity(PartitionKey, record.GetType().Name, "*", fac.Properties);
+            return new DynamicTableEntity(PartitionKey, $"{PartitionKey}{delimiter}{rowKey}", "*", fac.Properties);
         }
     }
 }
