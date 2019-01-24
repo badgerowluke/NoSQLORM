@@ -70,28 +70,6 @@ namespace com.brgs.orm
 
             return outVal;
         }
-        private bool QueryHelper(object val, string searchVal)
-        {
-            try
-            {
-                List<bool> propChecks = new List<bool>();
-                foreach(var prop in val.GetType().GetProperties())
-                {
-                    var propVal = prop.GetValue(val);
-                    if(propVal != null)
-                    {
-                        propChecks.Add(propVal.ToString().ToUpper()
-                            .Contains(searchVal.ToUpper()));
-                    }
-                }
-                return propChecks.Contains(true);
-
-            } catch (Exception e )
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
         public T Post<T>(T record)
         {
             if(record is ITableEntity)
@@ -146,7 +124,5 @@ namespace com.brgs.orm
                 return list;
             }            
         }
-
-
     }
 }
