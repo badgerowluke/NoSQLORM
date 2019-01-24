@@ -7,6 +7,7 @@ namespace com.brgs.orm.helpers
 {
     public class AzureFormatHelpers
     {
+        public static string PartitionKey { get; set; }
         public static object RecastEntity(DynamicTableEntity entity, Type type)
         {
             var val = Activator.CreateInstance(type);
@@ -49,26 +50,22 @@ namespace com.brgs.orm.helpers
         public static DynamicTableEntity BuildTableEntity<T>(T record)
         {
             var props = new Dictionary<string, EntityProperty>();
-            var fac = new TableEntityFactory
-            {
-                Properties = props
-            };
+            var fac = new TableEntityBuilder(props);
 
-            var partitionKey = "1";
             foreach (var prop in record.GetType().GetProperties())
             {
-                if(fac.mapper.ContainsKey(prop.PropertyType.ToString()))
+                if(fac.Mapper.ContainsKey(prop.PropertyType.ToString()))
                 {
-                    var func = fac.mapper[prop.PropertyType.ToString()];
+                    var func = fac.Mapper[prop.PropertyType.ToString()];
                     func.DynamicInvoke(prop.Name, prop.GetValue(record));
                 }
-                // if(prop.Name.ToUpper().Equals("ID"))
-                // {
-                //     partitionKey = prop.GetValue(record).ToString();
-                // }
-
             }
-            return new DynamicTableEntity(partitionKey, record.GetType().Name, "*", fac.Properties);
+            /* 
+                TODO in this instance the RowKey will ultimately fail... 
+                this needs to be lifted up somewhere much closer to the ultimate
+                domain context deveveloper.
+            */
+            return new DynamicTableEntity(PartitionKey, record.GetType().Name, "*", fac.Properties);
         }
     }
 }

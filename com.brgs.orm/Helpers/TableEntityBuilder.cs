@@ -4,9 +4,13 @@ using System.Reflection;
 using Microsoft.WindowsAzure.Storage.Table;
 namespace com.brgs.orm.helpers
 {
-    public class TableEntityFactory
+    public class TableEntityBuilder
     {
-        public readonly Dictionary<string, Delegate> mapper = new Dictionary<string, Delegate>(){
+        public TableEntityBuilder(Dictionary<string, EntityProperty> props)
+        {
+            Properties = props;
+        }
+        public readonly Dictionary<string, Delegate> Mapper = new Dictionary<string, Delegate>(){
             { "System.String", new Action<string, dynamic>(AddStringProperty) },
             { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
             { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
@@ -15,8 +19,8 @@ namespace com.brgs.orm.helpers
         };
         private static Dictionary<string, EntityProperty> properties;
         public Dictionary<string, EntityProperty> Properties {
-            get { return TableEntityFactory.properties; }
-            set { TableEntityFactory.properties = value; }
+            get { return TableEntityBuilder.properties; }
+            set { TableEntityBuilder.properties = value; }
         }
         private static void AddInt32Property(string name, dynamic value)
         {

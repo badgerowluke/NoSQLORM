@@ -16,6 +16,7 @@ namespace com.brgs.orm
     {
         private CloudStorageAccount account;
         public string CollectionName { get; set; }
+        public string PartitionKey { get; set; }
         public AzureStorageFactory(string connectionString)
         {
             account = CloudStorageAccount.Parse(connectionString);
@@ -102,6 +103,7 @@ namespace com.brgs.orm
             {
                 //work it into the correct format.
                 var recordProps = record.GetType().GetProperties();
+                AzureFormatHelpers.PartitionKey = PartitionKey;
                 var obj = AzureFormatHelpers.BuildTableEntity(record);
                 
                 TableResult table = PostAsync((ITableEntity) obj).Result;
