@@ -7,7 +7,7 @@ namespace com.brgs.orm
     public class FileStorageFactory : IStorageFactory
     {
         public string CollectionName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+        public string PartitionKey { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }        
         public FileStorageFactory()
         {
             
@@ -22,7 +22,7 @@ namespace com.brgs.orm
             throw new NotImplementedException();
         }
 
-        public T Get<T>(TableQuery query, string filter)
+        public T Get<T>(TableQuery query)
         {
             throw new NotImplementedException();
         }

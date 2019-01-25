@@ -37,7 +37,7 @@ namespace com.brgs.orm.test
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = fac.Get<List<River>>(query, string.Empty);
+            var stuff = fac.Get<List<River>>(query);
             Assert.NotEmpty(stuff);
 
         }
@@ -56,7 +56,7 @@ namespace com.brgs.orm.test
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
 
-            var stuff = fac.Get<List<River>>(query, "gaul");
+            var stuff = fac.Get<List<River>>(query);
 
             Assert.InRange(stuff.Count, 1, 4);
         }
@@ -74,7 +74,7 @@ namespace com.brgs.orm.test
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = fac.Get<River>(query, "GAULEY RIVER BELOW SUMMERSVILLE DAM, WV");
+            var stuff = fac.Get<River>(query);
             Assert.IsType<River>(stuff);
         }
         [Fact]
@@ -90,7 +90,7 @@ namespace com.brgs.orm.test
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = fac.Get<List<KeyValuePair<string,string>>>(query, "GAULEY RIVER BELOW SUMMERSVILLE DAM, WV");
+            var stuff = fac.Get<List<KeyValuePair<string,string>>>(query);
             Assert.IsType <List<KeyValuePair<string, string>>> (stuff);
         }
         [Fact]
@@ -109,7 +109,7 @@ namespace com.brgs.orm.test
             var query = new TableQuery();
 
             query.Where(TableQuery.CombineFilters(filter,TableOperators.And, rowfilter));
-            var stuff = fac.Get<River>(query, "SALMON R NR HYDER AK");
+            var stuff = fac.Get<River>(query);
             Assert.Equal("SALMON R NR HYDER AK", stuff.Name);
         }
     }

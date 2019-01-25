@@ -12,12 +12,13 @@ namespace com.brgs.orm
     {
         private readonly IDbFactory _connection;
         public string CollectionName { get; set; }
+        public string PartitionKey { get; set; }
         public SQLStorageFactory(IDbFactory factory)
         {
             _connection = factory;
         }
         public T Get<T>(string val){ throw new NotImplementedException("coming soon");}
-        public T Get<T>(TableQuery query, string filter) {throw new NotImplementedException("coming soon");}
+        public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
         public T Get<T>()
         {
             var outVal = (T)Activator.CreateInstance(typeof(T));

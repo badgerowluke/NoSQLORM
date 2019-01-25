@@ -37,11 +37,12 @@ namespace com.brgs.orm
                 return JsonConvert.DeserializeObject<T>(json);
             }
         }
-        public T Get<T>(TableQuery query, string table) 
+
+        public T Get<T>(TableQuery query) 
         {
-            return GetAsync<T>(query, table).Result;
+            return GetAsync<T>(query).Result;
         }
-        private async Task<T> GetAsync<T>(TableQuery query, string searchFilter)
+        private async Task<T> GetAsync<T>(TableQuery query)
         {
             var tableClient = account.CreateCloudTableClient();
             var table = tableClient.GetTableReference(CollectionName);
