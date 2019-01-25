@@ -21,7 +21,7 @@ steps:
   inputs:
     command: pack
     packagesToPack: '!**/*.[Tt]est.csproj'
-    versioningScheme: byBuildNumber
+    versioningScheme: byPrereleaseNumber
     majorVersion: 1
     minorVersion: 0
     patchVersion: 0
