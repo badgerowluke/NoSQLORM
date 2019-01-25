@@ -20,7 +20,7 @@ steps:
   displayName: package the assembly
   inputs:
     command: pack
-    packagesToPack: '**/com.brgs.orm.csproj'
+    packagesToPack: '**/*.csproj'
     versioningScheme: byPrereleaseNumber
     majorVersion: 1
     minorVersion: 0
