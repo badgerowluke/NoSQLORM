@@ -22,6 +22,9 @@ steps:
     command: pack
     packagesToPack: '!**/*.[Tt]est.csproj'
     versioningScheme: byBuildNumber
+    majorVersion: 1
+    minorVersion: 0
+    patchVersion: 0
 
 - task: NuGetCommand@2
   displayName: package the assembly
