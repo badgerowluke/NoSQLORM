@@ -1,3 +1,3 @@
 # NoSQLORM
 
-wentevbb7ydbxhxeohho2dxeszbv37xhgim4vjtqcbcqpr5kcgdq
+https://dev.azure.com/badgerowluke/RelationalMapper/_apis/build/status/fatguyclimbs.NoSQLORM?branchName=master
