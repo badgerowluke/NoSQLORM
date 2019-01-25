@@ -31,7 +31,7 @@ steps:
 
 
 - task: NuGetCommand@2
-  displayName: publidh the assembly
+  displayName: publish the assembly
   inputs:
       command: push
       publishVstsFeed: 'RelationalMapper'
