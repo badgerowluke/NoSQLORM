@@ -15,3 +15,17 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: NuGetCommand@2
+  displayName: package the assembly
+  inputs:
+    command: pack
+    packagesToPack: '!**/*.[Tt]est.csproj'
+    versioningScheme: byBuildNumber
+
+- task: NuGetCommand@2
+    displayName: 'publish package'
+    inputs:
+        command: push
+        publishToVstsFeed: 'RelationalMapper'
+        allowPackageconflicts: true
