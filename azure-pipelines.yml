@@ -24,8 +24,8 @@ steps:
     versioningScheme: byBuildNumber
 
 - task: NuGetCommand@2
-    displayName: publish package
-    inputs:
-        command: push
-        publishToVstsFeed: 'RelationalMapper'
-        allowPackageconflicts: true
+  displayName: package the assembly
+  inputs:
+      command: push
+      publishVstsFeed: 'RelationalMapper'
+      allowPackageconflicts: true
