@@ -23,19 +23,19 @@ steps:
     projects: '**/*[Tt]est/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'  
 
-# - task: NuGetCommand@2
-#   displayName: package the assembly
-#   inputs:
-#     command: pack
-#     packagesToPack: "**/*.csproj"
-#     versioningScheme: byPrereleaseNumber
-#     majorVersion: 1
-#     minorVersion: 0
-#     patchVersion: 0
+- task: NuGetCommand@2
+  displayName: package the assembly
+  inputs:
+    command: pack
+    packagesToPack: "**/*.csproj"
+    versioningScheme: byPrereleaseNumber
+    majorVersion: 1
+    minorVersion: 0
+    patchVersion: 0
 
-# - task: NuGetCommand@2
-#   displayName: package the assembly
-#   inputs:
-#       command: push
-#       publishVstsFeed: 'RelationalMapper'
-#       allowPackageconflicts: true
+- task: NuGetCommand@2
+  displayName: package the assembly
+  inputs:
+      command: push
+      publishVstsFeed: 'RelationalMapper'
+      allowPackageconflicts: true
