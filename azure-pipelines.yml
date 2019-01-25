@@ -28,12 +28,10 @@ steps:
   inputs:
     command: pack
     packagesToPack: "**/*.csproj"
-    majorVersion: 0
-    minorVersion: 0
-    patchVersion: 3
+
 
 - task: NuGetCommand@2
-  displayName: package the assembly
+  displayName: publidh the assembly
   inputs:
       command: push
       publishVstsFeed: 'RelationalMapper'
