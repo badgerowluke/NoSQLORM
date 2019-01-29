@@ -24,41 +24,32 @@ namespace com.brgs.orm
             var outVal = (T)Activator.CreateInstance(typeof(T));
             using (var conn = _connection.CreateConnection())
             {
+                var properties = outVal.GetType().GetProperties();
+                var assembly = typeof(T).Assembly;
+                var types = assembly.GetTypes();
+                var methods = from type in assembly.GetTypes()
+                                where type.IsSealed && !type.IsGenericType
+                                                    && !type.IsNested
+                                from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                                where method.IsDefined(typeof(ExtensionAttribute), false)
+                                where method.GetParameters()[0].ParameterType == typeof(T)
+                                select method;
+                
                 using (var command = conn.CreateCommand())
                 {
-                    var properties = outVal.GetType().GetProperties();
-                    var assembly = typeof(T).Assembly;
-                    var types = assembly.GetTypes();
-                    var methods = from type in assembly.GetTypes()
-                                  where type.IsSealed && !type.IsGenericType
-                                                      && !type.IsNested
-                                  from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                                  where method.IsDefined(typeof(ExtensionAttribute), false)
-                                  where method.GetParameters()[0].ParameterType == typeof(T)
-                                  select method;
-
-
-                    var methodExt = methods.FirstOrDefault(m => m.Name.Equals("ProcessRecord"));
                     command.CommandText = "";
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        if (methodExt != null)
+                        for (var f = 0; f < reader.FieldCount; f++)
                         {
-                            outVal = (T)methodExt.Invoke(outVal, new object[] { outVal, (IDataReader)reader });
-                        }
-                        else
-                        {
-                            for (var f = 0; f < reader.FieldCount; f++)
+                            var resultName = reader.GetName(f);
+                            var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
+                            var resultValue = reader.GetValue(f);
+                            if (property != null)
                             {
-                                var resultName = reader.GetName(f);
-                                var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
-                                var resultValue = reader.GetValue(f);
-                                if (property != null)
-                                {
-                                    outVal.GetType().GetProperty(property.Name)
-                                          .SetValue(outVal, resultValue.ToString(), null);
-                                }
+                                outVal.GetType().GetProperty(property.Name)
+                                        .SetValue(outVal, resultValue.ToString(), null);
                             }
                         }
                     }
