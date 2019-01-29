@@ -24,7 +24,14 @@ namespace com.brgs.orm.helpers
             } 
             
         }
-        public readonly Dictionary<string, Delegate> Mapper = new Dictionary<string, Delegate>()
+        public void DecodeProperty(PropertyInfo propInfo, KeyValuePair<string, EntityProperty> property)
+        {
+            if (propInfo != null && Mapper.ContainsKey(propInfo.PropertyType.ToString()))
+            {
+                Mapper[propInfo.PropertyType.ToString()].DynamicInvoke(property.Key, property.Value);
+            }
+        }
+        private readonly Dictionary<string, Delegate> Mapper = new Dictionary<string, Delegate>()
         {
             {"System.String", new Action<string, dynamic>(DecodeStringValue)},
             {"System.DateTime", new Action<string, dynamic>(DecodeDateTimeValue)},

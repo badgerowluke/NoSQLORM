@@ -18,15 +18,11 @@ namespace com.brgs.orm.helpers
         }
         public static object RecastEntity(DynamicTableEntity entity, Type type)
         {
-            var val = Activator.CreateInstance(type);
             var decoder = new TableEntityDecoder(type);
             foreach (var property in entity.Properties)
             {
-                var propInfo = val.GetType().GetProperty(property.Key);
-                if (propInfo != null && decoder.Mapper.ContainsKey(propInfo.PropertyType.ToString()))
-                {
-                    decoder.Mapper[propInfo.PropertyType.ToString()].DynamicInvoke(property.Key, property.Value);
-                }
+                var propInfo = type.GetProperty(property.Key);
+                decoder.DecodeProperty(propInfo, property);
             }
             return decoder.Value;
         }
@@ -43,10 +39,8 @@ namespace com.brgs.orm.helpers
                 {
                     rowKey = prop.GetValue(record).ToString();
                 }
-                if(fac.Mapper.ContainsKey(prop.PropertyType.ToString()))
-                {
-                    fac.Mapper[prop.PropertyType.ToString()].DynamicInvoke(prop.Name, prop.GetValue(record));
-                }
+                fac.EncodeProperty<T>(prop, record);
+
             }
             /* 
                 TODO lift the delimiter between the partition and entity id (row id).

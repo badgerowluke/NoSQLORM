@@ -6,17 +6,6 @@ namespace com.brgs.orm.helpers
 {
     public class TableEntityBuilder
     {
-        public TableEntityBuilder(Dictionary<string, EntityProperty> props)
-        {
-            Properties = props;
-        }
-        public readonly Dictionary<string, Delegate> Mapper = new Dictionary<string, Delegate>(){
-            { "System.String", new Action<string, dynamic>(AddStringProperty) },
-            { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
-            { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
-            { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
-            { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
-        };
         private static Dictionary<string, EntityProperty> properties;
         public Dictionary<string, EntityProperty> Properties 
         {
@@ -29,6 +18,26 @@ namespace com.brgs.orm.helpers
                 TableEntityBuilder.properties = value; 
             }
         }
+        public TableEntityBuilder(Dictionary<string, EntityProperty> props)
+        {
+            Properties = props;
+        }
+        public void EncodeProperty<T>(PropertyInfo prop, T record)
+        {
+            if(Mapper.ContainsKey(prop.PropertyType.ToString()))
+            {
+                Mapper[prop.PropertyType.ToString()].DynamicInvoke(prop.Name, prop.GetValue(record));
+            }            
+        }
+        private readonly Dictionary<string, Delegate> Mapper = new Dictionary<string, Delegate>()
+        {
+            { "System.String", new Action<string, dynamic>(AddStringProperty) },
+            { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
+            { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
+            { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
+            { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
+        };
+
         private static void AddInt32Property(string name, dynamic value)
         {
             if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
