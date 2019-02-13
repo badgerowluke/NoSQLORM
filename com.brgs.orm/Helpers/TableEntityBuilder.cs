@@ -6,21 +6,42 @@ namespace com.brgs.orm.helpers
 {
     public class TableEntityBuilder
     {
-        private static Dictionary<string, EntityProperty> properties;
+        private  Dictionary<string, EntityProperty> properties;
+
+        private readonly Dictionary<string, Delegate> Mapper;
+        public TableEntityBuilder()
+        {
+            Mapper = new Dictionary<string, Delegate>()
+            {
+                { "System.String", new Action<string, dynamic>(AddStringProperty) },
+                { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
+                { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
+                { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
+                { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
+            };
+        }
         public Dictionary<string, EntityProperty> Properties 
         {
             get 
             { 
-                return TableEntityBuilder.properties; 
+                return properties; 
             }
             set 
             { 
-                TableEntityBuilder.properties = value; 
+                properties = value; 
             }
         }
         public TableEntityBuilder(Dictionary<string, EntityProperty> props)
         {
             Properties = props;
+            Mapper = new Dictionary<string, Delegate>()
+            {
+                { "System.String", new Action<string, dynamic>(AddStringProperty) },
+                { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
+                { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
+                { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
+                { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
+            };            
         }
         public void EncodeProperty<T>(PropertyInfo prop, T record)
         {
@@ -29,46 +50,41 @@ namespace com.brgs.orm.helpers
                 Mapper[prop.PropertyType.ToString()].DynamicInvoke(prop.Name, prop.GetValue(record));
             }            
         }
-        private readonly Dictionary<string, Delegate> Mapper = new Dictionary<string, Delegate>()
-        {
-            { "System.String", new Action<string, dynamic>(AddStringProperty) },
-            { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
-            { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
-            { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
-            { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
-        };
 
-        private static void AddInt32Property(string name, dynamic value)
+
+        private void AddInt32Property(string name, dynamic value)
         {
             if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
             {
                 properties.Add(name, new EntityProperty((Int32?)value));
             } 
         }
-        private static void AddInt64Property(string name, dynamic value)
+        private void AddInt64Property(string name, dynamic value)
         {
             if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
             {
                 properties.Add(name, new EntityProperty((Int64?)value));
             } 
         }
-        private static void AddDoubleProperty(string name, dynamic value)
+        private void AddDoubleProperty(string name, dynamic value)
         {
             if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
             {
                 properties.Add(name, new EntityProperty((double?)value));
             } 
         }
-        private static void AddBooleanProperty(string name, dynamic value)
+        private void AddBooleanProperty(string name, dynamic value)
         {
             if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
             {
                 properties.Add(name, new EntityProperty((bool?)value));
             } 
         }
-        private static void AddStringProperty(string name, dynamic value)
+        private void AddStringProperty(string name, dynamic value)
         {
-            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            
+            if(name != null && value != null && properties != null 
+                && !properties.ContainsKey(name) )
             {
                 properties.Add(name, new EntityProperty((string) value));
             } 
