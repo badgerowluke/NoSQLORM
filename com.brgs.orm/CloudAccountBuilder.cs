@@ -25,7 +25,5 @@ namespace com.brgs.orm
         {
             return account.CreateCloudTableClient();
         }
-
-        
     }
 }

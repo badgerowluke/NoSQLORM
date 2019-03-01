@@ -22,13 +22,18 @@ namespace com.brgs.orm
         {
             account = CloudStorageAccount.Parse(connectionString);
         }
+        public AzureStorageFactory(ICloudStorageAccount acc)
+        {
+            stuff = acc;
+        }
         public T Get<T>( string blobName)
         {
             return GetAsync<T>(CollectionName, blobName).Result;
         }
         private async Task<T> GetAsync<T>(string containerName, string blobName)
         {
-            var blobClient = account.CreateCloudBlobClient();
+            // var blobClient = account.CreateCloudBlobClient();
+            var blobClient = stuff.GetCloudBlobClient();
             var container = blobClient.GetContainerReference(containerName);
             var blob = container.GetBlobReference(blobName);
             var blobStream = await blob.OpenReadAsync();

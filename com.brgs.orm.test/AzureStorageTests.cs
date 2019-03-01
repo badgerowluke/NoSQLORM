@@ -16,11 +16,13 @@ namespace com.brgs.orm.test
         [Fact(Skip="because appsettings.json cannot be published")]
         public void WeDoGetAStorageFactory()
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = config.GetConnectionString("store");
-            var fac = new AzureStorageFactory(connectionString);
+            // var config = new ConfigurationBuilder()
+            //     .AddJsonFile("appsettings.json")
+            //     .Build();
+            // var connectionString = config.GetConnectionString("store");
+
+            var stuff = (ICloudStorageAccount)CloudStorageAccount.Parse("");
+            var fac = new AzureStorageFactory(stuff);
             Assert.NotNull(fac);
 
         }
