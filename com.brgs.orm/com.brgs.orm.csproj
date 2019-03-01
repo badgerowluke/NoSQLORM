@@ -6,7 +6,7 @@
     <Authors>Luke Badgerow</Authors>
     <Copyright>2019 Luke Badgerow</Copyright>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.7</Version>
+    <Version>0.0.8</Version>
   </PropertyGroup>
 
   <ItemGroup>
