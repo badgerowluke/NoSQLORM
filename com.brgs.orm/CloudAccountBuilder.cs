@@ -7,7 +7,7 @@ namespace com.brgs.orm
 {
     public interface ICloudStorageAccount
     {
-        CloudBlobClient GetCloudBlobClient();
+        CloudBlobClient CreateCloudBlobClient();
         CloudTableClient CreateCloudTableClient();
     }
     public class CloudStorageAccountBuilder: ICloudStorageAccount
@@ -17,7 +17,11 @@ namespace com.brgs.orm
         {
             account = CloudStorageAccount.Parse(connectionString);
         }
-        public CloudBlobClient GetCloudBlobClient()
+        public CloudStorageAccountBuilder(CloudStorageAccount acc)
+        {
+            account  = acc;
+        }
+        public CloudBlobClient CreateCloudBlobClient()
         {
             return account.CreateCloudBlobClient();
         }
