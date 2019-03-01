@@ -14,12 +14,13 @@ namespace com.brgs.orm
 {
     public class AzureStorageFactory: IStorageFactory
     {
-        private CloudStorageAccount account;
+        private ICloudStorageAccount account;
         public string CollectionName { get; set; }
         public string PartitionKey { get; set; }
-        public AzureStorageFactory(string connectionString)
+
+        public AzureStorageFactory(ICloudStorageAccount acc)
         {
-            account = CloudStorageAccount.Parse(connectionString);
+            account = acc;
         }
         public T Get<T>( string blobName)
         {
@@ -28,6 +29,7 @@ namespace com.brgs.orm
         private async Task<T> GetAsync<T>(string containerName, string blobName)
         {
             var blobClient = account.CreateCloudBlobClient();
+
             var container = blobClient.GetContainerReference(containerName);
             var blob = container.GetBlobReference(blobName);
             var blobStream = await blob.OpenReadAsync();
