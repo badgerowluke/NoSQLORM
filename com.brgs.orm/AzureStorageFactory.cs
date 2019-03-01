@@ -15,6 +15,7 @@ namespace com.brgs.orm
     public class AzureStorageFactory: IStorageFactory
     {
         private CloudStorageAccount account;
+        private ICloudStorageAccount stuff;
         public string CollectionName { get; set; }
         public string PartitionKey { get; set; }
         public AzureStorageFactory(string connectionString)

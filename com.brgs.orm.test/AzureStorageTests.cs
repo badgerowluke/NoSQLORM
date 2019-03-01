@@ -13,7 +13,7 @@ namespace com.brgs.orm.test
     public class AzureStorageTests
     {
         
-        [Fact]
+        [Fact(Skip="because appsettings.json cannot be published")]
         public void WeDoGetAStorageFactory()
         {
             var config = new ConfigurationBuilder()
@@ -24,7 +24,7 @@ namespace com.brgs.orm.test
             Assert.NotNull(fac);
 
         }
-        [Fact]
+        [Fact(Skip="because appsettings.json cannot be published")]
         public void AzureFactory_DoesReturnResults()
         {
             var config = new ConfigurationBuilder()
@@ -60,7 +60,7 @@ namespace com.brgs.orm.test
 
             Assert.InRange(stuff.Count, 1, 4);
         }
-        [Fact]
+        [Fact(Skip="because appsettings.json cannot be published")]
         public void AzureFactory_Get_DoesReturnSingleEntity()
         {
             var config = new ConfigurationBuilder()
@@ -77,7 +77,7 @@ namespace com.brgs.orm.test
             var stuff = fac.Get<River>(query);
             Assert.IsType<River>(stuff);
         }
-        [Fact]
+        [Fact(Skip="because appsettings.json cannot be published")]
         public void AzureFactory_Get_Handles_ListKeyValuePair()
         {
             var config = new ConfigurationBuilder()
@@ -93,7 +93,7 @@ namespace com.brgs.orm.test
             var stuff = fac.Get<List<KeyValuePair<string,string>>>(query);
             Assert.IsType <List<KeyValuePair<string, string>>> (stuff);
         }
-        [Fact]
+        [Fact(Skip="because appsettings.json cannot be published")]
         public void AzureFactory_Get_PullsPartitionAndRowKey()
         {
             var config = new ConfigurationBuilder()
