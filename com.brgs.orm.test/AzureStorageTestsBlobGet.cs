@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Linq;
 using System.IO;
 using System.Text;
-using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 
 namespace com.brgs.orm.test

@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
+
 namespace com.brgs.orm.test
 {
     internal class River
@@ -24,5 +28,22 @@ namespace com.brgs.orm.test
         public object Value { get; set; }
         public string Flow { get; set; }
         public string Level { get; set; }        
+    }
+    internal class RiverEntity : River, ITableEntity
+    {
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
+        public string ETag { get; set; }
+
+        public void ReadEntity(IDictionary<string, EntityProperty> properties, OperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

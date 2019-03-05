@@ -8,7 +8,6 @@ namespace com.brgs.orm
     {
         string CollectionName { get; set; }
         string PartitionKey { get; set; }
-        IEnumerable<T> GetMultiple<T>(string filename);
         T Get<T>(string filename); 
         T Get<T>(TableQuery query);
 

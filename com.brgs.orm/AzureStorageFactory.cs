@@ -108,24 +108,5 @@ namespace com.brgs.orm
                 throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
             }
         }
-        public IEnumerable<T> GetMultiple<T>(string name)
-        {
-            return GetEnumerableAsync<T>(CollectionName, name).Result;
-        }        
-        private async Task<IEnumerable<T>> GetEnumerableAsync<T>(string containerName, string blobName)
-        {
-            var blobClient = account.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(containerName);
-            var blob = container.GetBlobReference(blobName);
-
-            var riverStream = await blob.OpenReadAsync();
-            using(StreamReader reader = new StreamReader(riverStream)){
-                string json = reader.ReadToEnd();
-                var list = JsonConvert.DeserializeObject<IEnumerable<T>>(json);
-
-
-                return list;
-            }            
-        }
     }
 }
