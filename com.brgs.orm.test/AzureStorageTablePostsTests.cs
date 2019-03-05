@@ -53,6 +53,36 @@ namespace com.brgs.orm.test
             var val = fac.Post<RiverEntity>(river);
             Assert.NotNull(val);
         }
+        [Fact]
+        public void DoesPostToTable_NonEntityObject()
+        {
+            var river = new River()
+            {
+                Name = "GAULEY RIVER BELOW SUMMERSVILLE DAM, WV",
+                RiverId = "03189600",
+                State = "West Virginia",
+                StateCode = "WV",
+                Srs = "EPSG:4326",
+                Latitude = "38.2151103",
+                Longitude = "-80.8881536", 
+                Id="Gauley|03189600"
+
+            };            
+            var acc = new Mock<ICloudStorageAccount>();
+            var tableClient = new Mock<CloudTableClient>(new Uri("https://www.google.com"), new StorageCredentials());
+            var table = new Mock<CloudTable>(new Uri("https://www.google.com"));
+            tableClient.Setup(tc => tc.GetTableReference(It.IsAny<string>())).Returns(table.Object);
+            acc.Setup(a => a.CreateCloudTableClient()).Returns(tableClient.Object);
+            var fac = new AzureStorageFactory(acc.Object)
+            {
+                PartitionKey = "TACOS",
+                CollectionName = "Pizza"
+            };
+
+
+            var val = fac.Post<River>(river);
+            Assert.NotNull(val);
+        }
 
     }
 }
