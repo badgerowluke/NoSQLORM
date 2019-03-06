@@ -12,11 +12,6 @@ namespace com.brgs.orm
         {
             
         }
-        public IEnumerable<T> GetMultiple<T>(string filename)
-        {
-            throw new NotImplementedException();
-        }
-
         public T Get<T>(string filename)
         {
             throw new NotImplementedException();

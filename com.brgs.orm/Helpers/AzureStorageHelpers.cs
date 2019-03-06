@@ -16,7 +16,7 @@ namespace com.brgs.orm.helpers
         {
             PartitionKey = key;
         }
-        public static object RecastEntity(DynamicTableEntity entity, Type type)
+        public object RecastEntity(DynamicTableEntity entity, Type type)
         {
             var decoder = new TableEntityDecoder(type);
             foreach (var property in entity.Properties)

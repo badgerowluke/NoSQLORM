@@ -57,10 +57,6 @@ namespace com.brgs.orm
             }
             return outVal;
         }
-        public IEnumerable<T> GetMultiple<T>(string val)
-        {
-            throw new NotImplementedException("we're refactoring this away");
-        }
         public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
         public T Post<T>()
         {
