@@ -9,12 +9,7 @@ using com.brgs.orm.helpers;
 
 namespace com.brgs.orm.test
 {
-    internal class DemoEntity
-    {
-        public bool BoolProp { get; set; }
-        public double DoubleProp { get; set; }
 
-    }
     public class TableEntityPropertyTests
     {
         [Fact]
@@ -51,7 +46,6 @@ namespace com.brgs.orm.test
             var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("DoubleProp"));
-            Assert.Equal(Convert.ToDouble(42), entity.Properties["DoubleProp"].DoubleValue);
         }
         [Fact]
         public void TableEntityBuilder_RetrievesAppropriateDoubleValue()
@@ -62,7 +56,56 @@ namespace com.brgs.orm.test
             };
             var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
-            Assert.Equal(Convert.ToDouble(42), entity.Properties["DoubleProp"].DoubleValue);            
+            var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
+            Assert.Equal(demo.DoubleProp, testVal.DoubleProp);            
         }
+        [Fact]
+        public void TableEntityBuilder_EncodesIntProp()
+        {
+            var demo = new DemoEntity()
+            {
+                IntProp = 42
+            };
+            var helper = new AzureFormatHelper(string.Empty);
+            var entity = helper.BuildTableEntity(demo);
+            Assert.True(entity.Properties.ContainsKey("IntProp"));
+        }
+        [Fact]
+        public void TableEntityBuilder_EncodesInt64Prop()
+        {
+            var demo = new DemoEntity()
+            {
+                LongProp = Convert.ToInt64(42)
+            };
+            var helper = new AzureFormatHelper(string.Empty);
+            var entity = helper.BuildTableEntity(demo);
+            Assert.True(entity.Properties.ContainsKey("LongProp"));            
+        }
+        [Fact]
+        public void TableEntityBuilder_CastsAndEncodesDateTime()
+        {
+            var demo = new DemoEntity()
+            {
+                DateProp = DateTime.Now
+            };
+            var helper = new AzureFormatHelper(string.Empty);
+            var entity = helper.BuildTableEntity(demo);
+            Assert.True(entity.Properties.ContainsKey("DateProp"));
+        }
+        [Fact]
+        public void TableEntityBuilder_AppropriateDateValue()
+        {
+            var demo = new DemoEntity()
+            {
+                DateProp = DateTime.UtcNow
+            };
+            var date = DateTime.Now.ToUniversalTime();
+            var helper = new AzureFormatHelper(string.Empty);
+            var entity = helper.BuildTableEntity(demo);
+            var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
+            Assert.Equal(demo.DateProp, testVal.DateProp);
+
+        }
+
     }
 }

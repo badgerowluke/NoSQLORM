@@ -17,7 +17,8 @@ namespace com.brgs.orm.helpers
                 { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
                 { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
                 { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
-                { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
+                { "System.Int64", new Action<string, dynamic>(AddInt64Property) },
+                { "System.DateTime", new Action<string, dynamic>(AddDateTimeProperty) }
             };
         }
         public Dictionary<string, EntityProperty> Properties 
@@ -40,7 +41,8 @@ namespace com.brgs.orm.helpers
                 { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
                 { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
                 { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
-                { "System.Int64", new Action<string, dynamic>(AddInt64Property) }
+                { "System.Int64", new Action<string, dynamic>(AddInt64Property) },
+                { "System.DateTime", new Action<string, dynamic>(AddDateTimeProperty) }
             };            
         }
         public void EncodeProperty<T>(PropertyInfo prop, T record)
@@ -50,8 +52,6 @@ namespace com.brgs.orm.helpers
                 Mapper[prop.PropertyType.ToString()].DynamicInvoke(prop.Name, prop.GetValue(record));
             }            
         }
-
-
         private void AddInt32Property(string name, dynamic value)
         {
             if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
@@ -88,6 +88,17 @@ namespace com.brgs.orm.helpers
             {
                 properties.Add(name, new EntityProperty((string) value));
             } 
+        }
+        private void AddDateTimeProperty(string name, dynamic value)
+        {
+            if(name != null && value != null && properties != null
+                && !properties.ContainsKey(name))
+            {
+                var date = (DateTime) value;
+                var utcDate = date.ToUniversalTime();
+                properties.Add(name, new EntityProperty(utcDate));
+            }
+
         }
     }
 }

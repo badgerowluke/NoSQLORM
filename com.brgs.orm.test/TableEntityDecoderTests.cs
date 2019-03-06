@@ -28,9 +28,22 @@ namespace com.brgs.orm.test
             var helper = new AzureFormatHelper("pizza");
             var entity = helper.BuildTableEntity(river);
 
-            var testVal = (River)AzureFormatHelper.RecastEntity(entity, typeof(River));
+            var testVal = (River)helper.RecastEntity(entity, typeof(River));
             Assert.Equal(river.Name, testVal.Name);
             Assert.Equal(river.RiverId, testVal.RiverId);
+        }
+        [Fact]
+        public void TableEntityDecoder_DoesDecodeDates()
+        {
+            var demo = new DemoEntity()
+            {
+                DateProp = DateTime.UtcNow
+            };
+            var helper =  new AzureFormatHelper(string.Empty);
+            var entity = helper.BuildTableEntity(demo);
+            var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
+            Assert.Equal(demo.DateProp, testVal.DateProp);
+
         }        
     }
-}   
+}

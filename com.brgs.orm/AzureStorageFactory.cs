@@ -17,10 +17,12 @@ namespace com.brgs.orm
         private ICloudStorageAccount account;
         public string CollectionName { get; set; }
         public string PartitionKey { get; set; }
+        private AzureFormatHelper helper { get; set; }
 
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
+            helper = new AzureFormatHelper();
         }
         public T Get<T>( string blobName)
         {
@@ -60,12 +62,12 @@ namespace com.brgs.orm
                 {
                     if (outVal.GetType().GetMethod("Add") != null && content != null)
                     {
-                        var val =  AzureFormatHelper.RecastEntity(entity, content);
+                        var val =  helper.RecastEntity(entity, content);
                         outVal.GetType().GetMethod("Add").Invoke(outVal, new object[] { val });
                     }
                     else
                     { 
-                        return (T)AzureFormatHelper.RecastEntity(entity, typeof(T));
+                        return (T)helper.RecastEntity(entity, typeof(T));
                     }
                 }
 
