@@ -9,7 +9,8 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using com.brgs.orm.helpers;
+using com.brgs.orm.Azure.helpers;
+
 namespace com.brgs.orm.Azure
 {
     public class AzureStorageFactory: IStorageFactory
