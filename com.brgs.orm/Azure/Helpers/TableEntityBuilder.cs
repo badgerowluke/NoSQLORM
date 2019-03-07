@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 using Microsoft.WindowsAzure.Storage.Table;
-namespace com.brgs.orm.helpers
+namespace com.brgs.orm.Azure.helpers
 {
     public class TableEntityBuilder
     {

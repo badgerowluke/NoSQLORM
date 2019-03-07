@@ -6,7 +6,7 @@ using Moq;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-using com.brgs.orm.helpers;
+using com.brgs.orm.Azure.helpers;
 
 namespace com.brgs.orm.test
 {

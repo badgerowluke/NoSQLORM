@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace com.brgs.orm
+namespace com.brgs.orm.Azure
 {
     public interface ICloudStorageAccount
     {

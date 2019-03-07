@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.WindowsAzure.Storage.Table;
-namespace com.brgs.orm
+namespace com.brgs.orm.RelationalDB
 {
     public class SQLStorageFactory : IStorageFactory
     {
@@ -23,15 +23,15 @@ namespace com.brgs.orm
         {
             var outVal = (T)Activator.CreateInstance(typeof(T));
             var properties = outVal.GetType().GetProperties();
-            var assembly = typeof(T).Assembly;
-            var types = assembly.GetTypes();
-            var methods = from type in assembly.GetTypes()
-                            where type.IsSealed && !type.IsGenericType
-                                                && !type.IsNested
-                            from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                            where method.IsDefined(typeof(ExtensionAttribute), false)
-                            where method.GetParameters()[0].ParameterType == typeof(T)
-                            select method;
+            // var assembly = typeof(T).Assembly;
+            // var types = assembly.GetTypes();
+            // var methods = from type in assembly.GetTypes()
+            //                 where type.IsSealed && !type.IsGenericType
+            //                                     && !type.IsNested
+            //                 from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+            //                 where method.IsDefined(typeof(ExtensionAttribute), false)
+            //                 where method.GetParameters()[0].ParameterType == typeof(T)
+            //                 select method;
             using (var conn = _connection.CreateConnection())
             {
                 using (var command = conn.CreateCommand())
