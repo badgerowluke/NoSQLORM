@@ -38,10 +38,11 @@ namespace com.brgs.orm.Azure
         }
         public T Post<T>(T record)
         {
+            var tableRunner = new AzureTableBuilder(account, CollectionName);
             if(record is ITableEntity)
             {
                 //just send the object in
-                var table = PostAsync(record).Result;
+                var table = tableRunner.PostAsync(record).Result;
             }
             else
             {
@@ -50,26 +51,9 @@ namespace com.brgs.orm.Azure
 
                 var obj = helper.BuildTableEntity(record);
                 
-                TableResult table = PostAsync((ITableEntity) obj).Result;
+                TableResult table = tableRunner.PostAsync((ITableEntity) obj).Result;
             }
             return record;
-        }
-        private async Task<TableResult> PostAsync<T>(T record)
-        {
-            try 
-            {                
-                var tableClient = account.CreateCloudTableClient();
-                var table = tableClient.GetTableReference(CollectionName);
-                bool complete = table.CreateIfNotExistsAsync().Result;
-                var insert = TableOperation.InsertOrMerge((ITableEntity) record);
-
-                var val =  await table.ExecuteAsync(insert);
-                return val;
-
-            } catch (StorageException e )
-            {
-                throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
-            }
         }
     }
 }
