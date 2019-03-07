@@ -27,54 +27,14 @@ namespace com.brgs.orm.Azure
         }
         public T Get<T>( string blobName)
         {
-            return GetAsync<T>(CollectionName, blobName).Result;
-        }
-        private async Task<T> GetAsync<T>(string containerName, string blobName)
-        {
-            var blobClient = account.CreateCloudBlobClient();
-
-            var container = blobClient.GetContainerReference(containerName);
-            var blob = container.GetBlobReference(blobName);
-            var blobStream = await blob.OpenReadAsync();
-            using(StreamReader reader = new StreamReader(blobStream))
-            {
-                string json = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<T>(json);
-            }
+            return new AzureBlobBuilder(account)
+                                .GetAsync<T>(CollectionName, blobName).Result;
         }
 
         public T Get<T>(TableQuery query) 
         {
-            return GetAsync<T>(query).Result;
-        }
-        private async Task<T> GetAsync<T>(TableQuery query)
-        {
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(CollectionName);
-            var outVal = (T)Activator.CreateInstance(typeof(T));
-            var content = outVal.GetType().GetGenericArguments().Length > 0 ? outVal.GetType().GetGenericArguments()[0] : null ;
-           
-            TableContinuationToken token = null;
-            do
-            {
-                var results = await table.ExecuteQuerySegmentedAsync(query, token);
-                token = results.ContinuationToken;
-                foreach(var entity in results.Results)
-                {
-                    if (outVal.GetType().GetMethod("Add") != null && content != null)
-                    {
-                        var val =  helper.RecastEntity(entity, content);
-                        outVal.GetType().GetMethod("Add").Invoke(outVal, new object[] { val });
-                    }
-                    else
-                    { 
-                        return (T)helper.RecastEntity(entity, typeof(T));
-                    }
-                }
-
-            } while (token != null);
-
-            return outVal;
+            return new AzureTableBuilder(account)
+                                .GetAsync<T>(query, CollectionName).Result;
         }
         public T Post<T>(T record)
         {
