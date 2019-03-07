@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.Extensions.Configuration;
 
-using com.brgs.orm;
+using com.brgs.orm.Azure;
 using Microsoft.WindowsAzure.Storage.Auth;
 using System.Reflection;
 using System.Linq;
