@@ -28,6 +28,8 @@ namespace com.brgs.orm.RelationalDB
                 {
                     command.CommandText = val;
                     var reader = command.ExecuteReader();
+  
+                    //todo sql parameterization
                     var enumerable = typeof(T).GetTypeInfo().ImplementedInterfaces
                                                             .Contains(typeof(System.Collections.IEnumerable));
                     

@@ -5,6 +5,7 @@
 
 trigger:
 - master
+- sqlite-imp
 
 pool:
   vmImage: 'Ubuntu-16.04'
@@ -22,6 +23,8 @@ steps:
     command: test
     projects: '**/*[Tt]est/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'  
+    nobuild: true
+    publishTestResults: true
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly

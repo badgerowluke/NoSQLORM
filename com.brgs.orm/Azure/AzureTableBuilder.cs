@@ -10,7 +10,7 @@ namespace com.brgs.orm.Azure
     {
         private ICloudStorageAccount account { get; set; }
         private AzureFormatHelper helpers { get; set; }
-        private string Collection { get; set; }
+        private readonly string Collection;
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
