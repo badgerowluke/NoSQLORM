@@ -1,7 +1,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace com.brgs.orm
+namespace com.brgs.orm.RelationalDB
 {
     public interface IDbFactory
     {

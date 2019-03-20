@@ -17,6 +17,13 @@ namespace com.brgs.orm.test
             Assert.NotNull(tester);
         }
         [Fact]
+        public void LiteDBConnection_IsIDbFactory()
+        {
+            var tester = new LiteDBConnection("Data Source=test.db");
+            var fac = new SQLStorageFactory(tester);  
+            Assert.NotNull(fac);   
+        }
+        [Fact]
         public void LiteDBConnection_CreateConnection_DoesReturnConnection(){
             var tester = new LiteDBConnection("Data Source=test.db");
             var conn = tester.CreateConnection();

@@ -17,10 +17,8 @@ namespace com.brgs.orm.RelationalDB
         {
             _connection = factory;
         }
-        public T Get<T>(string val){ throw new NotImplementedException("coming soon");}
-        public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
-        public T Get<T>()
-        {
+        public T Get<T>(string val)
+        { 
             var outVal = (T)Activator.CreateInstance(typeof(T));
             var properties = outVal.GetType().GetProperties();
             // var assembly = typeof(T).Assembly;
@@ -36,7 +34,7 @@ namespace com.brgs.orm.RelationalDB
             {
                 using (var command = conn.CreateCommand())
                 {
-                    command.CommandText = "";
+                    command.CommandText = val;
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -57,6 +55,8 @@ namespace com.brgs.orm.RelationalDB
             }
             return outVal;
         }
+        public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
+
         public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
         public T Post<T>()
         {
