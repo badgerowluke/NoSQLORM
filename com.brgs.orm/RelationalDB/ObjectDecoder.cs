@@ -10,6 +10,7 @@ namespace com.brgs.orm.RelationalDB
         {
             var val = Activator.CreateInstance(type);
             var properties = val.GetType().GetProperties();
+            
             for(var f=0; f < record.FieldCount; f++)
             {
                 var name = record.GetName(f);

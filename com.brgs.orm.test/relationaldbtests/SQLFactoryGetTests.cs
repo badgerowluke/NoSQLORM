@@ -8,7 +8,7 @@ using System.Data;
 
 namespace com.brgs.orm.test
 {
-    public class SqlFactoryTests
+    public class SqlFactoryGetTests
     {
         [Fact]
         public void WeDoGetASqlFactory()
