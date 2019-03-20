@@ -42,13 +42,13 @@ namespace com.brgs.orm.RelationalDB
                         {
                             var resultName = reader.GetName(f);
                             //This makes the assumption that the column name is 1:1 match with the 
-                            var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
+                            // var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
                             var resultValue = reader.GetValue(f);
-                            if (property != null)
-                            {
-                                outVal.GetType().GetProperty(property.Name)
-                                        .SetValue(outVal, resultValue.ToString(), null);
-                            }
+                            // if (property != null)
+                            // {
+                            //     outVal.GetType().GetProperty(property.Name)
+                            //             .SetValue(outVal, resultValue.ToString(), null);
+                            // }
                         }
                     }
                 }
