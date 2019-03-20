@@ -37,34 +37,18 @@ namespace com.brgs.orm.RelationalDB
                         if(enumerable)
                         {
                             var type = outVal.GetType().GetGenericArguments()[0];
-                            var record = DecodeData(reader, type);
+                            var record = ObjectDecoder.DecodeData(reader, type);
                             typeof(T).GetMethod("Add").Invoke(outVal, new object[]{record});
                         } else 
                         {
-                            outVal = (T)DecodeData(reader, typeof(T));
+                            outVal = (T)ObjectDecoder.DecodeData(reader, typeof(T));
                         }
                     }
                 }
             }
             return outVal;
         }
-        private object DecodeData(IDataRecord record, Type type)
-        {
-            var val = Activator.CreateInstance(type);
-            var properties = val.GetType().GetProperties();
-            for(var f=0; f < record.FieldCount; f++)
-            {
-                var name = record.GetName(f);
-                var value = record.GetValue(f);
-                var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(name.ToLower()));
-                if (property != null)
-                {
-                    val.GetType().GetProperty(property.Name)
-                            .SetValue(val, value, null);
-                }
-            }
-            return val;
-        }
+
         public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
 
         public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
