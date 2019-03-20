@@ -51,10 +51,10 @@ namespace com.brgs.orm.RelationalDB
 
         public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
 
-        public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
-        public T Post<T>()
+        public T Post<T>(T record) 
         {
-            throw new NotImplementedException("coming soon");
+            //todo: handle converting record to sql, parameterizing
+             return record;
         }
         public T Put<T>()
         {
