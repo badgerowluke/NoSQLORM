@@ -21,39 +21,49 @@ namespace com.brgs.orm.RelationalDB
         { 
             var outVal = (T)Activator.CreateInstance(typeof(T));
             var properties = outVal.GetType().GetProperties();
-            // var assembly = typeof(T).Assembly;
-            // var types = assembly.GetTypes();
-            // var methods = from type in assembly.GetTypes()
-            //                 where type.IsSealed && !type.IsGenericType
-            //                                     && !type.IsNested
-            //                 from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-            //                 where method.IsDefined(typeof(ExtensionAttribute), false)
-            //                 where method.GetParameters()[0].ParameterType == typeof(T)
-            //                 select method;
+
             using (var conn = _connection.CreateConnection())
             {
                 using (var command = conn.CreateCommand())
                 {
                     command.CommandText = val;
                     var reader = command.ExecuteReader();
-                    while (reader.Read())
+                    var enumerable = typeof(T).GetTypeInfo().ImplementedInterfaces
+                                                            .Contains(typeof(System.Collections.IEnumerable));
+                    
+                    while (reader.Read()) 
                     {
-                        for (var f = 0; f < reader.FieldCount; f++)
+                        
+                        if(enumerable)
                         {
-                            var resultName = reader.GetName(f);
-                            //This makes the assumption that the column name is 1:1 match with the 
-                            // var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
-                            var resultValue = reader.GetValue(f);
-                            // if (property != null)
-                            // {
-                            //     outVal.GetType().GetProperty(property.Name)
-                            //             .SetValue(outVal, resultValue.ToString(), null);
-                            // }
+                            var type = outVal.GetType().GetGenericArguments()[0];
+                            var record = DecodeData(reader, type);
+                            typeof(T).GetMethod("Add").Invoke(outVal, new object[]{record});
+                        } else 
+                        {
+                            outVal = (T)DecodeData(reader, typeof(T));
                         }
                     }
                 }
             }
             return outVal;
+        }
+        private object DecodeData(IDataRecord record, Type type)
+        {
+            var val = Activator.CreateInstance(type);
+            var properties = val.GetType().GetProperties();
+            for(var f=0; f < record.FieldCount; f++)
+            {
+                var name = record.GetName(f);
+                var value = record.GetValue(f);
+                var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(name.ToLower()));
+                if (property != null)
+                {
+                    val.GetType().GetProperty(property.Name)
+                            .SetValue(val, value, null);
+                }
+            }
+            return val;
         }
         public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
 
