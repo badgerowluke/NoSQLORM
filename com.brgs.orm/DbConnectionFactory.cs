@@ -7,6 +7,9 @@ namespace com.brgs.orm
     {
         IDbConnection CreateConnection();
     }
+    ///
+    ///<summary>MS SqlServer Connection Factory </summary>
+    ///
     public class DbConnection : IDbFactory
     {
         private readonly string connectionString;

@@ -45,7 +45,7 @@ namespace com.brgs.orm.Azure.helpers
             /* 
                 TODO lift the delimiter between the partition and entity id (row id).
                 this needs to be lifted up somewhere much closer to the ultimate
-                domain context deveveloper.
+                domain context developer.
             */
             return new DynamicTableEntity(PartitionKey, $"{PartitionKey}{delimiter}{rowKey}", "*", fac.Properties);
         }
