@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage;
@@ -28,6 +30,8 @@ namespace com.brgs.orm.Azure
             var tableClient = account.CreateCloudTableClient();
             var table = tableClient.GetTableReference(collection);
             var outVal = (T)Activator.CreateInstance(typeof(T));
+            var enumerable = typeof(T).GetTypeInfo().ImplementedInterfaces
+                                        .Contains(typeof(System.Collections.IEnumerable));
             var content = outVal.GetType().GetGenericArguments().Length > 0 ? outVal.GetType().GetGenericArguments()[0] : null ;
            
             TableContinuationToken token = null;
@@ -37,7 +41,7 @@ namespace com.brgs.orm.Azure
                 token = results.ContinuationToken;
                 foreach(var entity in results.Results)
                 {
-                    if (outVal.GetType().GetMethod("Add") != null && content != null)
+                    if (enumerable && content != null)
                     {
                         var val =  helpers.RecastEntity(entity, content);
                         outVal.GetType().GetMethod("Add").Invoke(outVal, new object[] { val });
