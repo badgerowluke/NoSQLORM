@@ -5,7 +5,7 @@
 
 trigger:
 - master
-- sqlite-imp
+
 
 pool:
   vmImage: 'Ubuntu-16.04'
