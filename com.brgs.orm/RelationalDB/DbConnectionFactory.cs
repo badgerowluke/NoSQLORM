@@ -3,23 +3,21 @@ using System.Data.SqlClient;
 
 namespace com.brgs.orm.RelationalDB
 {
-    public interface IDbFactory
-    {
-        IDbConnection CreateConnection();
-    }
-    ///
-    ///<summary>MS SqlServer Connection Factory </summary>
-    ///
-    public class DbConnection : IDbFactory
-    {
-        private readonly string connectionString;
 
-        public DbConnection(string connection)
+    ///
+    ///<summary>MSSQLServer Connection Factory </summary>
+    ///
+    public class MSSQLConnection : RdbmsFactoryCreator, IDbFactory
+    {
+
+
+        public MSSQLConnection(string connection)
         {
             connectionString = connection;
         }
-        public IDbConnection CreateConnection()
+        public override IDbConnection CreateConnection()
         {
+            //TODO once we solve for how to spin up docker from a yaml build, write up some integration tests.
             var conn = new SqlConnection(connectionString);
             conn.Open();
             return conn;

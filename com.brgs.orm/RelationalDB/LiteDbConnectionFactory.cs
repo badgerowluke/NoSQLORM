@@ -5,14 +5,13 @@ using System.Data.SQLite;
 namespace com.brgs.orm.RelationalDB
 {
     ///<summary>SQLite Connection Factory</summary>
-    public class LiteDBConnection: IDbFactory
+    public class LiteDBConnection: RdbmsFactoryCreator, IDbFactory
     {
-        private readonly string connectionString;
         public LiteDBConnection(string connection)
         {
             connectionString = connection;
         }
-        public IDbConnection CreateConnection()
+        public override IDbConnection CreateConnection()
         {
             var conn = new SQLiteConnection(connectionString);
             conn.Open();

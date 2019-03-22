@@ -14,7 +14,7 @@ namespace com.brgs.orm.test
         public void SqlFactory_Post_EchoesBackTheValue()
         {
             var river = new River(){RiverId= "03189600", Name="GAULEY RIVER BELOW SUMMERSVILLE DAM, WV"};
-            var tester = new SQLStorageFactory(null);
+            var tester = new SQLStorage(null);
             var stuff = tester.Post(river);
             
         }

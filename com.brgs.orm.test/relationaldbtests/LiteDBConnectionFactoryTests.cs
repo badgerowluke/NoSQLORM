@@ -20,7 +20,7 @@ namespace com.brgs.orm.test
         public void LiteDBConnection_IsIDbFactory()
         {
             var tester = new LiteDBConnection("Data Source=test.db");
-            var fac = new SQLStorageFactory(tester);  
+            var fac = new SQLStorage(tester);  
             Assert.NotNull(fac);   
         }
         [Fact]
