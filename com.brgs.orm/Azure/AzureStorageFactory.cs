@@ -47,7 +47,7 @@ namespace com.brgs.orm.Azure
             else
             {
                 //work it into the correct format.
-                var helper = new AzureFormatHelper(PartitionKey);
+                helper.PartitionKey = PartitionKey;
 
                 var obj = helper.BuildTableEntity(record);
                 
