@@ -7,7 +7,7 @@ using com.brgs.orm.Azure.helpers;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureBlobBuilder
+    internal class AzureBlobBuilder: AzureFormatHelper
     {
         private ICloudStorageAccount account;
 
@@ -16,7 +16,7 @@ namespace com.brgs.orm.Azure
         public AzureBlobBuilder(ICloudStorageAccount acc)
         {
             account = acc;
-            helpers = new AzureFormatHelper();
+
         }
         public async Task<T> GetAsync<T>(string containerName, string blobName)
         {

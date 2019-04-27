@@ -6,6 +6,7 @@ using Moq;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using com.brgs.orm.Azure.helpers;
+using com.brgs.orm.Azure;
 
 namespace com.brgs.orm.test
 {
@@ -19,7 +20,9 @@ namespace com.brgs.orm.test
             {
                 BoolProp = true
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("BoolProp"));
         }
@@ -30,7 +33,9 @@ namespace com.brgs.orm.test
             {
                 BoolProp = true
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
 
             Assert.True(entity.Properties["BoolProp"].BooleanValue);            
@@ -43,7 +48,9 @@ namespace com.brgs.orm.test
                 BoolProp = true,
                 DoubleProp = Convert.ToDouble(42)
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("DoubleProp"));
         }
@@ -54,7 +61,9 @@ namespace com.brgs.orm.test
             {
                 DoubleProp = Convert.ToDouble(42)
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DoubleProp, testVal.DoubleProp);            
@@ -66,7 +75,9 @@ namespace com.brgs.orm.test
             {
                 IntProp = 42
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("IntProp"));
         }
@@ -77,7 +88,9 @@ namespace com.brgs.orm.test
             {
                 LongProp = Convert.ToInt64(42)
             };
-            var helper = new AzureFormatHelper(string.Empty);
+              var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("LongProp"));            
         }
@@ -88,7 +101,9 @@ namespace com.brgs.orm.test
             {
                 DateProp = DateTime.Now
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("DateProp"));
         }
@@ -100,7 +115,9 @@ namespace com.brgs.orm.test
                 DateProp = DateTime.UtcNow
             };
             var date = DateTime.Now.ToUniversalTime();
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            // var helper = new AzureFormatHelper(string.Empty);
             var entity = helper.BuildTableEntity(demo);
             var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DateProp, testVal.DateProp);

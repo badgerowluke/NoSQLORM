@@ -6,6 +6,7 @@ using Moq;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using com.brgs.orm.Azure.helpers;
+using com.brgs.orm.Azure;
 
 namespace com.brgs.orm.test
 {
@@ -25,7 +26,10 @@ namespace com.brgs.orm.test
                Longitude = "-80.8881536",
                Id="Gauley|03189600"
             };
-            var helper = new AzureFormatHelper("pizza");
+
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+
             var entity = helper.BuildTableEntity(river);
 
             var testVal = (River)helper.RecastEntity(entity, typeof(River));
@@ -39,7 +43,8 @@ namespace com.brgs.orm.test
             {
                 DateProp = DateTime.UtcNow
             };
-            var helper =  new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
             var entity = helper.BuildTableEntity(demo);
             var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DateProp, testVal.DateProp);

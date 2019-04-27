@@ -13,17 +13,15 @@ using com.brgs.orm.Azure.helpers;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureStorageFactory: IStorageFactory
+    public class AzureStorageFactory: AzureFormatHelper, IStorageFactory
     {
         private ICloudStorageAccount account;
         public string CollectionName { get; set; }
-        public string PartitionKey { get; set; }
-        private AzureFormatHelper helper { get; set; }
 
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
-            helper = new AzureFormatHelper();
+
         }
         public T Get<T>( string blobName)
         {
@@ -47,9 +45,9 @@ namespace com.brgs.orm.Azure
             else
             {
                 //work it into the correct format.
-                helper.PartitionKey = PartitionKey;
+                PartitionKey = PartitionKey;
 
-                var obj = helper.BuildTableEntity(record);
+                var obj = BuildTableEntity(record);
                 
                 TableResult table = tableRunner.PostAsync((ITableEntity) obj).Result;
             }

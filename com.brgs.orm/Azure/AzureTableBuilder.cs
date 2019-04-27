@@ -8,7 +8,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureTableBuilder
+    public class AzureTableBuilder : AzureFormatHelper
     {
         private ICloudStorageAccount account { get; set; }
         private AzureFormatHelper helpers { get; set; }
@@ -16,12 +16,12 @@ namespace com.brgs.orm.Azure
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
-            helpers = new AzureFormatHelper();
+
         }
         public AzureTableBuilder(ICloudStorageAccount acc, string collection)
         {
             account = acc;
-            helpers = new AzureFormatHelper();
+
             Collection = collection;
             
         }
@@ -43,12 +43,12 @@ namespace com.brgs.orm.Azure
                 {
                     if (enumerable && content != null)
                     {
-                        var val =  helpers.RecastEntity(entity, content);
+                        var val =  RecastEntity(entity, content);
                         outVal.GetType().GetMethod("Add").Invoke(outVal, new object[] { val });
                     }
                     else
                     { 
-                        return (T)helpers.RecastEntity(entity, typeof(T));
+                        return (T)RecastEntity(entity, typeof(T));
                     }
                 }
 
@@ -62,7 +62,7 @@ namespace com.brgs.orm.Azure
             {                
                 var tableClient = account.CreateCloudTableClient();
                 var table = tableClient.GetTableReference(Collection);
-                bool complete = table.CreateIfNotExistsAsync().Result;
+
                 var insert = TableOperation.InsertOrMerge((ITableEntity) record);
 
                 var val =  await table.ExecuteAsync(insert);

@@ -7,6 +7,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
 using com.brgs.orm.Azure.helpers;
+using com.brgs.orm.Azure;
 
 namespace com.brgs.orm.test
 {
@@ -27,7 +28,8 @@ namespace com.brgs.orm.test
                 Id="Gauley|03189600"
 
             };
-            var helper = new AzureFormatHelper(string.Empty);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
             var entity = helper.BuildTableEntity(river);
             Assert.True(entity.Properties.ContainsKey("Name"));
         }
@@ -45,7 +47,9 @@ namespace com.brgs.orm.test
                 Latitude = "38.2151103",
                 Longitude = "-80.8881536"
             };
-            var helper = new AzureFormatHelper("TestEcosystem");
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            helper.PartitionKey = "TestEcosystem";
 
             Assert.NotNull(helper.BuildTableEntity(river).PartitionKey);
         }
@@ -64,7 +68,10 @@ namespace com.brgs.orm.test
                 Id = "03189600"
             };
 
-            var helper = new AzureFormatHelper("TestEcosystem");
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var helper = new AzureTableBuilder(mockAccount.Object);
+            helper.PartitionKey = "TestEcosystem";
+
 
             var entity = helper.BuildTableEntity(river);
             Assert.Equal("TestEcosystem||03189600", entity.RowKey);

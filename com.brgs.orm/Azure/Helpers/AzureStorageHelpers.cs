@@ -5,17 +5,10 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure.helpers
 {
-    public class AzureFormatHelper
+    public abstract class AzureFormatHelper
     {
         public string PartitionKey { get; set; }
-        public AzureFormatHelper()
-        {
-            PartitionKey = string.Empty;
-        }
-        public AzureFormatHelper(string key)
-        {
-            PartitionKey = key;
-        }
+
         public object RecastEntity(DynamicTableEntity entity, Type type)
         {
             var decoder = new TableEntityDecoder(type);
