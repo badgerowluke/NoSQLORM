@@ -1,4 +1,11 @@
 using System;
+using System.Collections.Generic;
+<<<<<<< Updated upstream
+=======
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+>>>>>>> Stashed changes
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage;
@@ -68,6 +75,17 @@ namespace com.brgs.orm.Azure
             {
                 throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
             }            
+        }
+        ///<summary>each individual batch needs to be less than or equal to 100</summary>
+        public async Task<IList<TableResult>> PostBatchAsync<T>(IEnumerable<T> records)
+        {
+            TableBatchOperation batch = new TableBatchOperation();
+
+            var tableClient = account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(Collection);
+            var results = await table.ExecuteBatchAsync(batch);
+
+            return results;
         }
     }
 }
