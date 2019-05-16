@@ -11,12 +11,11 @@ namespace com.brgs.orm.Azure
     {
         private ICloudStorageAccount account;
 
-        private AzureFormatHelper helpers { get; set; }
 
         public AzureBlobBuilder(ICloudStorageAccount acc)
         {
             account = acc;
-            helpers = new AzureFormatHelper();
+
         }
         public async Task<T> GetAsync<T>(string containerName, string blobName)
         {

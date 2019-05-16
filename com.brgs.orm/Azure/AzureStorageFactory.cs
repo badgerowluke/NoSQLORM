@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,17 +12,16 @@ using com.brgs.orm.Azure.helpers;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureStorageFactory: IStorageFactory
+    public class AzureStorageFactory: AzureFormatHelper, IStorageFactory
     {
         private ICloudStorageAccount account;
         public string CollectionName { get; set; }
-        public string PartitionKey { get; set; }
-        private AzureFormatHelper helper { get; set; }
+
 
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
-            helper = new AzureFormatHelper();
+
         }
         public T Get<T>( string blobName)
         {
@@ -46,14 +44,39 @@ namespace com.brgs.orm.Azure
             }
             else
             {
-                //work it into the correct format.
-                var helper = new AzureFormatHelper(PartitionKey);
+                PartitionKey = "";
 
-                var obj = helper.BuildTableEntity(record);
+                var obj = BuildTableEntity(record);
                 
                 TableResult table = tableRunner.PostAsync((ITableEntity) obj).Result;
             }
             return record;
         }
+        public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
+        {
+            
+            TableBatchOperation batch = new TableBatchOperation();
+            IList<TableResult> result = null;
+            var tableClient = account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(CollectionName);
+            await table.CreateIfNotExistsAsync();
+            foreach(var record in records)
+            {
+                if(record is ITableEntity)
+                {
+                    batch.Insert((ITableEntity)record);
+                } else 
+                {
+                    var obj = BuildTableEntity(record);
+                    batch.Insert((ITableEntity) obj);
+                }
+            }
+
+
+            result = await table.ExecuteBatchAsync(batch);
+            
+            return result.Count;
+            
+        }        
     }
 }

@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-<<<<<<< Updated upstream
-=======
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
->>>>>>> Stashed changes
+
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage;
@@ -13,20 +10,20 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureTableBuilder
+    internal class AzureTableBuilder: AzureFormatHelper
     {
         private ICloudStorageAccount account { get; set; }
-        private AzureFormatHelper helpers { get; set; }
+
         private string Collection { get; set; }
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
-            helpers = new AzureFormatHelper();
+
         }
         public AzureTableBuilder(ICloudStorageAccount acc, string collection)
         {
             account = acc;
-            helpers = new AzureFormatHelper();
+
             Collection = collection;
             
         }
@@ -46,12 +43,12 @@ namespace com.brgs.orm.Azure
                 {
                     if (outVal.GetType().GetMethod("Add") != null && content != null)
                     {
-                        var val =  helpers.RecastEntity(entity, content);
+                        var val =  RecastEntity(entity, content);
                         outVal.GetType().GetMethod("Add").Invoke(outVal, new object[] { val });
                     }
                     else
                     { 
-                        return (T)helpers.RecastEntity(entity, typeof(T));
+                        return (T)RecastEntity(entity, typeof(T));
                     }
                 }
 

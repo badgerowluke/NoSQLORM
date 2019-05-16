@@ -7,6 +7,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
 using com.brgs.orm.Azure.helpers;
+using com.brgs.orm.Azure;
 
 namespace com.brgs.orm.test
 {
@@ -27,8 +28,10 @@ namespace com.brgs.orm.test
                 Id="Gauley|03189600"
 
             };
-            var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(river);
+
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            var entity = fac.BuildTableEntity(river);
             Assert.True(entity.Properties.ContainsKey("Name"));
         }
 
@@ -45,9 +48,12 @@ namespace com.brgs.orm.test
                 Latitude = "38.2151103",
                 Longitude = "-80.8881536"
             };
-            var helper = new AzureFormatHelper("TestEcosystem");
 
-            Assert.NotNull(helper.BuildTableEntity(river).PartitionKey);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";            
+
+            Assert.NotNull(fac.BuildTableEntity(river).PartitionKey);
         }
          [Fact]
          public void DoesFormatObjectIntoDynamicTableEntity_DoesHaveAppropriateRowKey()
@@ -64,9 +70,11 @@ namespace com.brgs.orm.test
                 Id = "03189600"
             };
 
-            var helper = new AzureFormatHelper("TestEcosystem");
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
 
-            var entity = helper.BuildTableEntity(river);
+            var entity = fac.BuildTableEntity(river);
             Assert.Equal("TestEcosystem||03189600", entity.RowKey);
          }
 
