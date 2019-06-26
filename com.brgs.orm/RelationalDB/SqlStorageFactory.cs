@@ -22,7 +22,7 @@ namespace com.brgs.orm.RelationalDB
         public T Get<T>()
         {
             var outVal = (T)Activator.CreateInstance(typeof(T));
-            var properties = outVal.GetType().GetProperties();
+            // var properties = outVal.GetType().GetProperties();
             // var assembly = typeof(T).Assembly;
             // var types = assembly.GetTypes();
             // var methods = from type in assembly.GetTypes()
@@ -44,13 +44,13 @@ namespace com.brgs.orm.RelationalDB
                         {
                             var resultName = reader.GetName(f);
                             //This makes the assumption that the column name is 1:1 match with the 
-                            var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
-                            var resultValue = reader.GetValue(f);
-                            if (property != null)
-                            {
-                                outVal.GetType().GetProperty(property.Name)
-                                        .SetValue(outVal, resultValue.ToString(), null);
-                            }
+                            // var property = properties.FirstOrDefault(p => p.Name.ToLower().Contains(resultName.ToLower()));
+                            // var resultValue = reader.GetValue(f);
+                            // if (property != null)
+                            // {
+                            //     outVal.GetType().GetProperty(property.Name)
+                            //             .SetValue(outVal, resultValue.ToString(), null);
+                            // }
                         }
                     }
                 }
