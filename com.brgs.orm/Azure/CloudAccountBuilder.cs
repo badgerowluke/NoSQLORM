@@ -2,6 +2,8 @@ using System;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 
 namespace com.brgs.orm.Azure
 {
@@ -9,6 +11,7 @@ namespace com.brgs.orm.Azure
     {
         CloudBlobClient CreateCloudBlobClient();
         CloudTableClient CreateCloudTableClient();
+        IDocumentClient CreateDocumentClient(string url, string key);
     }
     public class CloudStorageAccountBuilder: ICloudStorageAccount
     {
@@ -28,6 +31,10 @@ namespace com.brgs.orm.Azure
         public CloudTableClient CreateCloudTableClient()
         {
             return account.CreateCloudTableClient();
+        }
+        public IDocumentClient CreateDocumentClient(string url, string key)
+        {
+            return new DocumentClient(new Uri(url), key);
         }
     }
 }
