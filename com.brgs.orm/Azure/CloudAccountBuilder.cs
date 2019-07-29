@@ -1,6 +1,9 @@
 using System;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure
@@ -28,6 +31,14 @@ namespace com.brgs.orm.Azure
         public CloudTableClient CreateCloudTableClient()
         {
             return account.CreateCloudTableClient();
+        }
+        public IDocumentClient CreateDocumentClient(string url, string key)
+        {
+            return new DocumentClient(new Uri(url), key);
+        }
+        public CloudQueueClient CreateCloudQueueClient()
+        {
+            return account.CreateCloudQueueClient();
         }
     }
 }
