@@ -276,3 +276,5 @@ __pycache__/
 com.brgs.orm.test/appsettings.json
 lcov.info
 coverage.info
+orm.v3.ncrunchsolution
+com.brgs.orm.test/coverage.json

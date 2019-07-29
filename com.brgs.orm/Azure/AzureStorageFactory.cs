@@ -28,6 +28,11 @@ namespace com.brgs.orm.Azure
             return new AzureBlobBuilder(account)
                                 .GetAsync<T>(CollectionName, blobName).Result;
         }
+        public Task<T> GetAsync<T>(string blobName)
+        {
+            return new AzureBlobBuilder(account)
+                                .GetAsync<T>(CollectionName, blobName);         
+        }
 
         public T Get<T>(TableQuery query) 
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm
@@ -13,6 +14,10 @@ namespace com.brgs.orm
             
         }
         public T Get<T>(string filename)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<T> GetAsync<T>(string filename)
         {
             throw new NotImplementedException();
         }

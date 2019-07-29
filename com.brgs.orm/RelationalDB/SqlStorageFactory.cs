@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.WindowsAzure.Storage.Table;
+using System.Threading.Tasks;
+
 namespace com.brgs.orm.RelationalDB
 {
     public class SQLStorageFactory : IStorageFactory
@@ -57,6 +59,7 @@ namespace com.brgs.orm.RelationalDB
             }
             return outVal;
         }
+        public Task<T> GetAsync<T>(string val) {throw new NotImplementedException();}
         public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
         public T Post<T>()
         {
