@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
+
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -27,6 +29,30 @@ namespace com.brgs.orm.Azure
             Collection = collection;
             
         }
+        public async Task<T> GetAsync<T>(Expression<Func<T, bool>> predicate, string collection)
+        {
+            var tableClient = account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(collection);
+            var outVal = (T)Activator.CreateInstance(typeof(T));
+            TableContinuationToken token = null;
+            var inquisitor = new Interegator();
+            inquisitor.Stuff(predicate);
+
+
+
+            if(typeof(T) is ITableEntity)
+            {
+                // do
+                // {
+                //     var results = await table.ExecuteQuerySegmentedAsync(new TableQuery(), token);
+                //     token = results.ContinuationToken;
+                //     results.Results.Where((Expression<Func<DynamicTableEntity, bool>>) predicate);
+                
+                // } while(token != null);
+
+            }
+            return default(T);
+        }
         public async Task<T> GetAsync<T>(TableQuery query, string collection)
         {
             var tableClient = account.CreateCloudTableClient();
@@ -37,6 +63,7 @@ namespace com.brgs.orm.Azure
             TableContinuationToken token = null;
             do
             {
+
                 var results = await table.ExecuteQuerySegmentedAsync(query, token);
                 token = results.ContinuationToken;
                 foreach(var entity in results.Results)

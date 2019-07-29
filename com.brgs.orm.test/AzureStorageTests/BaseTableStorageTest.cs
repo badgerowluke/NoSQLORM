@@ -6,10 +6,11 @@ using com.brgs.orm.Azure;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using Moq;
+using com.brgs.orm.Azure.helpers;
 
 namespace com.brgs.orm.test.Azure
 {
-    public abstract class BaseAzureTableStorageTester
+    public abstract class BaseAzureTableStorageTester : AzureFormatHelper
     {
         public Mock<ICloudStorageAccount> AccountMock { get; private set; }
         public Mock<CloudTableClient> TableClientMock { get; private set; }
@@ -24,12 +25,25 @@ namespace com.brgs.orm.test.Azure
 
             AccountMock.Setup(c => c.CreateCloudTableClient()).Returns(TableClientMock.Object);
         }
-        public virtual TableQuerySegment GetTableQuerySegments()
+        public virtual TableQuerySegment GetTableQuerySegments(int count = 1)
         {
             var ctor = typeof(TableQuerySegment).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)
-            .FirstOrDefault(c => c.GetParameters().Count() == 1);
+            .FirstOrDefault(c => c.GetParameters().Count() == count);
             return ctor.Invoke(new object[]{ new List<DynamicTableEntity>(){
                 new DynamicTableEntity()
+            }}) as TableQuerySegment;
+        }
+        public virtual TableQuerySegment GetQuerySegmentsWithData<T>(T record)
+        {
+            var entity = BuildTableEntity(record);
+
+            var ctor = typeof(TableQuerySegment).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)
+            .FirstOrDefault(c => c.GetParameters().Count() == 1);
+            return ctor.Invoke(new object[]
+            { new List<DynamicTableEntity>()
+            {
+                entity
+
             }}) as TableQuerySegment;
         }
 

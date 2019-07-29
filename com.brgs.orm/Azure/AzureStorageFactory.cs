@@ -9,6 +9,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using com.brgs.orm.Azure.helpers;
+using System.Linq.Expressions;
 
 namespace com.brgs.orm.Azure
 {
@@ -32,6 +33,10 @@ namespace com.brgs.orm.Azure
         {
             return new AzureBlobBuilder(account)
                                 .GetAsync<T>(CollectionName, blobName);         
+        }
+        public T Get<T>(Expression<Func<T, bool>> predicate)
+        {
+            return new AzureTableBuilder(account).GetAsync(predicate, CollectionName).Result;
         }
 
         public T Get<T>(TableQuery query) 

@@ -85,8 +85,6 @@ namespace com.brgs.orm.test.Azure
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
-
-
             var fac = new AzureStorageFactory(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
@@ -96,11 +94,14 @@ namespace com.brgs.orm.test.Azure
             var stuff = fac.Get<List<KeyValuePair<string,string>>>(query);
             Assert.IsType <List<KeyValuePair<string, string>>> (stuff);
         }
-        [Fact(Skip="because I don't want to whack together a DynamicTableEntity for this.")]
-        public void AzureFactory_Get_PullsPartitionAndRowKey()
+        [Fact]
+        public void DoesPullWithPartitionAndRowKey()
         {
 
-            var mock = GetTableQuerySegments();
+            var mock = GetQuerySegmentsWithData<River>(new River()
+            {
+                Name = "SALMON R NR HYDER AK"
+            });
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
@@ -114,7 +115,18 @@ namespace com.brgs.orm.test.Azure
 
             query.Where(TableQuery.CombineFilters(filter,TableOperators.And, rowfilter));
             var stuff = fac.Get<River>(query);
+
             Assert.Equal("SALMON R NR HYDER AK", stuff.Name);
+        }
+        [Fact]
+        public void GetDoesHandleLambdaParameter()
+        {
+            var fac = new AzureStorageFactory(AccountMock.Object)
+            {
+                CollectionName = "USRivers"
+            };
+
+            fac.Get<River>(r => r.StateCode.Equals("WV"));
         }
     }
 
