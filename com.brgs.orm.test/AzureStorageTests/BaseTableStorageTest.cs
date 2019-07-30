@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using com.brgs.orm.Azure;
 using Microsoft.WindowsAzure.Storage.Auth;
+
 using Microsoft.WindowsAzure.Storage.Table;
 using Moq;
 using com.brgs.orm.Azure.helpers;

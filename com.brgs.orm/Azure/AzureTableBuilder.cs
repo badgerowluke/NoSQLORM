@@ -36,8 +36,6 @@ namespace com.brgs.orm.Azure
             var outVal = (T)Activator.CreateInstance(typeof(T));
             TableContinuationToken token = null;
             var inquisitor = new Interegator();
-            inquisitor.Stuff(predicate);
-
 
 
             if(typeof(T) is ITableEntity)
