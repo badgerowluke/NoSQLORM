@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 using System.Collections.Generic;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Runtime.CompilerServices;
+using com.brgs.orm.AzureHelpers.ExpressionHelpers;
+
 [assembly:InternalsVisibleTo("com.brgs.orm.test")]
 
 namespace com.brgs.orm.Azure.helpers
@@ -12,32 +14,24 @@ namespace com.brgs.orm.Azure.helpers
     {
         public string BuildQueryFilter<T>(Expression<Func<T, bool>> predicate)
         {
+            var body = predicate.Body;
+            return this.BuildQueryFilter(body);
 
-            if(predicate.Body.NodeType == ExpressionType.Call)
+
+        }
+        private string BuildQueryFilter(Expression e)
+        {
+            if(e.NodeType == ExpressionType.Call)
             {
-                var body = (MethodCallExpression)predicate.Body;
-                var operand = (MemberExpression)body.Object;
-                var propName = operand.Member.Name;
-                var allParameters = from element in body.Arguments
-                            select processArgument(element);
-
-                var val = $"{propName} eq '{allParameters.ToList()[0].Item2}'";
-                return val;
-
+                return new ExpressionTypeCallHelper(e).ToString();
             }
-            if(predicate.Body.NodeType == ExpressionType.Not)
+            if(e.NodeType == ExpressionType.Not)
             {
-                var body = (UnaryExpression)predicate.Body;
-                var operand = (MethodCallExpression)body.Operand;
-                var allParameters = from element in operand.Arguments
-                            select processArgument(element);
-                var member = (MemberExpression) operand.Object;
-                var name = member.Member.Name;
-                return  $"{name} ne '{allParameters.ToList()[0].Item2}'";
+                return  new ExpressionTypeNotHelper(e).ToString();
             }
-            if(predicate.Body.NodeType == ExpressionType.GreaterThan)
+            if(e.NodeType == ExpressionType.GreaterThan)
             {
-                var body = (BinaryExpression)predicate.Body;
+                var body = (BinaryExpression)e;
                 var leftName = (MemberExpression)body.Left;
                 var rightName =(ConstantExpression) body.Right;
                 var propName = leftName.Member.Name; 
@@ -45,9 +39,9 @@ namespace com.brgs.orm.Azure.helpers
 
                 return $"{propName} gt {valName}";
             }
-            if(predicate.Body.NodeType == ExpressionType.GreaterThanOrEqual)
+            if(e.NodeType == ExpressionType.GreaterThanOrEqual)
             {
-                var body = (BinaryExpression)predicate.Body;
+                var body = (BinaryExpression)e;
                 var leftName = (MemberExpression)body.Left;
                 var rightName =(ConstantExpression) body.Right;
                 var propName = leftName.Member.Name; 
@@ -56,20 +50,21 @@ namespace com.brgs.orm.Azure.helpers
                 return $"{propName} ge {valName}";
 
             }
-            if(predicate.Body.NodeType == ExpressionType.LessThan)
+            if(e.NodeType == ExpressionType.LessThan)
             {
-                var body = (BinaryExpression)predicate.Body;
+                var body = (BinaryExpression)e;
                 var leftName = (MemberExpression)body.Left;
                 var rightName =(ConstantExpression) body.Right;
+                BuildQueryFilter(body.Left);
                 var propName = leftName.Member.Name; 
                 var valName= rightName.Value;
 
                 return $"{propName} lt {valName}";
 
             }
-            if(predicate.Body.NodeType == ExpressionType.LessThanOrEqual)
+            if(e.NodeType == ExpressionType.LessThanOrEqual)
             {
-                var body = (BinaryExpression)predicate.Body;
+                var body = (BinaryExpression)e;
                 var leftName = (MemberExpression)body.Left;
                 var rightName =(ConstantExpression) body.Right;
                 var propName = leftName.Member.Name; 
@@ -78,27 +73,23 @@ namespace com.brgs.orm.Azure.helpers
                 return $"{propName} le {valName}";
 
             }            
-            if(predicate.Body.NodeType == ExpressionType.AndAlso)
+            if(e.NodeType == ExpressionType.AndAlso)
             {
-                var body = (BinaryExpression)predicate.Body;
-                var left = BuildQueryFilter(body.Left);
-                var right = BuildQueryFilter(body.Right);
-                return $"{left} and {right}";
+                var body = (BinaryExpression)e;
+                // var left = BuildQueryFilter(body.Left);
+                // var right = BuildQueryFilter(body.Right);
+                // return $"{left} and {right}";
 
             }
-            if(predicate.Body.NodeType == ExpressionType.OrElse)
+            if(e.NodeType == ExpressionType.OrElse)
             {
-                var body = (BinaryExpression)predicate.Body;
+                var body = (BinaryExpression)e;
                 var left = body.Left;
                 var right = body.Right;
-                var val = BuildQueryFilter<T>(predicate);
+                // var val = BuildQueryFilter<T>(predicate);
                 int three = 1;
             }
 
-            return string.Empty;
-        }
-        private string BuildQueryFilter(Expression e)
-        {
             return string.Empty;
         }
         private static Tuple<Type, object> processArgument(Expression element)
