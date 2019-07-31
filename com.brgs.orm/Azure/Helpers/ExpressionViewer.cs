@@ -10,29 +10,9 @@ namespace com.brgs.orm.Azure.helpers
 {
     internal class Interegator : ExpressionVisitor
     {
-        //private readonly Dictionary<ExpressionType, Delegate> _mapper = new Dictionary<ExpressionType, Delegate>()
-        //{
-        //    { ExpressionType.Call, new Func<Expression<Func,bool>>, string>(Stuff) }
-
-        //};
-        //private static string Stuff(Expression e)
-        //{
-        //    var body = (MethodCallExpression)e.Body;
-        //    var operand = (MemberExpression)body.Object;
-        //    var propName = operand.Member.Name;
-        //    var allParameters = from element in body.Arguments
-        //                        select processArgument(element);
-
-        //    var val = $"{propName} eq '{allParameters.ToList()[0].Item2}'";
-        //    return val;
-
-        //}
         public string BuildQueryFilter<T>(Expression<Func<T, bool>> predicate)
         {
-             foreach(var key in _mapper.Keys)
-            {
 
-            }
             if(predicate.Body.NodeType == ExpressionType.Call)
             {
                 var body = (MethodCallExpression)predicate.Body;

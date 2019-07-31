@@ -72,14 +72,14 @@ namespace com.brgs.orm.test
         //     Assert.Equal("StateCode eq 'WV' and Name eq 'Gauley'", query);
 
         // }
-        [Fact]
-        public void DoesEncodeMultipleOrOperands()//OrElse
-        {
-            var builder = new Interegator();
-            var query = builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV") 
-            || r.Name.Equals("Ohio"));
-            Assert.Equal("1", query);
-        }
+        // [Fact]
+        // public void DoesEncodeMultipleOrOperands()//OrElse
+        // {
+        //     var builder = new Interegator();
+        //     var query = builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV") 
+        //     || r.Name.Equals("Ohio"));
+        //     Assert.Equal("1", query);
+        // }
         
 
     }
