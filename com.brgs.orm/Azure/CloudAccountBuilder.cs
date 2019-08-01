@@ -1,6 +1,6 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-
+using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 
 
@@ -10,6 +10,7 @@ namespace com.brgs.orm.Azure
     {
         CloudBlobClient CreateCloudBlobClient();
         CloudTableClient CreateCloudTableClient();
+        CloudQueueClient CreateCloudQueueClient();
     }
     public class CloudStorageAccountBuilder: ICloudStorageAccount
     {
@@ -31,6 +32,10 @@ namespace com.brgs.orm.Azure
         public CloudTableClient CreateCloudTableClient()
         {
             return _account.CreateCloudTableClient();
+        }
+        public CloudQueueClient CreateCloudQueueClient()
+        {
+            return _account.CreateCloudQueueClient();
         }
     }
 }
