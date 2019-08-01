@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
-
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -36,7 +34,6 @@ namespace com.brgs.orm.Azure
             TableContinuationToken token = null;
             do
             {
-
                 var results = await table.ExecuteQuerySegmentedAsync(query, token);
                 token = results.ContinuationToken;
                 foreach(var entity in results.Results)
