@@ -5,12 +5,12 @@ using Moq;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace com.brgs.orm.test
+namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
 {
-    public class InteregatorShould
+    public class LamdaExpressionParsingShould
     {
         private readonly Interegator _builder;
-        public InteregatorShould()
+        public LamdaExpressionParsingShould()
         {
             _builder = new Interegator();
         }
