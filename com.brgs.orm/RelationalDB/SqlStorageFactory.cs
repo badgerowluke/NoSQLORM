@@ -1,11 +1,7 @@
-using System.Collections.Generic;
 using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Reflection;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.WindowsAzure.Storage.Table;
+
 namespace com.brgs.orm.RelationalDB
 {
     public class SQLStorageFactory : IStorageFactory

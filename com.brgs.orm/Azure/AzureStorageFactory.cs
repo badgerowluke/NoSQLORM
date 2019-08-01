@@ -1,13 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using com.brgs.orm.Azure.helpers;
 
 namespace com.brgs.orm.Azure
