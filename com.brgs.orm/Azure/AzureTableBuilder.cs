@@ -40,13 +40,13 @@ namespace com.brgs.orm.Azure
 
             if(typeof(T) is ITableEntity)
             {
-                // do
-                // {
-                //     var results = await table.ExecuteQuerySegmentedAsync(new TableQuery(), token);
-                //     token = results.ContinuationToken;
-                //     results.Results.Where((Expression<Func<DynamicTableEntity, bool>>) predicate);
+                do
+                {
+                    var results = await table.ExecuteQuerySegmentedAsync(new TableQuery(), token);
+                    token = results.ContinuationToken;
+                    /* TODO:  all of this */
                 
-                // } while(token != null);
+                } while(token != null);
 
             }
             return default(T);
