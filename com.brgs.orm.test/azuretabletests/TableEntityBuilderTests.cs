@@ -23,14 +23,15 @@ namespace com.brgs.orm.test
                 State = "West Virginia",
                 StateCode = "WV",
                 Srs = "EPSG:4326",
-                Latitude = "38.2151103",
-                Longitude = "-80.8881536", 
+                 Latitude = Convert.ToDecimal("38.2151103"),
+               Longitude = Convert.ToDecimal("-80.8881536"), 
                 Id="Gauley|03189600"
 
             };
+
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            var entity = helper.BuildTableEntity(river);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            var entity = fac.BuildTableEntity(river);
             Assert.True(entity.Properties.ContainsKey("Name"));
         }
 
@@ -44,14 +45,15 @@ namespace com.brgs.orm.test
                 State = "West Virginia",
                 StateCode = "WV",
                 Srs = "EPSG:4326",
-                Latitude = "38.2151103",
-                Longitude = "-80.8881536"
+               Latitude = Convert.ToDecimal("38.2151103"),
+               Longitude = Convert.ToDecimal("-80.8881536"),
             };
-            var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            helper.PartitionKey = "TestEcosystem";
 
-            Assert.NotNull(helper.BuildTableEntity(river).PartitionKey);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";            
+
+            Assert.NotNull(fac.BuildTableEntity(river).PartitionKey);
         }
          [Fact]
          public void DoesFormatObjectIntoDynamicTableEntity_DoesHaveAppropriateRowKey()
@@ -63,17 +65,16 @@ namespace com.brgs.orm.test
                 State = "West Virginia",
                 StateCode = "WV",
                 Srs = "EPSG:4326",
-                Latitude = "38.2151103",
-                Longitude = "-80.8881536",
+               Latitude = Convert.ToDecimal("38.2151103"),
+               Longitude = Convert.ToDecimal("-80.8881536"),
                 Id = "03189600"
             };
 
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            helper.PartitionKey = "TestEcosystem";
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
 
-
-            var entity = helper.BuildTableEntity(river);
+            var entity = fac.BuildTableEntity(river);
             Assert.Equal("TestEcosystem||03189600", entity.RowKey);
          }
 

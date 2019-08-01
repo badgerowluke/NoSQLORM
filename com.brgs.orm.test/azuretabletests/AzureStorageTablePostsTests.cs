@@ -29,8 +29,8 @@ namespace com.brgs.orm.test
                 State = "West Virginia",
                 StateCode = "WV",
                 Srs = "EPSG:4326",
-                Latitude = "38.2151103",
-                Longitude = "-80.8881536", 
+                Latitude = Convert.ToDecimal("38.2151103"),
+                Longitude = Convert.ToDecimal("-80.8881536"), 
                 Id="Gauley|03189600",
                 RowKey = Guid.NewGuid().ToString(),
                 PartitionKey = Guid.NewGuid().ToString(),
@@ -63,8 +63,8 @@ namespace com.brgs.orm.test
                 State = "West Virginia",
                 StateCode = "WV",
                 Srs = "EPSG:4326",
-                Latitude = "38.2151103",
-                Longitude = "-80.8881536", 
+                Latitude = Convert.ToDecimal("38.2151103"),
+                Longitude = Convert.ToDecimal("-80.8881536"), 
                 Id="Gauley|03189600"
 
             };            

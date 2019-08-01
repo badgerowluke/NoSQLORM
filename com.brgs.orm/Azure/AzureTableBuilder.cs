@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage;
@@ -8,11 +7,11 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureTableBuilder : AzureFormatHelper
+    internal class AzureTableBuilder: AzureFormatHelper
     {
         private ICloudStorageAccount account { get; set; }
-        private AzureFormatHelper helpers { get; set; }
-        private readonly string Collection;
+
+        private string Collection { get; set; }
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
@@ -72,6 +71,17 @@ namespace com.brgs.orm.Azure
             {
                 throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
             }            
+        }
+        ///<summary>each individual batch needs to be less than or equal to 100</summary>
+        public async Task<IList<TableResult>> PostBatchAsync<T>(IEnumerable<T> records)
+        {
+            TableBatchOperation batch = new TableBatchOperation();
+
+            var tableClient = account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(Collection);
+            var results = await table.ExecuteBatchAsync(batch);
+
+            return results;
         }
     }
 }

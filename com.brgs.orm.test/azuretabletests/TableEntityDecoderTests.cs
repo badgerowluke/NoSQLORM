@@ -22,17 +22,17 @@ namespace com.brgs.orm.test
                State = "West Virginia",
                StateCode = "WV",
                Srs = "EPSG:4326",
-               Latitude = "38.2151103",
-               Longitude = "-80.8881536",
+               Latitude = Convert.ToDecimal("38.2151103"),
+               Longitude = Convert.ToDecimal("-80.8881536"),
                Id="Gauley|03189600"
             };
-
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            
+            var entity = fac.BuildTableEntity(river);
 
-            var entity = helper.BuildTableEntity(river);
-
-            var testVal = (River)helper.RecastEntity(entity, typeof(River));
+            var testVal = (River)fac.RecastEntity(entity, typeof(River));
             Assert.Equal(river.Name, testVal.Name);
             Assert.Equal(river.RiverId, testVal.RiverId);
         }
@@ -44,9 +44,10 @@ namespace com.brgs.orm.test
                 DateProp = DateTime.UtcNow
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            var entity = helper.BuildTableEntity(demo);
-            var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
+            var testVal = (DemoEntity)fac.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DateProp, testVal.DateProp);
 
         }        

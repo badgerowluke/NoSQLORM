@@ -11,7 +11,6 @@ namespace com.brgs.orm.Azure
     {
         private ICloudStorageAccount account;
 
-        private AzureFormatHelper helpers { get; set; }
 
         public AzureBlobBuilder(ICloudStorageAccount acc)
         {

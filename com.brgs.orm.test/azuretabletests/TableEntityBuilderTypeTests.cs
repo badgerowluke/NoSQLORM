@@ -21,9 +21,9 @@ namespace com.brgs.orm.test
                 BoolProp = true
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("BoolProp"));
         }
         [Fact]
@@ -34,9 +34,9 @@ namespace com.brgs.orm.test
                 BoolProp = true
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
 
             Assert.True(entity.Properties["BoolProp"].BooleanValue);            
         }
@@ -49,9 +49,9 @@ namespace com.brgs.orm.test
                 DoubleProp = Convert.ToDouble(42)
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("DoubleProp"));
         }
         [Fact]
@@ -62,10 +62,10 @@ namespace com.brgs.orm.test
                 DoubleProp = Convert.ToDouble(42)
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
-            var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
+            var testVal = (DemoEntity)fac.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DoubleProp, testVal.DoubleProp);            
         }
         [Fact]
@@ -76,9 +76,9 @@ namespace com.brgs.orm.test
                 IntProp = 42
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("IntProp"));
         }
         [Fact]
@@ -88,10 +88,10 @@ namespace com.brgs.orm.test
             {
                 LongProp = Convert.ToInt64(42)
             };
-              var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
+            var mockAccount = new Mock<ICloudStorageAccount>();
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("LongProp"));            
         }
         [Fact]
@@ -102,9 +102,9 @@ namespace com.brgs.orm.test
                 DateProp = DateTime.Now
             };
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("DateProp"));
         }
         [Fact]
@@ -116,10 +116,10 @@ namespace com.brgs.orm.test
             };
             var date = DateTime.Now.ToUniversalTime();
             var mockAccount = new Mock<ICloudStorageAccount>();
-            var helper = new AzureTableBuilder(mockAccount.Object);
-            // var helper = new AzureFormatHelper(string.Empty);
-            var entity = helper.BuildTableEntity(demo);
-            var testVal = (DemoEntity)helper.RecastEntity(entity, typeof(DemoEntity));
+            var fac = new AzureStorageFactory(mockAccount.Object);
+            fac.PartitionKey = "TestEcosystem";    
+            var entity = fac.BuildTableEntity(demo);
+            var testVal = (DemoEntity)fac.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DateProp, testVal.DateProp);
 
         }
