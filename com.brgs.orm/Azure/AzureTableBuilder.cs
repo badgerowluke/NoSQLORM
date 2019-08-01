@@ -16,7 +16,6 @@ namespace com.brgs.orm.Azure
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
-
         }
         public AzureTableBuilder(ICloudStorageAccount acc, string collection)
         {
@@ -72,7 +71,7 @@ namespace com.brgs.orm.Azure
             }            
         }
         ///<summary>each individual batch needs to be less than or equal to 100</summary>
-        public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
+        public async Task<int> PostBatchAsync<T>(IEnumerable<T> records, string partition)
         {
 
             var tableClient = account.CreateCloudTableClient();
@@ -84,7 +83,7 @@ namespace com.brgs.orm.Azure
 
             if (records.Count() <= 100)
             {
-                var batch = BuildBatch<T>(records);
+                var batch = BuildBatch<T>(records, partition);
                 result = await table.ExecuteBatchAsync(batch);
                 return result.Count;
             }
@@ -94,7 +93,7 @@ namespace com.brgs.orm.Azure
                 do
                 {
                     var partial = records.Skip(recordCount).Take(100);
-                    var batch = BuildBatch(partial);
+                    var batch = BuildBatch(partial, partition);
                     result = await table.ExecuteBatchAsync(batch);
                     var val = partial.Count();
                     recordCount = recordCount + partial.Count();;
@@ -104,7 +103,7 @@ namespace com.brgs.orm.Azure
             }
         }
 
-        private TableBatchOperation BuildBatch<T>(IEnumerable<T> records)
+        private TableBatchOperation BuildBatch<T>(IEnumerable<T> records, string partition)
         {
             TableBatchOperation batch = new TableBatchOperation();
             foreach (var record in records)
@@ -113,7 +112,7 @@ namespace com.brgs.orm.Azure
                 {
                     if(string.IsNullOrEmpty((record as ITableEntity).PartitionKey))
                     {
-                        (record as ITableEntity).PartitionKey = to.PartitionKey;
+                        (record as ITableEntity).PartitionKey = partition;
                     }
                     batch.InsertOrReplace((ITableEntity)record);
                 }
@@ -129,7 +128,7 @@ namespace com.brgs.orm.Azure
         {
 
             var tableClient = account.CreateCloudTableClient();            
-            var table = tableClient.GetTableReference(to.CollectionName);
+            var table = tableClient.GetTableReference(Collection);
             Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
             batchOperationAction = (bo, entity) => bo.Delete(entity);
             TableBatchOperation batch = new TableBatchOperation();
