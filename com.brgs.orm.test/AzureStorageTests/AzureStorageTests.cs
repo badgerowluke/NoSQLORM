@@ -118,16 +118,6 @@ namespace com.brgs.orm.test.Azure
 
             Assert.Equal("SALMON R NR HYDER AK", stuff.Name);
         }
-        [Fact]
-        public void GetDoesHandleLambdaParameter()
-        {
-            var fac = new AzureStorageFactory(AccountMock.Object)
-            {
-                CollectionName = "USRivers"
-            };
-
-            fac.Get<River>(r => r.StateCode.Equals("WV"));
-        }
     }
 
 }

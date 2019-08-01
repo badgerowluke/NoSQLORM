@@ -1,9 +1,7 @@
-
 using System.Linq.Expressions;
-
 namespace com.brgs.orm.AzureHelpers.ExpressionHelpers
 {
-    internal class ExpressionTypeGreaterThanHelper
+    internal class ExpressionTypeLessThanHelper
     {
         private readonly bool _orEqual;
         public BinaryExpression Body { get; private set; }
@@ -11,22 +9,20 @@ namespace com.brgs.orm.AzureHelpers.ExpressionHelpers
         public ConstantExpression Right { get { return (ConstantExpression) Body.Right; } }
         public string PropertyName { get { return Left.Member.Name; } }
         public object Value { get { return Right.Value; } }
-        public ExpressionTypeGreaterThanHelper(Expression predicate, bool orEqual = false)
+
+        public ExpressionTypeLessThanHelper(Expression predicate, bool orEqual = false)
         {
             Body = (BinaryExpression) predicate;
-            _orEqual = orEqual;
-
-        }        
-
-        public override string ToString()
-        {
-            if(!_orEqual)
-            {
-                return $"{PropertyName} gt {Value}";
-            } 
-            return $"{PropertyName} ge {Value}";
-
+            _orEqual = orEqual;             
         }
+        public override string ToString() 
+         {
+             if(!_orEqual)
+             {
+                 return $"{PropertyName} lt {Value}";
+             
+             }
+             return $"{PropertyName} le {Value}";
+         }
     }
-
 }

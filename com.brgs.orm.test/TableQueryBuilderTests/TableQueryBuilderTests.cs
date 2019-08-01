@@ -59,21 +59,35 @@ namespace com.brgs.orm.test
             Assert.Equal("Latitude le 36", query);
 
         }
-        // [Fact]
-        // public void EncodeMultipleOperands()
-        // {
-        //     var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV") 
-        //     && r.Name.Equals("Gauley") && r.Latitude > 36);
-        //     Assert.Equal("StateCode eq 'WV' and Name eq 'Gauley'", query);
+        [Fact]
+        public void EncodeMultipleOperands()
+        {
+            var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV") 
+                                                            && r.Name.Equals("Gauley") && r.Latitude > 36);
+            Assert.Equal("StateCode eq 'WV' and Name eq 'Gauley' and Latitude gt 36", query);
 
-        // }
-        // [Fact]
-        // public void EncodeMultipleOrOperands()//OrElse
-        // {
-        //     var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV") 
-        //     || r.Name.Equals("Ohio"));
-        //     Assert.Equal("1", query);
-        // }
+        }
+        [Fact]
+        public void EncodeMultipleOrOperands()//OrElse
+        {
+            var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV") 
+                                            || r.Name.Equals("Ohio"));
+            Assert.Equal("StateCode eq 'WV' or Name eq 'Ohio'", query);
+        }
+        [Fact]
+        public void ChainOrAndAndOperands()
+        {
+            var query = _builder.BuildQueryFilter<River>(
+                r => r.Name.Equals("Gauley") || r.Name.Equals("Meadow") && r.StateCode.Equals("WV")
+            );
+            Assert.Equal("Name eq 'Gauley' or Name eq 'Meadow' and StateCode eq 'WV'", query);
+        }
+        [Fact]
+        public void ReturnEmptyString()
+        {
+            var query = _builder.BuildQueryFilter<River>(null);
+            Assert.Equal(string.Empty, query);
+        }
         
 
     }

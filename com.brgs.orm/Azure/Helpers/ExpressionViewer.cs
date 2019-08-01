@@ -10,16 +10,18 @@ using com.brgs.orm.AzureHelpers.ExpressionHelpers;
 
 namespace com.brgs.orm.Azure.helpers
 {
-    internal class Interegator : ExpressionVisitor
+    internal class Interegator
     {
         public string BuildQueryFilter<T>(Expression<Func<T, bool>> predicate)
         {
-            var body = predicate.Body;
-            return this.BuildQueryFilter(body);
-
-
+            if(predicate != null)
+            {
+                var body = predicate.Body;
+                return BuildQueryFilter(body);
+            }
+            return string.Empty;
         }
-        private string BuildQueryFilter(Expression e)
+        private  string BuildQueryFilter(Expression e)
         {
             if(e.NodeType == ExpressionType.Call)
             {
@@ -31,77 +33,37 @@ namespace com.brgs.orm.Azure.helpers
             }
             if(e.NodeType == ExpressionType.GreaterThan)
             {
-                var body = (BinaryExpression)e;
-                var leftName = (MemberExpression)body.Left;
-                var rightName =(ConstantExpression) body.Right;
-                var propName = leftName.Member.Name; 
-                var valName= rightName.Value;
-
-                return $"{propName} gt {valName}";
+                return new ExpressionTypeGreaterThanHelper(e).ToString();
             }
             if(e.NodeType == ExpressionType.GreaterThanOrEqual)
             {
-                var body = (BinaryExpression)e;
-                var leftName = (MemberExpression)body.Left;
-                var rightName =(ConstantExpression) body.Right;
-                var propName = leftName.Member.Name; 
-                var valName= rightName.Value;
-
-                return $"{propName} ge {valName}";
-
+                return new ExpressionTypeGreaterThanHelper(e, true).ToString();
             }
             if(e.NodeType == ExpressionType.LessThan)
             {
-                var body = (BinaryExpression)e;
-                var leftName = (MemberExpression)body.Left;
-                var rightName =(ConstantExpression) body.Right;
-                BuildQueryFilter(body.Left);
-                var propName = leftName.Member.Name; 
-                var valName= rightName.Value;
-
-                return $"{propName} lt {valName}";
-
+                return new ExpressionTypeLessThanHelper(e).ToString();
             }
             if(e.NodeType == ExpressionType.LessThanOrEqual)
             {
-                var body = (BinaryExpression)e;
-                var leftName = (MemberExpression)body.Left;
-                var rightName =(ConstantExpression) body.Right;
-                var propName = leftName.Member.Name; 
-                var valName= rightName.Value;
-
-                return $"{propName} le {valName}";
-
+                return new ExpressionTypeLessThanHelper(e, true).ToString();
             }            
             if(e.NodeType == ExpressionType.AndAlso)
             {
                 var body = (BinaryExpression)e;
-                // var left = BuildQueryFilter(body.Left);
-                // var right = BuildQueryFilter(body.Right);
-                // return $"{left} and {right}";
-
+                var left = BuildQueryFilter(body.Left);
+                var right = BuildQueryFilter(body.Right);
+                return $"{left} and {right}";
             }
             if(e.NodeType == ExpressionType.OrElse)
             {
                 var body = (BinaryExpression)e;
-                var left = body.Left;
-                var right = body.Right;
-                // var val = BuildQueryFilter<T>(predicate);
-                int three = 1;
+                var left = BuildQueryFilter(body.Left);
+                var right = BuildQueryFilter(body.Right);
+                return $"{left} or {right}";
+
             }
 
-            return string.Empty;
+            throw new ArgumentException();
         }
-        private static Tuple<Type, object> processArgument(Expression element)
-        {
-            object argument = default(object);
-            LambdaExpression l = Expression.Lambda(
-                Expression.Convert(element, element.Type));
-            Type parmType = l.ReturnType;
-            argument = l.Compile().DynamicInvoke();
-            return Tuple.Create(parmType, argument);
-        }   
-    
-
     }
 }

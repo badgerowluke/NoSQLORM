@@ -10,7 +10,6 @@ namespace com.brgs.orm
         string CollectionName { get; set; }
         string PartitionKey { get; set; }
         T Get<T>(string filename); 
-        Task<T> GetAsync<T>(string filename);
         T Get<T>(TableQuery query);
 
         T Post<T>(T record);
