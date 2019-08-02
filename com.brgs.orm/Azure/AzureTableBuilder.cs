@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+[assembly:InternalsVisibleTo("com.brgs.orm.test")]
+
 
 namespace com.brgs.orm.Azure
 {
@@ -12,16 +15,15 @@ namespace com.brgs.orm.Azure
     {
         private ICloudStorageAccount account { get; set; }
 
-        private string Collection { get; set; }
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
         }
-        public AzureTableBuilder(ICloudStorageAccount acc, string collection)
+        public AzureTableBuilder(ICloudStorageAccount acc, Dictionary<string, string> keys)
         {
             account = acc;
-
-            Collection = collection;
+            CollectionName = keys["CollectionName"];
+            PartitionKey = keys["PartitionKey"];
             
         }
         public async Task<T> GetAsync<T>(TableQuery query, string collection)
@@ -58,12 +60,26 @@ namespace com.brgs.orm.Azure
             try 
             {                
                 var tableClient = account.CreateCloudTableClient();
-                var table = tableClient.GetTableReference(Collection);
+                var table = tableClient.GetTableReference(CollectionName);
                 bool complete = table.CreateIfNotExistsAsync().Result;
-                var insert = TableOperation.InsertOrMerge((ITableEntity) record);
+                TableOperation insert = null;
+                if(record is ITableEntity)
+                {
+                    if(string.IsNullOrEmpty((record as ITableEntity).PartitionKey))
+                    {
+                        (record as ITableEntity).PartitionKey = PartitionKey;
+                    }                    
+                    insert = TableOperation.InsertOrMerge((ITableEntity) record);
 
+                } 
+                else 
+                {
+                    var obj = BuildTableEntity(record);
+                    insert = TableOperation.InsertOrMerge((ITableEntity) obj);
+                }
                 var val =  await table.ExecuteAsync(insert);
                 return val;
+
 
             } catch (StorageException e )
             {
@@ -75,7 +91,7 @@ namespace com.brgs.orm.Azure
         {
 
             var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(Collection);
+            var table = tableClient.GetTableReference(CollectionName);
 
             var didCreate = await table.CreateIfNotExistsAsync();
 
@@ -128,7 +144,7 @@ namespace com.brgs.orm.Azure
         {
 
             var tableClient = account.CreateCloudTableClient();            
-            var table = tableClient.GetTableReference(Collection);
+            var table = tableClient.GetTableReference(CollectionName);
             Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
             batchOperationAction = (bo, entity) => bo.Delete(entity);
             TableBatchOperation batch = new TableBatchOperation();

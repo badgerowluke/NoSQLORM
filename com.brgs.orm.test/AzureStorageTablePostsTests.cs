@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using System.Linq;
 using Moq;
 using com.brgs.orm.Azure;
 using Microsoft.WindowsAzure.Storage.Auth;
@@ -25,18 +26,15 @@ namespace com.brgs.orm.test.Azure.Tables
             var val = Fac.Post<River>(ARiver);
             Assert.NotNull(val);
         }
-        [Fact]
-        public void PostABatchOperation()
+        [Theory]
+        [InlineData(101)]
+        [InlineData(250)]
+        public async  void PostABatchOperation(int listCount)
         {
-            var list = BuildRiverEnumerable(50);
-            var val = Fac.PostBatchAsync(list);
+            var list = BuildRiverEnumerable(listCount);
+            var val = await Fac.PostBatchAsync(list);
+            Assert.Equal(listCount, val);
         }
-        [Fact]
-        public void PostALargishBatch()
-        {
-            var list = BuildRiverEnumerable(250);
-            var val = Fac.PostBatchAsync(list);
 
-        }
     }
 }

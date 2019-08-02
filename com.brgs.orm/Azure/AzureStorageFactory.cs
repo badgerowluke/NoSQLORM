@@ -6,12 +6,19 @@ using System;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureStorageFactory: AzureFormatHelper, IAzureStorage
+    public class AzureStorageFactory: IAzureStorage
     {
         private ICloudStorageAccount account;
+        public string CollectionName { get; set; }
+        public string PartitionKey { get; set; }
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
+
+        }
+        public void Register(string collection, string partition)
+        {
+
 
         }
         public T Get<T>( string blobName)
@@ -27,25 +34,29 @@ namespace com.brgs.orm.Azure
         }
         public T Post<T>(T record)
         {
-            var tableRunner = new AzureTableBuilder(account, CollectionName);
-            if(record is ITableEntity)
-            {
-                //just send the object in
-                var table = tableRunner.PostAsync(record).Result;
-            }
-            else
-            {
-                PartitionKey = "";
-
-                var obj = BuildTableEntity(record);
-                
-                TableResult table = tableRunner.PostAsync((ITableEntity) obj).Result;
-            }
+            
+            var dict = new Dictionary<string,string>(){
+                {"CollectionName", CollectionName},
+                {"PartitionKey", PartitionKey}
+            };
+            new AzureTableBuilder(account, dict).PostAsync(record).GetAwaiter().GetResult();
             return record;
         }
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
-            return await new AzureTableBuilder(account, CollectionName).PostBatchAsync(records, "");
+            if(string.IsNullOrEmpty(CollectionName))
+            {
+                throw new ArgumentException("we need to have a collection");
+            }
+            if(string.IsNullOrEmpty("PartitionKey"))
+            {
+                throw new ArgumentException("we need to hava a partition Key");
+            }
+            var dict = new Dictionary<string,string>(){
+                {"CollectionName", CollectionName},
+                {"PartitionKey", PartitionKey}
+            };
+            return await new AzureTableBuilder(account, dict).PostBatchAsync(records, "");
         }   
         public T Put<T>(T record)
         {
