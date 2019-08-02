@@ -19,6 +19,7 @@ namespace com.brgs.orm.test.Azure
         public Mock<CloudTable> TableMock { get; private set; }
         public RiverEntity Entity { get; private set; }
         public River ARiver { get; private set; }
+        public AzureStorageFactory Fac { get; private set; }
         public BaseAzureTableStorageTester()
         {
             Entity = new Fixture().Create<RiverEntity>();
@@ -30,6 +31,11 @@ namespace com.brgs.orm.test.Azure
             TableClientMock.Setup(tc => tc.GetTableReference(It.IsAny<string>())).Returns(TableMock.Object);
 
             AccountMock.Setup(c => c.CreateCloudTableClient()).Returns(TableClientMock.Object);
+            Fac = new AzureStorageFactory(AccountMock.Object)
+            {
+                PartitionKey = "TACOS",
+                CollectionName = "Pizza"                
+            };
         }
         public virtual TableQuerySegment GetTableQuerySegments(int count = 1)
         {
@@ -52,6 +58,17 @@ namespace com.brgs.orm.test.Azure
 
             }}) as TableQuerySegment;
         }
+        public virtual IEnumerable<River> BuildRiverEnumerable(int num)
+        {
+            var list = new List<River>();
+            for(var x =0; x < num; x++)
+            {
+                var r = new River();
+                list.Add(r);
+            }
+            return list;
+        }
+
 
     }
 }

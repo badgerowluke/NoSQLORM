@@ -16,41 +16,27 @@ namespace com.brgs.orm.test.Azure.Tables
         [Fact]
         public void PostToAnAzureStorageTable()
         {
-            
-            var fac = new AzureStorageFactory(AccountMock.Object)
-            {
-                PartitionKey = "TACOS",
-                CollectionName = "Pizza"
-            };
-
-
-            var val = fac.Post<RiverEntity>(Entity);
+            var val = Fac.Post<RiverEntity>(Entity);
             Assert.NotNull(val);
         }
         [Fact]
         public void ConvertAndPostAPOCO()
         {
-     
-            var fac = new AzureStorageFactory(AccountMock.Object)
-            {
-                PartitionKey = "TACOS",
-                CollectionName = "Pizza"
-            };
-
-
-            var val = fac.Post<River>(ARiver);
+            var val = Fac.Post<River>(ARiver);
             Assert.NotNull(val);
         }
         [Fact]
         public void PostABatchOperation()
         {
-            var vac = new AzureStorageFactory(AccountMock.Object)
-            {
-                PartitionKey = "TACOS",
-                CollectionName = "Pizza"
-                
-            };
+            var list = BuildRiverEnumerable(50);
+            var val = Fac.PostBatchAsync(list);
         }
+        [Fact]
+        public void PostALargishBatch()
+        {
+            var list = BuildRiverEnumerable(250);
+            var val = Fac.PostBatchAsync(list);
 
+        }
     }
 }

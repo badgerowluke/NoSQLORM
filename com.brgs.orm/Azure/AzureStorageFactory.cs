@@ -45,29 +45,7 @@ namespace com.brgs.orm.Azure
         }
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
-            
-            TableBatchOperation batch = new TableBatchOperation();
-            IList<TableResult> result = null;
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(CollectionName);
-            await table.CreateIfNotExistsAsync();
-            foreach(var record in records)
-            {
-                if(record is ITableEntity)
-                {
-                    batch.Insert((ITableEntity)record);
-                } else 
-                {
-                    var obj = BuildTableEntity(record);
-                    batch.Insert((ITableEntity) obj);
-                }
-            }
-
-
-            result = await table.ExecuteBatchAsync(batch);
-            
-            return result.Count;
-            
+            return await new AzureTableBuilder(account, CollectionName).PostBatchAsync(records, "");
         }   
         public T Put<T>(T record)
         {
