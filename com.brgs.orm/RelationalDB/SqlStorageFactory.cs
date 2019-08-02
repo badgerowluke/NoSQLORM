@@ -1,20 +1,18 @@
 using System;
 using System.Linq;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.RelationalDB
 {
     public class SQLStorageFactory : IStorageFactory
     {
         private readonly IDbFactory _connection;
-        public string CollectionName { get; set; }
-        public string PartitionKey { get; set; }
+
         public SQLStorageFactory(IDbFactory factory)
         {
             _connection = factory;
         }
         public T Get<T>(string val){ throw new NotImplementedException("coming soon");}
-        public T Get<T>(TableQuery query) {throw new NotImplementedException("coming soon");}
+
         public T Get<T>()
         {
             var outVal = (T)Activator.CreateInstance(typeof(T));
@@ -54,15 +52,11 @@ namespace com.brgs.orm.RelationalDB
             return outVal;
         }
         public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
-        public T Post<T>()
+        public T Put<T>(T record)
         {
             throw new NotImplementedException("coming soon");
         }
-        public T Put<T>()
-        {
-            throw new NotImplementedException("coming soon");
-        }
-        public int Delete<T>()
+        public int Delete<T>(T record)
         {
             throw new NotImplementedException("coming soon");
         }

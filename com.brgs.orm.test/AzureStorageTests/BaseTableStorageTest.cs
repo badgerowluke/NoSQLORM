@@ -8,6 +8,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using Moq;
 using com.brgs.orm.Azure.helpers;
+using AutoFixture;
 
 namespace com.brgs.orm.test.Azure
 {
@@ -16,8 +17,15 @@ namespace com.brgs.orm.test.Azure
         public Mock<ICloudStorageAccount> AccountMock { get; private set; }
         public Mock<CloudTableClient> TableClientMock { get; private set; }
         public Mock<CloudTable> TableMock { get; private set; }
+        public RiverEntity Entity { get; private set; }
+        public River ARiver { get; private set; }
+        public AzureStorageFactory Fac { get; private set; }
+        internal AzureTableBuilder Builder { get; private set; }
         public BaseAzureTableStorageTester()
         {
+
+            Entity = new Fixture().Create<RiverEntity>();
+            ARiver = new Fixture().Create<River>();
             AccountMock = new Mock<ICloudStorageAccount>();
             TableClientMock = new Mock<CloudTableClient>(new Uri("https://www.google.com"), new StorageCredentials() );
             TableMock = new Mock<CloudTable>(new Uri("https://www.google.com"));
@@ -25,6 +33,12 @@ namespace com.brgs.orm.test.Azure
             TableClientMock.Setup(tc => tc.GetTableReference(It.IsAny<string>())).Returns(TableMock.Object);
 
             AccountMock.Setup(c => c.CreateCloudTableClient()).Returns(TableClientMock.Object);
+            Fac = new AzureStorageFactory(AccountMock.Object)
+            {
+                PartitionKey = "TACOS",
+                CollectionName = "Pizza"                
+            };
+            Builder = new AzureTableBuilder(AccountMock.Object);
         }
         public virtual TableQuerySegment GetTableQuerySegments(int count = 1)
         {
@@ -47,6 +61,17 @@ namespace com.brgs.orm.test.Azure
 
             }}) as TableQuerySegment;
         }
+        public virtual IEnumerable<River> BuildRiverEnumerable(int num)
+        {
+            var list = new List<River>();
+            for(var x =0; x < num; x++)
+            {
+                var r = new River();
+                list.Add(r);
+            }
+            return list;
+        }
+
 
     }
 }

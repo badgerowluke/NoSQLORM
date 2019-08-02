@@ -1,81 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Xunit;
-using Moq;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
 
-using com.brgs.orm.Azure.helpers;
-using com.brgs.orm.Azure;
-
-namespace com.brgs.orm.test
+namespace com.brgs.orm.test.Azure.Tables
 {
-    public class TableEntityBuilderTests
+    public class TableEntityBuilderShould: BaseAzureTableStorageTester
     {
         [Fact]
-        public void DoFormatObjectIntoDynamicTableEntity()
+        public void FormatObjectIntoDynamicTableEntity()
         {
-            var river = new River()
-            {
-                Name = "GAULEY RIVER BELOW SUMMERSVILLE DAM, WV",
-                RiverId = "03189600",
-                State = "West Virginia",
-                StateCode = "WV",
-                Srs = "EPSG:4326",
-                 Latitude = Convert.ToDecimal("38.2151103"),
-               Longitude = Convert.ToDecimal("-80.8881536"), 
-                Id="Gauley|03189600"
 
-            };
-
-            var mockAccount = new Mock<ICloudStorageAccount>();
-            var fac = new AzureStorageFactory(mockAccount.Object);
-            var entity = fac.BuildTableEntity(river);
+            var entity = Builder.BuildTableEntity(ARiver);
             Assert.True(entity.Properties.ContainsKey("Name"));
         }
 
         [Fact]
-        public void DoesFormatObjectIntoDynamicTableEntity_DoesHaveAppropriatePartitionKey()
+        public void HaveDynamicTableEntityWithAppropriatePartitionKey()
         {
-            var river = new River()
-            {
-                Name = "GAULEY RIVER BELOW SUMMERSVILLE DAM, WV",
-                RiverId = "03189600",
-                State = "West Virginia",
-                StateCode = "WV",
-                Srs = "EPSG:4326",
-               Latitude = Convert.ToDecimal("38.2151103"),
-               Longitude = Convert.ToDecimal("-80.8881536"),
-            };
+            Builder.PartitionKey = "TestEcosystem";            
+            var entity = Builder.BuildTableEntity(ARiver);
 
-            var mockAccount = new Mock<ICloudStorageAccount>();
-            var fac = new AzureStorageFactory(mockAccount.Object);
-            fac.PartitionKey = "TestEcosystem";            
-
-            Assert.NotNull(fac.BuildTableEntity(river).PartitionKey);
+            Assert.NotNull(entity.PartitionKey);
         }
          [Fact]
          public void DoesFormatObjectIntoDynamicTableEntity_DoesHaveAppropriateRowKey()
          {
-            var river = new River()
-            {
-                Name = "GAULEY RIVER BELOW SUMMERSVILLE DAM, WV",
-                RiverId = "03189600",
-                State = "West Virginia",
-                StateCode = "WV",
-                Srs = "EPSG:4326",
-               Latitude = Convert.ToDecimal("38.2151103"),
-               Longitude = Convert.ToDecimal("-80.8881536"),
-                Id = "03189600"
-            };
+            Builder.PartitionKey = "TestEcosystem";    
+            var entity = Builder.BuildTableEntity(ARiver);
 
-            var mockAccount = new Mock<ICloudStorageAccount>();
-            var fac = new AzureStorageFactory(mockAccount.Object);
-            fac.PartitionKey = "TestEcosystem";    
-
-            var entity = fac.BuildTableEntity(river);
-            Assert.Equal("TestEcosystem||03189600", entity.RowKey);
+            Assert.Equal("TestEcosystem||" + ARiver.Id, entity.RowKey);
          }
 
     }

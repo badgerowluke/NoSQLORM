@@ -2,18 +2,23 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 using com.brgs.orm.Azure.helpers;
+using System;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureStorageFactory: AzureFormatHelper, IStorageFactory
+    public class AzureStorageFactory: IAzureStorage
     {
         private ICloudStorageAccount account;
         public string CollectionName { get; set; }
-
-
+        public string PartitionKey { get; set; }
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
+
+        }
+        public void Register(string collection, string partition)
+        {
+
 
         }
         public T Get<T>( string blobName)
@@ -29,47 +34,37 @@ namespace com.brgs.orm.Azure
         }
         public T Post<T>(T record)
         {
-            var tableRunner = new AzureTableBuilder(account, CollectionName);
-            if(record is ITableEntity)
-            {
-                //just send the object in
-                var table = tableRunner.PostAsync(record).Result;
-            }
-            else
-            {
-                PartitionKey = "";
-
-                var obj = BuildTableEntity(record);
-                
-                TableResult table = tableRunner.PostAsync((ITableEntity) obj).Result;
-            }
+            
+            var dict = new Dictionary<string,string>(){
+                {"CollectionName", CollectionName},
+                {"PartitionKey", PartitionKey}
+            };
+            new AzureTableBuilder(account, dict).PostAsync(record).GetAwaiter().GetResult();
             return record;
         }
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
-            
-            TableBatchOperation batch = new TableBatchOperation();
-            IList<TableResult> result = null;
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(CollectionName);
-            await table.CreateIfNotExistsAsync();
-            foreach(var record in records)
+            if(string.IsNullOrEmpty(CollectionName))
             {
-                if(record is ITableEntity)
-                {
-                    batch.Insert((ITableEntity)record);
-                } else 
-                {
-                    var obj = BuildTableEntity(record);
-                    batch.Insert((ITableEntity) obj);
-                }
+                throw new ArgumentException("we need to have a collection");
             }
-
-
-            result = await table.ExecuteBatchAsync(batch);
-            
-            return result.Count;
-            
-        }        
+            if(string.IsNullOrEmpty("PartitionKey"))
+            {
+                throw new ArgumentException("we need to hava a partition Key");
+            }
+            var dict = new Dictionary<string,string>(){
+                {"CollectionName", CollectionName},
+                {"PartitionKey", PartitionKey}
+            };
+            return await new AzureTableBuilder(account, dict).PostBatchAsync(records, "");
+        }   
+        public T Put<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }
+        public int Delete<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }             
     }
 }

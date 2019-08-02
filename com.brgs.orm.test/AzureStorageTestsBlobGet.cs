@@ -14,7 +14,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace com.brgs.orm.test
+namespace com.brgs.orm.test.Azure.Blobs
 {
     public class AzureStorageBlobTests
     {

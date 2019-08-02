@@ -5,7 +5,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.test
 {
-    internal class River
+    public class River
     {
         public string Id { get; set; }
 		public string Name { get; set; }
@@ -21,14 +21,14 @@ namespace com.brgs.orm.test
 		public River() {
 		}
     }
-    internal class RiverData
+    public class RiverData
     {
         public DateTime DateTime { get; set; }
         public object Value { get; set; }
         public string Flow { get; set; }
         public string Level { get; set; }        
     }
-    internal class RiverEntity : River, ITableEntity
+    public class RiverEntity : River, ITableEntity
     {
         public string PartitionKey { get; set; }
         public string RowKey { get; set; }
