@@ -4,6 +4,7 @@ using Xunit;
 using Moq;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage.Table;
+using FluentAssertions;
 
 namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
 {
@@ -18,40 +19,44 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
         public void BuildQueryFilter()
         {
             var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
-            Assert.NotNull(query);
+  
+            query.Should().NotBeNull();
         }
         [Fact]
         public void EncodeOperandCorrectly()
         {           
             var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
-            Assert.Equal("StateCode eq 'WV'", query);  
+            query.Should().BeEquivalentTo("StateCode eq 'WV'");
+            // Assert.Equal("StateCode eq 'WV'", query);  
         }
         [Fact]
         public void EncodeNotOperandCorrectly()
         {
             var query =_builder.BuildQueryFilter<River>(r => !r.StateCode.Equals("WV"));
-            Assert.Equal("StateCode ne 'WV'", query);  
+            query.Should().BeEquivalentTo("StateCode ne 'WV'");
 
         }
         [Fact]
         public void EncodeGreaterThanCorrectly()
         {
             var query = _builder.BuildQueryFilter<River>(r => r.Latitude > 36);
-            Assert.Equal("Latitude gt 36", query);
+            query.Should().BeEquivalentTo("Latitude gt 36");
         }
         [Fact]
         public void EncodeGreatherThanOrEqualCorrectly()
         {
             var query = _builder.BuildQueryFilter<River>(r => r.Latitude >= 36);
-            Assert.Equal("Latitude ge 36", query);
+            query.Should().BeEquivalentTo("Latitude ge 36");
+
 
         }
         [Fact]
         public void EncodeLessThanCorrectly()
         {
             var query = _builder.BuildQueryFilter<River>(r => r.Latitude < 36);
-            Assert.Equal("Latitude lt 36", query);
+            query.Should().BeEquivalentTo("Latitude lt 36");
         }
+
         [Fact]
         public void EncodeLessThanOrEqualCorrectly()
         {

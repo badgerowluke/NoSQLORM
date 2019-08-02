@@ -1,14 +1,13 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿
 
 namespace com.brgs.orm
 {
     public interface IStorageFactory
     {
-        string CollectionName { get; set; }
-        string PartitionKey { get; set; }
-        T Get<T>(string filename); 
-        T Get<T>(TableQuery query);
 
+        T Get<T>(string filename); 
         T Post<T>(T record);
+        int Delete<T>(T record);
+        T Put<T>(T record);
     }
 }

@@ -41,6 +41,16 @@ namespace com.brgs.orm.test.Azure.Tables
             var val = fac.Post<River>(ARiver);
             Assert.NotNull(val);
         }
+        [Fact]
+        public void PostABatchOperation()
+        {
+            var vac = new AzureStorageFactory(AccountMock.Object)
+            {
+                PartitionKey = "TACOS",
+                CollectionName = "Pizza"
+                
+            };
+        }
 
     }
 }

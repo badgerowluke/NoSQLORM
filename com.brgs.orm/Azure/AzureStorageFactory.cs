@@ -2,15 +2,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 using com.brgs.orm.Azure.helpers;
+using System;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureStorageFactory: AzureFormatHelper, IStorageFactory
+    public class AzureStorageFactory: AzureFormatHelper, IAzureStorage
     {
         private ICloudStorageAccount account;
-        public string CollectionName { get; set; }
-
-
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
@@ -70,6 +68,14 @@ namespace com.brgs.orm.Azure
             
             return result.Count;
             
-        }        
+        }   
+        public T Put<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }
+        public int Delete<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }             
     }
 }

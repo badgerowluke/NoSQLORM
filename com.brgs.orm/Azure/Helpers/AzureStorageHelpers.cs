@@ -8,6 +8,7 @@ namespace com.brgs.orm.Azure.helpers
     public abstract class AzureFormatHelper
     {
         public string PartitionKey { get; set; }
+        public string CollectionName { get; set; }
 
         public object RecastEntity(DynamicTableEntity entity, Type type)
         {
