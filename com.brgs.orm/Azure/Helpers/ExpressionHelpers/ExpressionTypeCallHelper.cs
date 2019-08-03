@@ -26,6 +26,10 @@ namespace com.brgs.orm.AzureHelpers.ExpressionHelpers
         }
         public override string ToString()
         {
+            if(Body.Method.Name.Equals("Contains"))
+            {
+                throw new ArgumentException("sorry, Table API will not accept the Contains Operation");
+            }
             return $"{PropertyName} eq '{Parameters.ToList()[0].Item2}'";
         }
        

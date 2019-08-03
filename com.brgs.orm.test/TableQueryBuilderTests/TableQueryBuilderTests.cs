@@ -27,7 +27,12 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
         {           
             var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
             query.Should().BeEquivalentTo("StateCode eq 'WV'");
-            // Assert.Equal("StateCode eq 'WV'", query);  
+        }
+        [Fact]
+        public void ThrowWhenContainsIsCalled()
+        {
+            Assert.Throws<ArgumentException>(() =>
+             _builder.BuildQueryFilter<River>(r => r.Name.Contains("Gauley")));
         }
         [Fact]
         public void EncodeNotOperandCorrectly()
