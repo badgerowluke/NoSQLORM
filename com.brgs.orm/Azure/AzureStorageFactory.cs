@@ -38,8 +38,6 @@ namespace com.brgs.orm.Azure
 
             return new AzureTableBuilder(account)
                                 .GetAsync<List<T>>(query, CollectionName).GetAwaiter().GetResult();
-
-
         }
 
         public T Get<T>(TableQuery query) 
