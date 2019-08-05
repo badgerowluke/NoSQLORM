@@ -1,19 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Xunit;
-using Moq;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
-using com.brgs.orm.Azure.helpers;
-using com.brgs.orm.Azure;
+
 
 namespace com.brgs.orm.test.Azure.Tables
 {
     public class TableEntityDecoderShould: BaseAzureTableStorageTester
     {
         [Fact]
-        public void DoesConvertITableEntityIntoDomainObject()
+        public void ConvertITableEntityIntoDomainObject()
         {
             var entity = Builder.BuildTableEntity(ARiver);
 
@@ -23,7 +17,7 @@ namespace com.brgs.orm.test.Azure.Tables
             Assert.Equal(ARiver.RiverId, testVal.RiverId);
         }
         [Fact]
-        public void TableEntityDecoder_DoesDecodeDates()
+        public void DecodeDates()
         {
             var demo = new DemoEntity()
             {

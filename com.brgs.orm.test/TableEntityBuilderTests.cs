@@ -21,7 +21,7 @@ namespace com.brgs.orm.test.Azure.Tables
             Assert.NotNull(entity.PartitionKey);
         }
          [Fact]
-         public void DoesFormatObjectIntoDynamicTableEntity_DoesHaveAppropriateRowKey()
+         public void FormatObjectIntoDynamicTableEntity_DoesHaveAppropriateRowKey()
          {
             Builder.PartitionKey = "TestEcosystem";    
             var entity = Builder.BuildTableEntity(ARiver);
