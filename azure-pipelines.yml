@@ -33,6 +33,7 @@ steps:
   inputs:
     command: pack
     nobuild: true
+    versioningScheme: byPrereleaseNumber
     configurationToBack: $(buildConfiguration)
     packagesToPack: "**/*.csproj"
     majorVersion: '$(majorVersion)'
