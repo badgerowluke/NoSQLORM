@@ -4,10 +4,12 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
 using com.brgs.orm.Azure.helpers;
+using System.Collections.Generic;
+using System.Text;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureBlobBuilder
+    internal class AzureBlobBuilder : AzureFormatHelper
     {
         private ICloudStorageAccount account;
 
@@ -29,6 +31,20 @@ namespace com.brgs.orm.Azure
                 string json = reader.ReadToEnd();
                 return JsonConvert.DeserializeObject<T>(json);
             }
+        }
+
+        public async void PostAsync<T>(T record)
+        {
+            var blobClient = account.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(CollectionName);
+            var blob = container.GetBlockBlobReference(PartitionKey);
+            var vals = JsonConvert.SerializeObject(record);
+            var bytes = Encoding.UTF8.GetBytes(vals);
+            using(var stream = new MemoryStream(bytes))
+            {
+                await blob.UploadFromStreamAsync(stream);
+            }
+
         }
     }
 }

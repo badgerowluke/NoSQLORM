@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm
@@ -16,15 +15,18 @@ namespace com.brgs.orm
         {
             throw new NotImplementedException();
         }
-
-        public T Get<T>(TableQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
         public T Post<T>(T record)
         {
             throw new NotImplementedException();
         }
+
+        public T Put<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }
+        public int Delete<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }        
     }
 }

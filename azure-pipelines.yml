@@ -11,6 +11,11 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  majorVersion: 0
+  minorVersion: 1
+  #NOTE: this allows for auto incrementing on the patch number each time it runs... reset when the major minor is updated...
+  #https://kasunkodagoda.com/2019/04/03/hidden-gems-in-azure-pipelines-creating-your-own-rev-variable-using-counter-expression-in-azure-pipelines/
+  patchVersion: $[counter(format('{0}.{1}', variables['majorVersion'], variables['minorVersion'], 0))]  
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -21,16 +26,19 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments: '--configuration $(BuildConfiguration)'  
+    arguments: '--configuration $(buildConfiguration)'  
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
   inputs:
     command: pack
+    nobuild: true
+    versioningScheme: byPrereleaseNumber
+    configurationToBack: $(buildConfiguration)
     packagesToPack: "**/*.csproj"
-    majorVersion: 1
-    minorVersion: 0
-    patchVersion: 0
+    majorVersion: '$(majorVersion)'
+    minorVersion: '$(minorVersion)'
+    patchVersion: '$(patchVersion)'
 
 
 - task: NuGetCommand@2

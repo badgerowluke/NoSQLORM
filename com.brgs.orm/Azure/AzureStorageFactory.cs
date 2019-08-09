@@ -1,82 +1,87 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using com.brgs.orm.Azure.helpers;
+using System;
+using System.Linq.Expressions;
 
 namespace com.brgs.orm.Azure
 {
-    public class AzureStorageFactory: AzureFormatHelper, IStorageFactory
+    public class AzureStorageFactory: IAzureStorage
     {
         private ICloudStorageAccount account;
         public string CollectionName { get; set; }
-
-
+        public string PartitionKey { get; set; }
+        private readonly Interegator _parser;
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
+            _parser = new Interegator();
 
         }
+
         public T Get<T>( string blobName)
         {
             return new AzureBlobBuilder(account)
                                 .GetAsync<T>(CollectionName, blobName).Result;
         }
+        public IEnumerable<T> Get<T>(Expression<Func<T,bool>> predicate)
+        {
+
+            if(string.IsNullOrEmpty(CollectionName))
+            {
+                throw new ArgumentException("we need to have a collection");
+            }
+            var query = new TableQuery();
+            var filter = _parser.BuildQueryFilter(predicate);
+            query.Where(filter);
+
+            return new AzureTableBuilder(account)
+                                .GetAsync<List<T>>(query, CollectionName).GetAwaiter().GetResult();
+        }
 
         public T Get<T>(TableQuery query) 
         {
+            if(string.IsNullOrEmpty(CollectionName))
+            {
+                throw new ArgumentException("we need to have a collection");
+            }            
             return new AzureTableBuilder(account)
                                 .GetAsync<T>(query, CollectionName).Result;
         }
         public T Post<T>(T record)
         {
-            var tableRunner = new AzureTableBuilder(account, CollectionName);
-            if(record is ITableEntity)
-            {
-                //just send the object in
-                var table = tableRunner.PostAsync(record).Result;
-            }
-            else
-            {
-                PartitionKey = "";
-
-                var obj = BuildTableEntity(record);
-                
-                TableResult table = tableRunner.PostAsync((ITableEntity) obj).Result;
-            }
+            
+            var dict = new Dictionary<string,string>(){
+                {"CollectionName", CollectionName},
+                {"PartitionKey", PartitionKey}
+            };
+            new AzureTableBuilder(account, dict).PostAsync(record).GetAwaiter().GetResult();
             return record;
         }
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
-            
-            TableBatchOperation batch = new TableBatchOperation();
-            IList<TableResult> result = null;
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(CollectionName);
-            await table.CreateIfNotExistsAsync();
-            foreach(var record in records)
+            if(string.IsNullOrEmpty(CollectionName))
             {
-                if(record is ITableEntity)
-                {
-                    batch.Insert((ITableEntity)record);
-                } else 
-                {
-                    var obj = BuildTableEntity(record);
-                    batch.Insert((ITableEntity) obj);
-                }
+                throw new ArgumentException("we need to have a collection");
             }
-
-
-            result = await table.ExecuteBatchAsync(batch);
-            
-            return result.Count;
-            
-        }        
+            if(string.IsNullOrEmpty("PartitionKey"))
+            {
+                throw new ArgumentException("we need to hava a partition Key");
+            }
+            var dict = new Dictionary<string,string>(){
+                {"CollectionName", CollectionName},
+                {"PartitionKey", PartitionKey}
+            };
+            return await new AzureTableBuilder(account, dict).PostBatchAsync(records, "");
+        }   
+        public T Put<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }
+        public int Delete<T>(T record)
+        {
+            throw new NotImplementedException("coming soon");
+        }             
     }
 }

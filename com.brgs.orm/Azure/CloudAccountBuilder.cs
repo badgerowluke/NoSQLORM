@@ -1,9 +1,10 @@
-using System;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using System;
 
 namespace com.brgs.orm.Azure
 {
@@ -12,25 +13,32 @@ namespace com.brgs.orm.Azure
         CloudBlobClient CreateCloudBlobClient();
         CloudTableClient CreateCloudTableClient();
         IDocumentClient CreateDocumentClient(string url, string key);
+        CloudQueueClient CreateCloudQueueClient();
     }
     public class CloudStorageAccountBuilder: ICloudStorageAccount
     {
-        private readonly CloudStorageAccount account;
+        private readonly CloudStorageAccount _account;
+
         public CloudStorageAccountBuilder(string connectionString)
         {
-            account = CloudStorageAccount.Parse(connectionString);
+            _account = CloudStorageAccount.Parse(connectionString);
+
         }
         public CloudStorageAccountBuilder(CloudStorageAccount acc)
         {
-            account  = acc;
+            _account  = acc;
         }
         public CloudBlobClient CreateCloudBlobClient()
         {
-            return account.CreateCloudBlobClient();
+            return _account.CreateCloudBlobClient();
         }
         public CloudTableClient CreateCloudTableClient()
         {
-            return account.CreateCloudTableClient();
+            return _account.CreateCloudTableClient();
+        }
+        public CloudQueueClient CreateCloudQueueClient()
+        {
+            return _account.CreateCloudQueueClient();
         }
         public IDocumentClient CreateDocumentClient(string url, string key)
         {
