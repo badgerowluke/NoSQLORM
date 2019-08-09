@@ -12,17 +12,24 @@ namespace com.brgs.orm.Azure
     {
         CloudBlobClient CreateCloudBlobClient();
         CloudTableClient CreateCloudTableClient();
-        IDocumentClient CreateDocumentClient(string url, string key);
+        IDocumentClient CreateDocumentClient();
         CloudQueueClient CreateCloudQueueClient();
     }
     public class CloudStorageAccountBuilder: ICloudStorageAccount
     {
         private readonly CloudStorageAccount _account;
+        private readonly string _url;
+        private readonly string _authKey;
 
         public CloudStorageAccountBuilder(string connectionString)
         {
             _account = CloudStorageAccount.Parse(connectionString);
 
+        }
+        public CloudStorageAccountBuilder(string url, string key)
+        {
+            _url = url;
+            _authKey = key;
         }
         public CloudStorageAccountBuilder(CloudStorageAccount acc)
         {
@@ -40,9 +47,12 @@ namespace com.brgs.orm.Azure
         {
             return _account.CreateCloudQueueClient();
         }
-        public IDocumentClient CreateDocumentClient(string url, string key)
+        public IDocumentClient CreateDocumentClient()
         {
-            return new DocumentClient(new Uri(url), key);
+            if(string.IsNullOrEmpty(_url)) { throw new ArgumentException("need a collection url"); }
+            if(string.IsNullOrEmpty(_authKey)) { throw new ArgumentException("need an authorization key"); }
+
+            return new DocumentClient(new Uri(_url), _authKey);
         }
     }
 }

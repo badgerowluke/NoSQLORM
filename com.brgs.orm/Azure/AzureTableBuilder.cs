@@ -11,7 +11,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureTableBuilder: AzureFormatHelper
+    public class AzureTableBuilder: AzureFormatHelper
     {
         private ICloudStorageAccount account { get; set; }
 
