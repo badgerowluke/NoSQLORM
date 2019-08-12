@@ -63,7 +63,7 @@ namespace com.brgs.orm.Azure.helpers
 
             }
 
-            throw new ArgumentException();
+            return string.Empty;
         }
     }
 }

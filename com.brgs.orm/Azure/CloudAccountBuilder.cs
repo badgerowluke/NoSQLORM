@@ -23,7 +23,15 @@ namespace com.brgs.orm.Azure
 
         public CloudStorageAccountBuilder(string connectionString)
         {
-            _account = CloudStorageAccount.Parse(connectionString);
+            if(connectionString.Contains("DefaultEndpointsProtocol"))
+            {
+                _account = CloudStorageAccount.Parse(connectionString);
+            }
+            if(connectionString.Contains("AccountEndpoint"))
+            {
+                _url = connectionString.Split(';')[0].Split('=')[1];
+                _authKey = connectionString.Split(';')[1].Split(new[]{'='},2)[1];
+            }
 
         }
         public CloudStorageAccountBuilder(string url, string key)
@@ -51,7 +59,6 @@ namespace com.brgs.orm.Azure
         {
             if(string.IsNullOrEmpty(_url)) { throw new ArgumentException("need a collection url"); }
             if(string.IsNullOrEmpty(_authKey)) { throw new ArgumentException("need an authorization key"); }
-
             return new DocumentClient(new Uri(_url), _authKey);
         }
     }

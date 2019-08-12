@@ -30,11 +30,7 @@ namespace com.brgs.orm.Azure
             CollectionId = collection;
             
         }
-        public T Get<T>()
-        {
-            return default(T);
-        }
-        public async Task<IEnumerable<T>> Get<T>(Expression<Func<T,bool>> predicate)
+        public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
         {
             var query = _client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId))
@@ -49,15 +45,21 @@ namespace com.brgs.orm.Azure
         }
         public async void PostAsync<T>(T record)
         {
+            await _client.UpsertDocumentAsync(
+                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),record);
+        }
+        public async void PostBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
+        {
+            await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),
+            new RequestOptions()
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(partitionKey)
+            }, records);
             
         }
-        public async void PostBatchAsync<T>(IEnumerable<T> records)
+        public async void DeleteAsync<T>(string id)
         {
-
-        }
-        public void DeleteAsync<T>(T record)
-        {
-
+            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));          
         }
 
     }
