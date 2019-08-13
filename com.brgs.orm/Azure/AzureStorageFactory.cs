@@ -12,11 +12,11 @@ namespace com.brgs.orm.Azure
         private ICloudStorageAccount account;
         public string CollectionName { get; set; }
         public string PartitionKey { get; set; }
-        private readonly Interegator _parser;
+
         public AzureStorageFactory(ICloudStorageAccount acc)
         {
             account = acc;
-            _parser = new Interegator();
+
 
         }
 
@@ -27,17 +27,16 @@ namespace com.brgs.orm.Azure
         }
         public IEnumerable<T> Get<T>(Expression<Func<T,bool>> predicate)
         {
-
+            var table = new AzureTableBuilder(account);
             if(string.IsNullOrEmpty(CollectionName))
             {
                 throw new ArgumentException("we need to have a collection");
             }
             var query = new TableQuery();
-            var filter = _parser.BuildQueryFilter(predicate);
+            var filter = table.BuildQueryFilter(predicate);
             query.Where(filter);
 
-            return new AzureTableBuilder(account)
-                                .GetAsync<List<T>>(query, CollectionName).GetAwaiter().GetResult();
+            return table.GetAsync<List<T>>(query, CollectionName).GetAwaiter().GetResult();
         }
 
         public T Get<T>(TableQuery query) 

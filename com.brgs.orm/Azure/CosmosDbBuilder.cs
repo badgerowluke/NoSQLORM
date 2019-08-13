@@ -11,7 +11,7 @@ using Microsoft.Azure.Documents.Linq;
 [assembly:InternalsVisibleTo("com.brgs.orm.test")]
 namespace com.brgs.orm.Azure
 {
-    public class CosmosDbBuilder 
+    public class CosmosDbBuilder
     {
         private ICloudStorageAccount _account { get; set; }
         private IDocumentClient _client { get; set; }
@@ -43,12 +43,12 @@ namespace com.brgs.orm.Azure
             }
             return results;
         }
-        public async void PostAsync<T>(T record)
+        public async Task PostAsync<T>(T record)
         {
             await _client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),record);
         }
-        public async void PostBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
+        public async Task PostBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
         {
             await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),
             new RequestOptions()
@@ -60,6 +60,10 @@ namespace com.brgs.orm.Azure
         public async void DeleteAsync<T>(string id)
         {
             await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));          
+        }
+        public async void DeleteBatchAsync<T>(IEnumerable<T> records)
+        {
+            throw new NotImplementedException();
         }
 
     }

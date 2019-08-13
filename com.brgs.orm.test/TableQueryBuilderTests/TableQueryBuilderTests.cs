@@ -5,15 +5,16 @@ using Moq;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage.Table;
 using FluentAssertions;
+using com.brgs.orm.Azure;
 
 namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
 {
     public class LamdaExpressionParsingShould
     {
-        private readonly Interegator _builder;
+        private readonly AzureTableBuilder _builder;
         public LamdaExpressionParsingShould()
         {
-            _builder = new Interegator();
+            _builder = new AzureTableBuilder(null);
         }
         [Fact]
         public void BuildQueryFilter()
