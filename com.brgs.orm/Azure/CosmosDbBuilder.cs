@@ -33,9 +33,13 @@ namespace com.brgs.orm.Azure
         public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
         {
             var query = _client.CreateDocumentQuery<T>(
-                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId))
+                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true
+                })
                 .Where(predicate)
                 .AsDocumentQuery();
+            
             var results = new List<T>();
             while(query.HasMoreResults)
             {
@@ -48,6 +52,10 @@ namespace com.brgs.orm.Azure
             await _client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),record);
         }
+        ///<summary>
+        ///In order to affect a batch operation against Cosmos, you'll need to create a stored procedure (js) 
+        ///and host it in your CosmosDB instance.
+        ///</summary>
         public async Task PostBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
         {
             await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),
@@ -57,13 +65,32 @@ namespace com.brgs.orm.Azure
             }, records);
             
         }
-        public async void DeleteAsync<T>(string id)
+        public async Task DeleteAsync<T>(string id, string partiton = null)
         {
-            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));          
+            if(partiton == null)
+            {
+
+                await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), new RequestOptions
+                {
+                    PartitionKey = new PartitionKey(Undefined.Value)
+                });          
+            }
+
+
+            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), new RequestOptions
+            {
+                PartitionKey = new PartitionKey(partiton)
+            });          
+
         }
-        public async void DeleteBatchAsync<T>(IEnumerable<T> records)
+        public async void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
         {
-            throw new NotImplementedException();
+            await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),
+            new RequestOptions()
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(partitionKey)
+            }, records);            
+            
         }
 
     }

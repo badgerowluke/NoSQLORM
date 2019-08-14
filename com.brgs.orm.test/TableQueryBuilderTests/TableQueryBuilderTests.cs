@@ -14,12 +14,13 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
         private readonly AzureTableBuilder _builder;
         public LamdaExpressionParsingShould()
         {
-            _builder = new AzureTableBuilder(null);
+            var mock = new Mock<ICloudStorageAccount>();
+            _builder = new AzureTableBuilder(mock.Object);
         }
         [Fact]
         public void BuildQueryFilter()
         {
-            var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
+            var query =  _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
   
             query.Should().NotBeNull();
         }
