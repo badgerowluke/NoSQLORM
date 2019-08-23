@@ -5,9 +5,15 @@ using Newtonsoft.Json.Linq;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureQueueBuilder
+    public interface IAzureQueueBuilder 
     {
-        private ICloudStorageAccount _account { get; set; }
+        string Post<T>(T value, string container);
+        Task<T> GetAsync<T>(string container);
+        string Peek(string container);
+        Task<int> GetApproximateQueueMessageCount(string container);
+    }
+    public class AzureQueueBuilder : AzureStorageFactory, IAzureQueueBuilder
+    {
         private CloudQueueClient _client;
         public AzureQueueBuilder(ICloudStorageAccount account)
         {
@@ -25,14 +31,15 @@ namespace com.brgs.orm.Azure
             
             return queue.ApproximateMessageCount.ToString();
         }
-        public T Get<T>(string container)
+        
+        public override async Task<T> GetAsync<T>(string container)
         {
             var queue = _client.GetQueueReference(container);
-            var message = queue.GetMessageAsync().GetAwaiter().GetResult();
+            var message = await queue.GetMessageAsync();//.GetAwaiter().GetResult();
             if(message != null)
             {
 
-                queue.DeleteMessageAsync(message).GetAwaiter().GetResult();
+                await queue.DeleteMessageAsync(message);
                 var jObject = (JObject) JsonConvert.DeserializeObject(message.AsString); 
                 return jObject.ToObject<T>();
             }
@@ -56,6 +63,8 @@ namespace com.brgs.orm.Azure
             queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             await queue.FetchAttributesAsync();
             return queue.ApproximateMessageCount ?? 0;
-        }        
+        }
+
+    
     }
 }

@@ -11,20 +11,20 @@ namespace com.brgs.orm.test.Azure.Queues
     public class QueueBuilderGetShould : BaseAzureQueueBuilderTester
     {
         [Fact]
-        public void GetMessage()
+        public async void GetMessage()
         {
             var river = new River();
             var riverString = JsonConvert.SerializeObject(river);
             
             CloudQueueMock.Setup(m => m.GetMessageAsync()).Returns(Task.FromResult(new CloudQueueMessage(riverString)));
 
-            var msg = Builder.Get<River>("favorite-river-queue");
+            var msg = await Builder.GetAsync<River>("favorite-river-queue");
             Assert.IsType<River>(msg);
         }
         [Fact]
-        public void ReturnNullIfNoMessage()
+        public async void ReturnNullIfNoMessage()
         {
-            var msg = Builder.Get<River>("favorite-river-queue");
+            var msg = await Builder.GetAsync<River>("favorite-river-queue");
             Assert.Null(msg);
 
         }

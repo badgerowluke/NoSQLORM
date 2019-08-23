@@ -1,13 +1,15 @@
 ﻿
 
+using System.Threading.Tasks;
+
 namespace com.brgs.orm
 {
     public interface IStorageFactory
     {
 
-        T Get<T>(string filename); 
-        T Post<T>(T record);
-        int Delete<T>(T record);
+        Task<T> GetAsync<T>(string filename); 
+        Task<int> PostAsync<T>(T record);
+        Task DeleteAsync<T>(T record);
         T Put<T>(T record);
     }
 }

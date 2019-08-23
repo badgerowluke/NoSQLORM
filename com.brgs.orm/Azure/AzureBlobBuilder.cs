@@ -9,35 +9,30 @@ using System.Text;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureBlobBuilder : AzureFormatHelper
+    public interface IAzureBlobBuilder
     {
-        private ICloudStorageAccount account;
+        Task<T> GetAsync<T>(string containerName);
+    }
+    
+    public class AzureBlobBuilder : AzureStorageFactory
+    {
 
 
         public AzureBlobBuilder(ICloudStorageAccount acc)
         {
-            account = acc;
+            _account = acc;
+            _blobClient = _account.CreateCloudBlobClient();
 
         }
-        public async Task<T> GetAsync<T>(string containerName, string blobName)
+        public override async Task<T> GetAsync<T>(string blobName)
         {
-            var blobClient = account.CreateCloudBlobClient();
-
-            var container = blobClient.GetContainerReference(containerName);
-            var blob = container.GetBlobReference(blobName);
-            var blobStream = await blob.OpenReadAsync();
-            using(StreamReader reader = new StreamReader(blobStream))
-            {
-                string json = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<T>(json);
-            }
+            return await base.GetAsync<T>(blobName);
         }
 
-        public async Task<int> PostAsync<T>(T record)
+        public override async Task<int> PostAsync<T>(T record)
         {
             int count = 0;
-            var blobClient = account.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(CollectionName);
+            var container = _blobClient.GetContainerReference(CollectionName);
             var blob = container.GetBlockBlobReference(PartitionKey);
             var vals = JsonConvert.SerializeObject(record);
             var bytes = Encoding.UTF8.GetBytes(vals);

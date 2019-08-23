@@ -33,7 +33,7 @@ namespace com.brgs.orm.test.Azure
             TableClientMock.Setup(tc => tc.GetTableReference(It.IsAny<string>())).Returns(TableMock.Object);
 
             AccountMock.Setup(c => c.CreateCloudTableClient()).Returns(TableClientMock.Object);
-            Fac = new AzureStorageFactory(AccountMock.Object)
+            Fac = new AzureTableBuilder(AccountMock.Object)
             {
                 PartitionKey = "TACOS",
                 CollectionName = "Pizza"                
