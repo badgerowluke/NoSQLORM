@@ -33,8 +33,9 @@ namespace com.brgs.orm.Azure
             }
         }
 
-        public async void PostAsync<T>(T record)
+        public async Task<int> PostAsync<T>(T record)
         {
+            int count = 0;
             var blobClient = account.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(CollectionName);
             var blob = container.GetBlockBlobReference(PartitionKey);
@@ -43,7 +44,9 @@ namespace com.brgs.orm.Azure
             using(var stream = new MemoryStream(bytes))
             {
                 await blob.UploadFromStreamAsync(stream);
+                count++;
             }
+            return count;
 
         }
     }

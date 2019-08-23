@@ -5,20 +5,22 @@ using Moq;
 using com.brgs.orm.Azure.helpers;
 using Microsoft.WindowsAzure.Storage.Table;
 using FluentAssertions;
+using com.brgs.orm.Azure;
 
 namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
 {
     public class LamdaExpressionParsingShould
     {
-        private readonly Interegator _builder;
+        private readonly AzureTableBuilder _builder;
         public LamdaExpressionParsingShould()
         {
-            _builder = new Interegator();
+            var mock = new Mock<ICloudStorageAccount>();
+            _builder = new AzureTableBuilder(mock.Object);
         }
         [Fact]
         public void BuildQueryFilter()
         {
-            var query = _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
+            var query =  _builder.BuildQueryFilter<River>(r => r.StateCode.Equals("WV"));
   
             query.Should().NotBeNull();
         }

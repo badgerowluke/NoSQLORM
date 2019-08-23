@@ -11,13 +11,15 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm.Azure
 {
-    internal class AzureTableBuilder: AzureFormatHelper
+    public class AzureTableBuilder: AzureFormatHelper
     {
         private ICloudStorageAccount account { get; set; }
+        private CloudTableClient _client { get; set; }
 
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             account = acc;
+            _client = account.CreateCloudTableClient();
         }
         public AzureTableBuilder(ICloudStorageAccount acc, Dictionary<string, string> keys)
         {
@@ -28,8 +30,7 @@ namespace com.brgs.orm.Azure
         }
         public async Task<T> GetAsync<T>(TableQuery query, string collection)
         {
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(collection);
+            var table = _client.GetTableReference(collection);
             var outVal = (T)Activator.CreateInstance(typeof(T));
             var content = outVal.GetType().GetGenericArguments().Length > 0 ? outVal.GetType().GetGenericArguments()[0] : null ;
            
@@ -59,8 +60,7 @@ namespace com.brgs.orm.Azure
         {
             try 
             {                
-                var tableClient = account.CreateCloudTableClient();
-                var table = tableClient.GetTableReference(CollectionName);
+                var table = _client.GetTableReference(CollectionName);
                 bool complete = table.CreateIfNotExistsAsync().Result;
                 TableOperation insert = null;
                 if(record is ITableEntity)
@@ -89,9 +89,7 @@ namespace com.brgs.orm.Azure
         ///<summary>each individual batch needs to be less than or equal to 100</summary>
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records, string partition)
         {
-
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(CollectionName);
+            var table = _client.GetTableReference(CollectionName);
 
             var didCreate = await table.CreateIfNotExistsAsync();
 
@@ -141,10 +139,8 @@ namespace com.brgs.orm.Azure
             return batch;
         }
         public void DeleteBatchAsync<T>(IEnumerable<T> records)
-        {
-
-            var tableClient = account.CreateCloudTableClient();            
-            var table = tableClient.GetTableReference(CollectionName);
+        {         
+            var table = _client.GetTableReference(CollectionName);
             Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
             batchOperationAction = (bo, entity) => bo.Delete(entity);
             TableBatchOperation batch = new TableBatchOperation();
