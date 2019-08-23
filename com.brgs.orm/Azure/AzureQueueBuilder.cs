@@ -20,8 +20,9 @@ namespace com.brgs.orm.Azure
             queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             var obj = JsonConvert.SerializeObject(value);
             var message = new CloudQueueMessage(obj);
-            
             queue.AddMessageAsync(message).GetAwaiter().GetResult();
+            queue.FetchAttributesAsync().GetAwaiter().GetResult();
+            
             return queue.ApproximateMessageCount.ToString();
         }
         public T Get<T>(string container)
@@ -48,12 +49,13 @@ namespace com.brgs.orm.Azure
             }
             return string.Empty;
         }
+        /* this is currently untestable because I am unaware how to set the readonly property here. */
         public async Task<int> GetApproximateQueueMessageCount(string container)
         {          
             var queue = _client.GetQueueReference(container);
             queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             await queue.FetchAttributesAsync();
-            return queue.ApproximateMessageCount != null ? (int)queue.ApproximateMessageCount : 0;
+            return queue.ApproximateMessageCount ?? 0;
         }        
     }
 }
