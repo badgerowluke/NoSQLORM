@@ -12,7 +12,7 @@ namespace com.brgs.orm.test.Azure.Tables
         [Fact]
         public void Instantiate()
         {
-            var fac = new AzureStorageFactory(AccountMock.Object);
+            var fac = new AzureTableBuilder(AccountMock.Object);
             Assert.NotNull(fac);
         }
         [Fact]
@@ -22,7 +22,7 @@ namespace com.brgs.orm.test.Azure.Tables
 
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
-            var fac = new AzureStorageFactory(AccountMock.Object)
+            var fac = new AzureTableBuilder(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
@@ -41,7 +41,7 @@ namespace com.brgs.orm.test.Azure.Tables
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
 
-            var fac = new AzureStorageFactory(AccountMock.Object)
+            var fac = new AzureTableBuilder(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
@@ -62,7 +62,7 @@ namespace com.brgs.orm.test.Azure.Tables
                 .ReturnsAsync(mock);
 
 
-            var fac = new AzureStorageFactory(AccountMock.Object)
+            var fac = new AzureTableBuilder(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
@@ -78,7 +78,7 @@ namespace com.brgs.orm.test.Azure.Tables
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
-            var fac = new AzureStorageFactory(AccountMock.Object)
+            var fac = new AzureTableBuilder(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };

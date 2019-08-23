@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace com.brgs.orm.RelationalDB
 {
@@ -11,7 +12,7 @@ namespace com.brgs.orm.RelationalDB
         {
             _connection = factory;
         }
-        public T Get<T>(string val){ throw new NotImplementedException("coming soon");}
+        public async Task<T> GetAsync<T>(string val){ throw new NotImplementedException("coming soon");}
 
         public T Get<T>()
         {
@@ -51,12 +52,12 @@ namespace com.brgs.orm.RelationalDB
             }
             return outVal;
         }
-        public T Post<T>(T record) {throw new NotImplementedException("coming soon");}
+        public Task<int> PostAsync<T>(T record) {throw new NotImplementedException("coming soon");}
         public T Put<T>(T record)
         {
             throw new NotImplementedException("coming soon");
         }
-        public int Delete<T>(T record)
+        public Task DeleteAsync<T>(T record)
         {
             throw new NotImplementedException("coming soon");
         }

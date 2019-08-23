@@ -19,7 +19,7 @@ namespace com.brgs.orm.test.Azure.Blobs
     public class AzureStorageBlobTests
     {
         [Fact]
-        public void WeDoGetDataFromBlobStorage()
+        public async void WeDoGetDataFromBlobStorage()
         {
             var acc = new Mock<ICloudStorageAccount>();
             var blobClient = new Mock<CloudBlobClient>(new Uri("https://ww.google.com"), new StorageCredentials());
@@ -39,11 +39,11 @@ namespace com.brgs.orm.test.Azure.Blobs
 
                 acc.Setup(c => c.CreateCloudBlobClient()).Returns(blobClient.Object);
 
-                var fac = new AzureStorageFactory(acc.Object)
+                var fac = new AzureBlobBuilder(acc.Object)
                 {
                     CollectionName ="PIZZA"
                 };
-                var stuff = fac.Get<List<River>>("TACOS");
+                var stuff = await fac.GetAsync<List<River>>("TACOS");
                 Assert.NotEmpty(stuff);
             }
             
