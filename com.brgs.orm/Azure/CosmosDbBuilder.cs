@@ -30,7 +30,7 @@ namespace com.brgs.orm.Azure
             CollectionId = collection;
             
         }
-        public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
+        public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection = null)
         {
             var query = _client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), new FeedOptions
