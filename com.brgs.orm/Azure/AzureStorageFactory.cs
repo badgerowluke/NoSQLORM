@@ -100,9 +100,24 @@ namespace com.brgs.orm.Azure
             {
                 throw new ArgumentException("we need to have a collection");
             }            
-            return new AzureTableBuilder(_account)
-                                .GetAsync<T>(query, CollectionName).Result;
+            return InternalGetAsync<T>(query, CollectionName).Result;
         }
+        ///<summary>
+
+        ///<param name="Value">The object to be converted to a queue message</param>
+        ///<param name="container">The Queue to post into</param>
+        ///</summary>
+        public virtual string Post<T>(T value, string container)
+        {
+            var queue = _queueClient.GetQueueReference(container);
+            queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            var obj = JsonConvert.SerializeObject(value);
+            var message = new CloudQueueMessage(obj);
+            queue.AddMessageAsync(message).GetAwaiter().GetResult();
+            queue.FetchAttributesAsync().GetAwaiter().GetResult();
+            
+            return queue.ApproximateMessageCount.ToString();
+        }        
         public virtual async Task<int> PostAsync<T>(T record)
         {
             
@@ -134,7 +149,7 @@ namespace com.brgs.orm.Azure
                 throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
             }        
         }
-        public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
+        public virtual async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
             if(string.IsNullOrEmpty(CollectionName))
             {
@@ -226,7 +241,7 @@ namespace com.brgs.orm.Azure
             throw new NotImplementedException("coming soon");
         }
 
-        public async Task DeleteAsync<T>(string id, string partiton = null)
+        public virtual async Task DeleteAsync<T>(string id, string partiton = null)
         {
             if(partiton == null)
             {
@@ -244,7 +259,7 @@ namespace com.brgs.orm.Azure
             });          
 
         }
-        public async void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
+        public virtual async void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
         {
             await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),
             new RequestOptions()
@@ -252,6 +267,25 @@ namespace com.brgs.orm.Azure
                 PartitionKey = new Microsoft.Azure.Documents.PartitionKey(partitionKey)
             }, records);            
             
-        }        
+        }  
+        public virtual string Peek(string container)
+        {
+            var queue = _queueClient.GetQueueReference(container);
+            queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            var peekedMessage = queue.PeekMessageAsync().GetAwaiter().GetResult();
+            if(peekedMessage != null)
+            {
+                return peekedMessage.AsString; 
+            }
+            return string.Empty;
+        }  
+        /* this is currently untestable because I am unaware how to set the readonly property here. */
+        public virtual async Task<int> GetApproximateQueueMessageCount(string container)
+        {          
+            var queue = _queueClient.GetQueueReference(container);
+            queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            await queue.FetchAttributesAsync();
+            return queue.ApproximateMessageCount ?? 0;
+        }                    
     }
 }
