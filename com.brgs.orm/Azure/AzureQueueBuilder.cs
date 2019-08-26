@@ -14,15 +14,14 @@ namespace com.brgs.orm.Azure
     }
     public class AzureQueueBuilder : AzureStorageFactory, IAzureQueueBuilder
     {
-        private CloudQueueClient _client;
         public AzureQueueBuilder(ICloudStorageAccount account)
         {
             _account  = account;
-            _client = _account.CreateCloudQueueClient();
+            _queueClient = _account.CreateCloudQueueClient();
         }
         public string Post<T>(T value, string container)
         {
-            var queue = _client.GetQueueReference(container);
+            var queue = _queueClient.GetQueueReference(container);
             queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             var obj = JsonConvert.SerializeObject(value);
             var message = new CloudQueueMessage(obj);
@@ -34,7 +33,7 @@ namespace com.brgs.orm.Azure
         
         public override async Task<T> GetAsync<T>(string container)
         {
-            var queue = _client.GetQueueReference(container);
+            var queue = _queueClient.GetQueueReference(container);
             var message = await queue.GetMessageAsync();//.GetAwaiter().GetResult();
             if(message != null)
             {
@@ -47,7 +46,7 @@ namespace com.brgs.orm.Azure
         }
         public string Peek(string container)
         {
-            var queue = _client.GetQueueReference(container);
+            var queue = _queueClient.GetQueueReference(container);
             queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             var peekedMessage = queue.PeekMessageAsync().GetAwaiter().GetResult();
             if(peekedMessage != null)
@@ -59,7 +58,7 @@ namespace com.brgs.orm.Azure
         /* this is currently untestable because I am unaware how to set the readonly property here. */
         public async Task<int> GetApproximateQueueMessageCount(string container)
         {          
-            var queue = _client.GetQueueReference(container);
+            var queue = _queueClient.GetQueueReference(container);
             queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             await queue.FetchAttributesAsync();
             return queue.ApproximateMessageCount ?? 0;

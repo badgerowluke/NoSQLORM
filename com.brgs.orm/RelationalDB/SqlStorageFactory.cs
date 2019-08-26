@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace com.brgs.orm.RelationalDB
@@ -52,6 +54,11 @@ namespace com.brgs.orm.RelationalDB
             }
             return outVal;
         }
+
+        public Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }        
         public Task<int> PostAsync<T>(T record) {throw new NotImplementedException("coming soon");}
         public T Put<T>(T record)
         {
@@ -61,5 +68,7 @@ namespace com.brgs.orm.RelationalDB
         {
             throw new NotImplementedException("coming soon");
         }
+
+
     }
 }

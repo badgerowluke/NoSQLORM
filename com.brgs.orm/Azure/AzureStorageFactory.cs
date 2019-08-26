@@ -12,6 +12,7 @@ using System.Linq;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
+using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace com.brgs.orm.Azure
 {
@@ -20,6 +21,7 @@ namespace com.brgs.orm.Azure
         protected ICloudStorageAccount _account;
         protected CloudTableClient _tableclient { get; set; }
         protected CloudBlobClient _blobClient { get; set; }
+        protected CloudQueueClient _queueClient { get; set; }
         protected IDocumentClient _client { get; set; }
         protected string DatabaseId { get;  set; }
         protected string CollectionId { get; set; }

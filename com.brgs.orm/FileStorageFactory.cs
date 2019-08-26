@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace com.brgs.orm
 {
@@ -27,6 +28,11 @@ namespace com.brgs.orm
         public Task DeleteAsync<T>(T record)
         {
             throw new NotImplementedException("coming soon");
-        }        
+        }
+
+        public Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
