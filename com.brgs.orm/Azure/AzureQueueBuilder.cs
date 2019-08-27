@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
@@ -20,11 +24,10 @@ namespace com.brgs.orm.Azure
             _queueClient = _account.CreateCloudQueueClient();
         }
 
-        
         public override async Task<T> GetAsync<T>(string container)
         {
             var queue = _queueClient.GetQueueReference(container);
-            var message = await queue.GetMessageAsync();//.GetAwaiter().GetResult();
+            var message = await queue.GetMessageAsync();
             if(message != null)
             {
 
@@ -34,7 +37,23 @@ namespace com.brgs.orm.Azure
             }
             return default(T);
         }
+        public async Task<Dictionary<string, int>> CheckPoisonQueues()
+        {
+            var queueList = new Dictionary<string, int>();
+            QueueContinuationToken token = null;
+            do
+            {
+                var segment = await _queueClient.ListQueuesSegmentedAsync(token);
+                var poisonQueues = segment.Results.Where(q => q.Name.EndsWith("-poison",
+                                                           StringComparison.InvariantCultureIgnoreCase));
+                foreach(var queue in poisonQueues)
+                {
+                    
+                }
+            } while(token != null);
 
+            return null;
+        }
 
 
     

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace com.brgs.orm.Azure
 {
@@ -19,5 +21,6 @@ namespace com.brgs.orm.Azure
         string Post<T>(T value, string container);
         string Peek(string container);
         Task<int> GetApproximateQueueMessageCount(string container);
+
     }
 }

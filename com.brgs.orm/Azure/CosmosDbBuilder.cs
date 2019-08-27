@@ -32,11 +32,11 @@ namespace com.brgs.orm.Azure
             _client = _account.CreateDocumentClient();
             DatabaseId = database;
             CollectionId = collection;
-            
         }
 
         public override async Task<int> PostAsync<T>(T record)
         {
+
             await _client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),record);
             return 1;

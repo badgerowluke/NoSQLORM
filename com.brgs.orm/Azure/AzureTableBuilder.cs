@@ -52,8 +52,5 @@ namespace com.brgs.orm.Azure
         {
             return await base.PostBatchAsync<T>(records);
         }
-
-
-
     }
 }

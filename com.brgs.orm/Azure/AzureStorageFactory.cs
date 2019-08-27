@@ -28,7 +28,6 @@ namespace com.brgs.orm.Azure
 
         protected string _containerName;
 
-
         public virtual async Task<T> GetAsync<T>( string fileName)
         {
             var blobClient = _account.CreateCloudBlobClient();
@@ -287,5 +286,6 @@ namespace com.brgs.orm.Azure
             await queue.FetchAttributesAsync();
             return queue.ApproximateMessageCount ?? 0;
         }                    
+
     }
 }
