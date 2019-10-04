@@ -61,9 +61,17 @@ namespace com.brgs.orm.Azure
       
         public virtual async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
         {
-            var query = new TableQuery().Where(BuildQueryFilter(predicate));
-            
-            return await InternalGetAsync<IEnumerable<T>>(query, CollectionName);
+            try
+            {
+                if(string.IsNullOrEmpty(CollectionName)) { throw new ArgumentNullException("Collection cannot be null"); }
+                var query = new TableQuery().Where(BuildQueryFilter(predicate));
+                
+                return await InternalGetAsync<IEnumerable<T>>(query, CollectionName);
+
+            } catch (Exception e)
+            {
+                throw new Exception(e.StackTrace);
+            }
         }
         protected async Task<T> InternalGetAsync<T>(TableQuery query, string collection)
         {
@@ -99,7 +107,7 @@ namespace com.brgs.orm.Azure
             {
                 throw new ArgumentException("we need to have a collection");
             }            
-            return InternalGetAsync<T>(query, CollectionName).Result;
+            return InternalGetAsync<T>(query, CollectionName).GetAwaiter().GetResult();
         }
         ///<summary>
 
