@@ -41,23 +41,7 @@ namespace com.brgs.orm.Azure
                 return JsonConvert.DeserializeObject<T>(json);
             }
         }
-        public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection = null)
-        {
-            var query = _client.CreateDocumentQuery<T>(
-                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), new FeedOptions
-                {
-                    EnableCrossPartitionQuery = true
-                })
-                .Where(predicate)
-                .AsDocumentQuery();
-            
-            var results = new List<T>();
-            while(query.HasMoreResults)
-            {
-                results.AddRange(await query.ExecuteNextAsync<T>());
-            }
-            return results;
-        }        
+       
       
         public virtual async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
         {
