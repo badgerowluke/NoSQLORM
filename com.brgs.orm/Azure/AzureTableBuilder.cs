@@ -15,6 +15,8 @@ namespace com.brgs.orm.Azure
 {
     public interface IAzureTableBuilder
     {
+        string CollectionName { get; set; }
+        string PartitionKey { get; set; } 
         Task<T> GetAsync<T>(TableQuery query, string collection);
         Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
         Task<int> PostAsync<T>(T record);
@@ -29,13 +31,13 @@ namespace com.brgs.orm.Azure
             _account = acc;
             _tableclient = _account.CreateCloudTableClient();
         }
-        public AzureTableBuilder(ICloudStorageAccount acc, Dictionary<string, string> keys)
-        {
-            _account = acc;
-            CollectionName = keys["CollectionName"];
-            PartitionKey = keys["PartitionKey"];
+        // public AzureTableBuilder(ICloudStorageAccount acc, Dictionary<string, string> keys)
+        // {
+        //     _account = acc;
+        //     CollectionName = keys["CollectionName"];
+        //     PartitionKey = keys["PartitionKey"];
             
-        }
+        // }
 
         public async Task<T> GetAsync<T>(TableQuery query, string collection)
         {

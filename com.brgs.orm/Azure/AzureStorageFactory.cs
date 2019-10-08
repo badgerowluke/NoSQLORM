@@ -49,12 +49,13 @@ namespace com.brgs.orm.Azure
             {
                 if(string.IsNullOrEmpty(CollectionName)) { throw new ArgumentNullException("Collection cannot be null"); }
                 var query = new TableQuery().Where(BuildQueryFilter(predicate));
+
                 /* TODO Fix the IEnumerable issue cropping up now. */
                 return await InternalGetAsync<List<T>>(query, CollectionName);
 
             } catch (Exception e)
             {
-                throw new Exception(e.StackTrace);
+                throw e;
             }
         }
         protected async Task<T> InternalGetAsync<T>(TableQuery query, string collection)
