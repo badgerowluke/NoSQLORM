@@ -15,36 +15,26 @@ namespace com.brgs.orm.Azure
 {
     public interface IAzureTableBuilder
     {
-        string CollectionName { get; set; }
-        string PartitionKey { get; set; } 
+        // string CollectionName { get; set; }
+        // string PartitionKey { get; set; } 
         Task<T> GetAsync<T>(TableQuery query, string collection);
-        Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
-        Task<int> PostAsync<T>(T record);
+        // Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
+        // Task<int> PostAsync<T>(T record);
         Task<int> PostBatchAsync<T>(IEnumerable<T> records, string partition);
-        void DeleteBatchAsync<T>(IEnumerable<T> records);
+        Task DeleteBatchAsync<T>(IEnumerable<T> records);
     }
     public class AzureTableBuilder: AzureStorageFactory,  IAzureTableBuilder
     {
-        
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             _account = acc;
             _tableclient = _account.CreateCloudTableClient();
         }
-        // public AzureTableBuilder(ICloudStorageAccount acc, Dictionary<string, string> keys)
-        // {
-        //     _account = acc;
-        //     CollectionName = keys["CollectionName"];
-        //     PartitionKey = keys["PartitionKey"];
-            
-        // }
-
         public async Task<T> GetAsync<T>(TableQuery query, string collection)
         {
            return await InternalGetAsync<T>(query, collection);  
         }
-
-        public override async Task<int> PostAsync<T>(T record)
+        public override async Task<string> PostAsync<T>(T record)
         {
             return await base.PostAsync<T>(record);
     
@@ -54,5 +44,15 @@ namespace com.brgs.orm.Azure
         {
             return await base.PostBatchAsync<T>(records);
         }
+
+        public override async Task DeleteBatchAsync<T>(IEnumerable<T> records)
+        {
+            await base.DeleteBatchAsync(records);
+        }
+
+
+
+
+
     }
 }

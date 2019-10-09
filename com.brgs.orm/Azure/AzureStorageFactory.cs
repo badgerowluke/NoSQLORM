@@ -110,7 +110,7 @@ namespace com.brgs.orm.Azure
             
             return queue.ApproximateMessageCount.ToString();
         }        
-        public virtual async Task<int> PostAsync<T>(T record)
+        public virtual async Task<string> PostAsync<T>(T record)
         {
             
             try 
@@ -133,7 +133,7 @@ namespace com.brgs.orm.Azure
                     insert = TableOperation.InsertOrMerge((ITableEntity) obj);
                 }
                 var val =  await table.ExecuteAsync(insert);
-                return 1;
+                return val.HttpStatusCode.ToString();
 
 
             } catch (StorageException e )
@@ -141,6 +141,7 @@ namespace com.brgs.orm.Azure
                 throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
             }        
         }
+
         public virtual async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
             if(string.IsNullOrEmpty(CollectionName))
@@ -200,7 +201,7 @@ namespace com.brgs.orm.Azure
             }
             return batch;
         }  
-        public virtual void DeleteBatchAsync<T>(IEnumerable<T> records)
+        public virtual async Task DeleteBatchAsync<T>(IEnumerable<T> records)
         {         
             var table = _tableclient.GetTableReference(CollectionName);
             Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
@@ -220,7 +221,7 @@ namespace com.brgs.orm.Azure
                 tasks.Add(table.ExecuteBatchAsync(batchOperation));
             }
 
-            IList<TableResult>[] results =  Task.WhenAll(tasks).ConfigureAwait(false).GetAwaiter().GetResult();            
+            IList<TableResult>[] results =  await Task.WhenAll(tasks).ConfigureAwait(false);            
 
 
         }              

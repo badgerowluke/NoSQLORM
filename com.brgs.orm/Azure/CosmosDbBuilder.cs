@@ -14,7 +14,7 @@ namespace com.brgs.orm.Azure
     public interface ICosmosDbBuilder
     {
         Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection);
-        Task<int> PostAsync<T>(T record);
+        Task<string> PostAsync<T>(T record);
         Task DeleteAsync<T>(string id, string partiton = null);
         void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey);
     }
@@ -51,12 +51,12 @@ namespace com.brgs.orm.Azure
             return results;
         }         
 
-        public override async Task<int> PostAsync<T>(T record)
+        public override async Task<string> PostAsync<T>(T record)
         {
 
-            await _client.UpsertDocumentAsync(
+            var result = await _client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),record);
-            return 1;
+            return result.StatusCode.ToString();
         }
         ///<summary>
         ///In order to affect a batch operation against Cosmos, you'll need to create a stored procedure (js) 

@@ -8,15 +8,17 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace com.brgs.orm.Azure
 {
-    public interface IAzureStorage : IStorageFactory
+    public interface IAzureStorage 
     {
         string CollectionName { get; set; }
         string PartitionKey { get; set; } 
         T Get<T>(TableQuery query);   
         
+        Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
         Task<int> PostBatchAsync<T>(IEnumerable<T> records);     
 
         string Post<T>(T value, string container);
+        Task<string> PostAsync<T>(T value);
         string Peek(string container);
         Task<int> GetApproximateQueueMessageCount(string container);
 

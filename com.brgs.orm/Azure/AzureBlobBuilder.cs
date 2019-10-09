@@ -32,7 +32,7 @@ namespace com.brgs.orm.Azure
             return await base.GetAsync<T>(blobName);
         }
 
-        public override async Task<int> PostAsync<T>(T record)
+        public override async Task<string> PostAsync<T>(T record)
         {
             int count = 0;
             var container = _blobClient.GetContainerReference(CollectionName);
@@ -44,7 +44,7 @@ namespace com.brgs.orm.Azure
                 await blob.UploadFromStreamAsync(stream);
                 count++;
             }
-            return count;
+            return count.ToString();
 
         }
     }
