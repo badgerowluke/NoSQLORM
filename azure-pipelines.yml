@@ -26,7 +26,7 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  "/p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/coverage.xml'"  
+    arguments:  /p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/coverage.xml'
     nobuild: true
     
 
@@ -34,7 +34,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testRunner: xUnit
-    testResultsFiles: '**/*.xml'
+    testResultsFiles: '**/*.trx'
     searchFolder: '$(Agent.TempDirectory)'
 
 
