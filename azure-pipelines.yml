@@ -36,7 +36,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testRunner: xUnit
-    testResultsFiles: '**/*.info'
+    testResultsFiles: '**/*.xml'
     searchFolder: '$(Agent.TempDirectory)'
 
 - task: DotNetCoreCLI@2
