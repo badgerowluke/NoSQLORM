@@ -23,15 +23,9 @@ steps:
 
 - script: dotnet test  --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/coverage.xml
   displayName: 'Test' 
-
-    
-
-
-- task: PublishTestResults@2
+- task: PublishCodeCoverageResults@1
   inputs:
-    testRunner: xUnit
-    testResultsFiles: '**/*.xml'
-    searchFolder: '$(Agent.TempDirectory)'
+    summaryFileLocation: $(Agent.TempDirectory)/coverage.xml
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
