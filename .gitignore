@@ -281,3 +281,4 @@ orm.v3.ncrunchsolution
 com.brgs.orm.test/coverage.json
 com.brgs.orm.sandbox/
 com.brgs.orm.test/.lcov.info
+com.brgs.orm.test/coverage.xml
