@@ -28,7 +28,7 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    custom: "/p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/build.html'"  
+    custom: "/p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/build.xml'"  
     nobuild: true
     publishTestResults: true
     
@@ -37,8 +37,8 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
-    testResultsFiles: '**/*.html'
-    searchFolder: '$(Agent.TempDirectory)/coverage'
+    testResultsFiles: '**/*.xml'
+    searchFolder: '$(Agent.TempDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
