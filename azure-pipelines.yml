@@ -28,9 +28,10 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    custom: "--configuration '$(buildConfiguration)' --collect 'Code Coverage'"  
+    custom: "/p:CoverletOutputFormat=cobertura /p:CoverletOutput=.'$(Agent.TempDirectory)/coverage/'"  
     nobuild: true
     publishTestResults: true
+    
 
 
 # - task: PublishTestResults@2
