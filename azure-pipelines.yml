@@ -34,7 +34,7 @@ steps:
 
 - task: PublishTestResults@2
   inputs:
-    testRunner: xUnit
+    testRunner: VSTest
     testResultsFiles: '**/*.trx'
     searchFolder: '$(Agent.TempDirectory)'
 
