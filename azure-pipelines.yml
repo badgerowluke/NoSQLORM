@@ -21,15 +21,9 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
-- script: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/coverage.xml
+- script: dotnet test  --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/coverage.xml
   displayName: 'Test' 
-# - task: DotNetCoreCLI@2
-#   displayName: Test
-#   inputs:
-#     command: test
-#     projects: '**/*[Tt]est/*.csproj'
-#     custom: "/p:CoverletOutputFormat=lcov /p:CoverletOutput='$(Agent.TempDirectory)/coverage/lcov.info'"  
-#     nobuild: true
+
     
 
 
