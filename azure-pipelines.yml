@@ -28,6 +28,7 @@ steps:
     projects: '**/*[Tt]est/*.csproj'
     arguments:  /p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/coverage.xml'
     nobuild: true
+    publishTestResults: true
     
 
 
