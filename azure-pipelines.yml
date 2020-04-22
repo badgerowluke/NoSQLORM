@@ -37,7 +37,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
-    testResultsFiles: '**/*'
+    testResultsFiles: '**/*.html'
     searchFolder: '$(Agent.TempDirectory)/coverage'
 
 - task: DotNetCoreCLI@2
