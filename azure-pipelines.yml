@@ -36,6 +36,12 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: $(Agent.TempDirectory)/Coverage/coverage.json
 
+- task: PublishBuildArtifacts@1
+  displayName: "save off the coverage file"
+  inputs:
+    PathtoPublish: $(Agent.TempDirectory)/Coverage
+    ArtifactName: 'coverageoutput'
+
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
