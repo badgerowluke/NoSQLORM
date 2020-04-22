@@ -21,22 +21,21 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
-# - script: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info
-#   displayName: 'Test' 
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '**/*[Tt]est/*.csproj'
-    custom: "/p:CoverletOutputFormat=lcov /p:CoverletOutput='$(Agent.TempDirectory)/coverage/lcov.info'"  
-    nobuild: true
-    publishTestResults: true
+- script: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=$(Agent.TempDirectory)/lcov.info
+  displayName: 'Test' 
+# - task: DotNetCoreCLI@2
+#   displayName: Test
+#   inputs:
+#     command: test
+#     projects: '**/*[Tt]est/*.csproj'
+#     custom: "/p:CoverletOutputFormat=lcov /p:CoverletOutput='$(Agent.TempDirectory)/coverage/lcov.info'"  
+#     nobuild: true
     
 
 
 - task: PublishTestResults@2
   inputs:
-    testRunner: VSTest
+    testRunner: xUnit
     testResultsFiles: '**/*.info'
     searchFolder: '$(Agent.TempDirectory)'
 
