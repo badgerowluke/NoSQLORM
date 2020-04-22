@@ -26,17 +26,9 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.json
+    arguments:  --configuration '$(buildConfiguration)' /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.json
     nobuild: true
     publishTestResults: true
-    
-
-
-# - task: PublishTestResults@2
-#   inputs:
-#     testRunner: VSTest
-#     testResultsFiles: '**/*.trx'
-#     searchFolder: '$(Agent.TempDirectory)'
 
 
 - task: PublishCodeCoverageResults@1
