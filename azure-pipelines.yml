@@ -26,15 +26,14 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.json
-    nobuild: true
+    arguments:  --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.xml
     publishTestResults: true
 
 
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: $(Agent.TempDirectory)/Coverage/coverage.json
+    summaryFileLocation: $(Agent.TempDirectory)/Coverage/coverage.xml
 
 - task: PublishBuildArtifacts@1
   displayName: "save off the coverage file"
