@@ -28,7 +28,7 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'  
+    custom: "--configuration '$(buildConfiguration)' --collect 'Code Coverage'"  
     nobuild: true
     publishTestResults: true
 
