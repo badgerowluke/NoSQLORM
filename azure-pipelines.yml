@@ -28,17 +28,17 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    custom: "/p:CoverletOutputFormat=cobertura /p:CoverletOutput=.'$(Agent.TempDirectory)/coverage/'"  
+    custom: "/p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/build.html'"  
     nobuild: true
     publishTestResults: true
     
 
 
-# - task: PublishTestResults@2
-#   inputs:
-#     testRunner: VSTest
-#     testResultsFiles: '**/*.trx'
-#     searchFolder: '$(Agent.TempDirectory)'
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*'
+    searchFolder: '$(Agent.TempDirectory)/coverage'
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
