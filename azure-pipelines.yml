@@ -26,7 +26,7 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  /p:CoverletOutputFormat=cobertura /p:CoverletOutput='$(Agent.TempDirectory)/coverage/coverage.xml'
+    arguments:  /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoveletOutput=$(Agent.TempDirectory)/Coverage/coverage.json
     nobuild: true
     publishTestResults: true
     
@@ -42,7 +42,7 @@ steps:
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: $(Agent.TempDirectory)/coverage/coverage.xml
+    summaryFileLocation: $(Agent.TempDirectory)/coverage/coverage.json
 
 
 - task: DotNetCoreCLI@2
