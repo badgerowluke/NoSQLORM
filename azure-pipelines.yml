@@ -37,6 +37,7 @@ steps:
   inputs:
     testRunner: xUnit
     testResultsFiles: '**/*.trx'
+    searchFolder: '$(Agent.TempDirectory)'
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
