@@ -26,14 +26,15 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage" --diag:$(Agent.TempDirectory)/Coverage/log.txt /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.xml'
+    arguments:  '--configuration $(BuildConfiguration)  /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\'
     publishTestResults: true
 
 
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: $(Agent.TempDirectory)/Coverage/coverage.xml
+    summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/*cobertura.xml
+    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
 
 - task: PublishBuildArtifacts@1
   displayName: "save off the coverage file"
