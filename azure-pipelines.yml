@@ -26,8 +26,8 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  '--configuration $(BuildConfiguration)  /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\'
-    publishTestResults: true
+    arguments:  '--configuration $(buildConfiguration)  /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+
 
 
 - task: PublishCodeCoverageResults@1
@@ -39,7 +39,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: "save off the coverage file"
   inputs:
-    PathtoPublish: $(Build.SourcesDirectory)\TestResults\Coverage\
+    PathtoPublish: $(Build.SourcesDirectory)/TestResults/Coverage
     ArtifactName: 'coverageoutput'
 
 
