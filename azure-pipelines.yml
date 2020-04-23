@@ -26,22 +26,13 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  '--configuration $(buildConfiguration)  /p:IncludeDirectory=$(Build.SourcesDirectory)/com.brgs.orm.test/bin/Release/netcoreapp2.1 /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
-
-
+    arguments:  '--configuration $(buildConfiguration) /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
 
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/*cobertura.xml
     reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
-
-- task: PublishBuildArtifacts@1
-  displayName: "save off the coverage file"
-  inputs:
-    PathtoPublish: $(Build.SourcesDirectory)/TestResults
-    ArtifactName: 'coverageoutput'
-
 
 - task: DotNetCoreCLI@2
   displayName: package the assembly
