@@ -26,7 +26,7 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments:  --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.xml
+    arguments:  '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage" --diag:$(Agent.TempDirectory)/Coverage/log.txt /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Agent.TempDirectory)/Coverage/coverage.xml'
     publishTestResults: true
 
 
