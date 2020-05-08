@@ -1,13 +1,4 @@
-using System;
 using Xunit;
-using System.Linq;
-using Moq;
-using com.brgs.orm.Azure;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Table;
-using AutoFixture;
-using AutoFixture.Xunit;
-using AutoFixture.AutoMoq;
 
 namespace com.brgs.orm.test.Azure.Tables
 {

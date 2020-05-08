@@ -7,11 +7,10 @@ using System;
 using System.Linq.Expressions;
 using System.IO;
 using Newtonsoft.Json;
-using Microsoft.WindowsAzure.Storage;
+
 using System.Linq;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
 using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace com.brgs.orm.Azure
@@ -28,10 +27,8 @@ namespace com.brgs.orm.Azure
 
         protected string _containerName;
 
-        public virtual async Task<T> GetAsync<T>( string fileName)
+        public virtual async Task<T> GetAsync<T>(string fileName)
         {
-            var blobClient = _account.CreateCloudBlobClient();
-
             var container = _blobClient.GetContainerReference(_containerName);
             var blob = container.GetBlobReference(fileName);
             var blobStream = await blob.OpenReadAsync();
@@ -45,18 +42,10 @@ namespace com.brgs.orm.Azure
       
         public virtual async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
         {
-            try
-            {
-                if(string.IsNullOrEmpty(CollectionName)) { throw new ArgumentNullException("Collection cannot be null"); }
-                var query = new TableQuery().Where(BuildQueryFilter(predicate));
+            if(string.IsNullOrEmpty(CollectionName)) { throw new ArgumentNullException(CollectionName, "Collection cannot be null"); }
+            var query = new TableQuery().Where(BuildQueryFilter(predicate));
 
-                /* TODO Fix the IEnumerable issue cropping up now. */
-                return await InternalGetAsync<List<T>>(query, CollectionName);
-
-            } catch (Exception e)
-            {
-                throw e;
-            }
+            return await InternalGetAsync<List<T>>(query, CollectionName);
         }
         protected async Task<T> InternalGetAsync<T>(TableQuery query, string collection)
         {
@@ -95,7 +84,6 @@ namespace com.brgs.orm.Azure
             return InternalGetAsync<T>(query, CollectionName).GetAwaiter().GetResult();
         }
         ///<summary>
-
         ///<param name="Value">The object to be converted to a queue message</param>
         ///<param name="container">The Queue to post into</param>
         ///</summary>
@@ -110,36 +98,28 @@ namespace com.brgs.orm.Azure
             
             return queue.ApproximateMessageCount.ToString();
         }        
-        public virtual async Task<string> PostAsync<T>(T record)
+        public virtual async Task<string> PostAsync<T>(T value)
         {
             
-            try 
-            {                
-                var table = _tableclient.GetTableReference(CollectionName);
-                bool complete = table.CreateIfNotExistsAsync().Result;
-                TableOperation insert = null;
-                if(record is ITableEntity)
-                {
-                    if(string.IsNullOrEmpty((record as ITableEntity).PartitionKey))
-                    {
-                        (record as ITableEntity).PartitionKey = PartitionKey;
-                    }                    
-                    insert = TableOperation.InsertOrMerge((ITableEntity) record);
+            var table = _tableclient.GetTableReference(CollectionName);
 
-                } 
-                else 
-                {
-                    var obj = BuildTableEntity(record);
-                    insert = TableOperation.InsertOrMerge((ITableEntity) obj);
-                }
-                var val =  await table.ExecuteAsync(insert);
-                return val.HttpStatusCode.ToString();
-
-
-            } catch (StorageException e )
+            TableOperation insert = null;
+            if(value is ITableEntity)
             {
-                throw new Exception(e.RequestInformation.ExtendedErrorInformation.ToString());
-            }        
+                if(string.IsNullOrEmpty((value as ITableEntity).PartitionKey))
+                {
+                    (value as ITableEntity).PartitionKey = PartitionKey;
+                }                    
+                insert = TableOperation.InsertOrMerge((ITableEntity) value);
+
+            } 
+            else 
+            {
+                var obj = BuildTableEntity(value);
+                insert = TableOperation.InsertOrMerge((ITableEntity) obj);
+            }
+            var val =  await table.ExecuteAsync(insert);
+            return val.HttpStatusCode.ToString();      
         }
 
         public virtual async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
@@ -155,7 +135,7 @@ namespace com.brgs.orm.Azure
 
             var table = _tableclient.GetTableReference(CollectionName);
 
-            var didCreate = await table.CreateIfNotExistsAsync();
+            await table.CreateIfNotExistsAsync();
 
             IList<TableResult> result = null;
 
@@ -172,9 +152,8 @@ namespace com.brgs.orm.Azure
                 {
                     var partial = records.Skip(recordCount).Take(100);
                     var batch = BuildBatch(partial, PartitionKey);
-                    result = await table.ExecuteBatchAsync(batch);
-                    var val = partial.Count();
-                    recordCount = recordCount + partial.Count();;
+                    await table.ExecuteBatchAsync(batch);
+                    recordCount = recordCount + partial.Count();
 
                 } while (recordCount < records.Count());
                 return recordCount;
@@ -201,30 +180,7 @@ namespace com.brgs.orm.Azure
             }
             return batch;
         }  
-        public virtual async Task DeleteBatchAsync<T>(IEnumerable<T> records)
-        {         
-            var table = _tableclient.GetTableReference(CollectionName);
-            Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
-            batchOperationAction = (bo, entity) => bo.Delete(entity);
-            TableBatchOperation batch = new TableBatchOperation();
-            var tasks = new List<Task<IList<TableResult>>>();
-            var entitiesOffset = 0;
-            while (entitiesOffset < records?.Count())
-            {
-                var entitiesToAdd = records.Skip(entitiesOffset).Take(100).ToList();
-                entitiesOffset += entitiesToAdd.Count;
-
-                TableBatchOperation batchOperation = new TableBatchOperation();
-
-                entitiesToAdd.ForEach(entity => batchOperationAction(batchOperation, (ITableEntity)entity));
-
-                tasks.Add(table.ExecuteBatchAsync(batchOperation));
-            }
-
-            IList<TableResult>[] results =  await Task.WhenAll(tasks).ConfigureAwait(false);            
-
-
-        }              
+             
         public T Put<T>(T record)
         {
             throw new NotImplementedException("coming soon");
@@ -261,6 +217,32 @@ namespace com.brgs.orm.Azure
             }, records);            
             
         }  
+
+        public virtual async Task DeleteBatchAsync<T>(IEnumerable<T> records)
+        {         
+            var table = _tableclient.GetTableReference(CollectionName);
+            Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
+            batchOperationAction = (bo, entity) => bo.Delete(entity);
+
+            var tasks = new List<Task<IList<TableResult>>>();
+            var entitiesOffset = 0;
+            while (entitiesOffset < records?.Count())
+            {
+                var entitiesToAdd = records.Skip(entitiesOffset).Take(100).ToList();
+                entitiesOffset += entitiesToAdd.Count;
+
+                TableBatchOperation batchOperation = new TableBatchOperation();
+
+                entitiesToAdd.ForEach(entity => batchOperationAction(batchOperation, (ITableEntity)entity));
+
+                tasks.Add(table.ExecuteBatchAsync(batchOperation));
+            }
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);            
+
+
+        } 
+
         public virtual string Peek(string container)
         {
             var queue = _queueClient.GetQueueReference(container);

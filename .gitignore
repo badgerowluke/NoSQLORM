@@ -1,6 +1,8 @@
 **/bin
 **/obj
 
+/.sonarqube
+
 
 .DS_Store
 ## Ignore Visual Studio temporary files, build results, and
@@ -282,3 +284,4 @@ com.brgs.orm.test/coverage.json
 com.brgs.orm.sandbox/
 com.brgs.orm.test/.lcov.info
 com.brgs.orm.test/coverage.xml
+com.brgs.orm.test/coverage.opencover.xml

@@ -28,7 +28,7 @@ namespace com.brgs.orm.AzureHelpers.ExpressionHelpers
         {
             if(Body.Method.Name.Equals("Contains"))
             {
-                throw new ArgumentException("sorry, Table API will not accept the Contains Operation");
+                return string.Empty;
             }
             return $"{PropertyName} eq '{Parameters.ToList()[0].Item2}'";
         }

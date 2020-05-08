@@ -1,11 +1,9 @@
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using com.brgs.orm.Azure.helpers;
-using Microsoft.WindowsAzure.Storage;
+
 using Microsoft.WindowsAzure.Storage.Table;
 
 [assembly:InternalsVisibleTo("com.brgs.orm.test")]
@@ -15,11 +13,7 @@ namespace com.brgs.orm.Azure
 {
     public interface IAzureTableBuilder
     {
-        // string CollectionName { get; set; }
-        // string PartitionKey { get; set; } 
         Task<T> GetAsync<T>(TableQuery query, string collection);
-        // Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
-        // Task<int> PostAsync<T>(T record);
         Task<int> PostBatchAsync<T>(IEnumerable<T> records, string partition);
         Task DeleteBatchAsync<T>(IEnumerable<T> records);
     }
@@ -34,9 +28,9 @@ namespace com.brgs.orm.Azure
         {
            return await InternalGetAsync<T>(query, collection);  
         }
-        public override async Task<string> PostAsync<T>(T record)
+        public override async Task<string> PostAsync<T>(T value)
         {
-            return await base.PostAsync<T>(record);
+            return await base.PostAsync<T>(value);
     
         }
         ///<summary>each individual batch needs to be less than or equal to 100</summary>

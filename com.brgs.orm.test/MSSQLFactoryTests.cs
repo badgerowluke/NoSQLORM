@@ -12,7 +12,7 @@ namespace com.brgs.orm.test
         [Fact]
         public void WeDoGetASqlFactory()
         {
-            var test = new SQLStorageFactory(null);
+            var test = new SqlStorageFactory(null);
             Assert.NotNull(test);
 
         }

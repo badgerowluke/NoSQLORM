@@ -33,8 +33,9 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
         [Fact]
         public void ThrowWhenContainsIsCalled()
         {
-            Assert.Throws<ArgumentException>(() =>
-             _builder.BuildQueryFilter<River>(r => r.Name.Contains("Gauley")));
+            var query = _builder.BuildQueryFilter<River>(r => r.Name.Contains("Gauley"));
+            query.Should().BeEmpty();
+
         }
         [Fact]
         public void EncodeNotOperandCorrectly()

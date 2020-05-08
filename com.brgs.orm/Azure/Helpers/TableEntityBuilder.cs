@@ -6,9 +6,11 @@ namespace com.brgs.orm.Azure.helpers
 {
     public class TableEntityBuilder
     {
-        private  Dictionary<string, EntityProperty> properties;
+        public Dictionary<string, EntityProperty> Properties {get;set;}
 
         private readonly Dictionary<string, Delegate> Mapper;
+
+
         public TableEntityBuilder()
         {
             Mapper = new Dictionary<string, Delegate>()
@@ -21,17 +23,7 @@ namespace com.brgs.orm.Azure.helpers
                 { "System.DateTime", new Action<string, dynamic>(AddDateTimeProperty) }
             };
         }
-        public Dictionary<string, EntityProperty> Properties 
-        {
-            get 
-            { 
-                return properties; 
-            }
-            set 
-            { 
-                properties = value; 
-            }
-        }
+
         public TableEntityBuilder(Dictionary<string, EntityProperty> props)
         {
             Properties = props;
@@ -54,49 +46,49 @@ namespace com.brgs.orm.Azure.helpers
         }
         private void AddInt32Property(string name, dynamic value)
         {
-            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            if(name != null && value != null && Properties != null && !Properties.ContainsKey(name) )
             {
-                properties.Add(name, new EntityProperty((Int32?)value));
+                Properties.Add(name, new EntityProperty((Int32?)value));
             } 
         }
         private void AddInt64Property(string name, dynamic value)
         {
-            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            if(name != null && value != null && Properties != null && !Properties.ContainsKey(name) )
             {
-                properties.Add(name, new EntityProperty((Int64?)value));
+                Properties.Add(name, new EntityProperty((Int64?)value));
             } 
         }
         private void AddDoubleProperty(string name, dynamic value)
         {
-            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            if(name != null && value != null && Properties != null && !Properties.ContainsKey(name) )
             {
-                properties.Add(name, new EntityProperty((double?)value));
+                Properties.Add(name, new EntityProperty((double?)value));
             } 
         }
         private void AddBooleanProperty(string name, dynamic value)
         {
-            if(name != null && value != null && properties != null && !properties.ContainsKey(name) )
+            if(name != null && value != null && Properties != null && !Properties.ContainsKey(name) )
             {
-                properties.Add(name, new EntityProperty((bool?)value));
+                Properties.Add(name, new EntityProperty((bool?)value));
             } 
         }
         private void AddStringProperty(string name, dynamic value)
         {
             
-            if(name != null && value != null && properties != null 
-                && !properties.ContainsKey(name) )
+            if(name != null && value != null && Properties != null 
+                && !Properties.ContainsKey(name) )
             {
-                properties.Add(name, new EntityProperty((string) value));
+                Properties.Add(name, new EntityProperty((string) value));
             } 
         }
         private void AddDateTimeProperty(string name, dynamic value)
         {
-            if(name != null && value != null && properties != null
-                && !properties.ContainsKey(name))
+            if(name != null && value != null && Properties != null
+                && !Properties.ContainsKey(name))
             {
                 var date = (DateTime) value;
                 var utcDate = date.ToUniversalTime();
-                properties.Add(name, new EntityProperty(utcDate));
+                Properties.Add(name, new EntityProperty(utcDate));
             }
 
         }

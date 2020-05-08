@@ -12,7 +12,12 @@ namespace com.brgs.orm
         {
             
         }
-        public async Task<T> GetAsync<T>(string filename)
+        public Task<T> GetAsync<T>(string filename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T, bool>> predicate)
         {
             throw new NotImplementedException();
         }
@@ -30,9 +35,5 @@ namespace com.brgs.orm
             throw new NotImplementedException("coming soon");
         }
 
-        public Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

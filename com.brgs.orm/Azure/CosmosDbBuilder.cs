@@ -13,7 +13,7 @@ namespace com.brgs.orm.Azure
 {
     public interface ICosmosDbBuilder
     {
-        Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection);
+        Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection=null);
         Task<string> PostAsync<T>(T record);
         Task DeleteAsync<T>(string id, string partiton = null);
         void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey);
@@ -51,11 +51,11 @@ namespace com.brgs.orm.Azure
             return results;
         }         
 
-        public override async Task<string> PostAsync<T>(T record)
+        public override async Task<string> PostAsync<T>(T value)
         {
 
             var result = await _client.UpsertDocumentAsync(
-                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),record);
+                UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), value);
             return result.StatusCode.ToString();
         }
         ///<summary>

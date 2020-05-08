@@ -1,13 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-
-using com.brgs.orm.Azure.helpers;
-using System.Collections.Generic;
 using System.Text;
-using System;
-using System.Linq.Expressions;
 
 namespace com.brgs.orm.Azure
 {
@@ -27,17 +21,17 @@ namespace com.brgs.orm.Azure
 
         }
 
-        public override async Task<T> GetAsync<T>(string blobName)
+        public override async Task<T> GetAsync<T>(string fileName)
         {
-            return await base.GetAsync<T>(blobName);
+            return await base.GetAsync<T>(fileName);
         }
 
-        public override async Task<string> PostAsync<T>(T record)
+        public override async Task<string> PostAsync<T>(T value)
         {
             int count = 0;
             var container = _blobClient.GetContainerReference(CollectionName);
             var blob = container.GetBlockBlobReference(PartitionKey);
-            var vals = JsonConvert.SerializeObject(record);
+            var vals = JsonConvert.SerializeObject(value);
             var bytes = Encoding.UTF8.GetBytes(vals);
             using(var stream = new MemoryStream(bytes))
             {
