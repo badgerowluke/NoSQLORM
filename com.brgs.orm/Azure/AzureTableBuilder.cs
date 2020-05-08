@@ -43,10 +43,5 @@ namespace com.brgs.orm.Azure
         {
             await base.DeleteBatchAsync(records);
         }
-
-
-
-
-
     }
 }
