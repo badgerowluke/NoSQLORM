@@ -13,7 +13,18 @@ namespace com.brgs.orm.Azure.helpers
 
         public TableEntityBuilder()
         {
-            Mapper = new Dictionary<string, Delegate>()
+            Mapper = BuildMapper();
+        }
+
+        public TableEntityBuilder(Dictionary<string, EntityProperty> props)
+        {
+            Properties = props;
+            Mapper = BuildMapper();          
+        }
+
+        private Dictionary<string, Delegate> BuildMapper()
+        {
+            return new Dictionary<string, Delegate>
             {
                 { "System.String", new Action<string, dynamic>(AddStringProperty) },
                 { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
@@ -22,20 +33,6 @@ namespace com.brgs.orm.Azure.helpers
                 { "System.Int64", new Action<string, dynamic>(AddInt64Property) },
                 { "System.DateTime", new Action<string, dynamic>(AddDateTimeProperty) }
             };
-        }
-
-        public TableEntityBuilder(Dictionary<string, EntityProperty> props)
-        {
-            Properties = props;
-            Mapper = new Dictionary<string, Delegate>()
-            {
-                { "System.String", new Action<string, dynamic>(AddStringProperty) },
-                { "System.Boolean", new Action<string, dynamic>(AddBooleanProperty) },
-                { "System.Double", new Action<string, dynamic>(AddDoubleProperty) },
-                { "System.Int32", new Action<string, dynamic>(AddInt32Property) },
-                { "System.Int64", new Action<string, dynamic>(AddInt64Property) },
-                { "System.DateTime", new Action<string, dynamic>(AddDateTimeProperty) }
-            };            
         }
         public void EncodeProperty<T>(PropertyInfo prop, T record)
         {
