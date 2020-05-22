@@ -18,24 +18,7 @@ namespace com.brgs.orm.RelationalDB
 
         public T Get<T>()
         {
-            var outVal = (T)Activator.CreateInstance(typeof(T));
-
-            using (var conn = _connection.CreateConnection())
-            {
-                using (var command = conn.CreateCommand())
-                {
-                    command.CommandText = "";
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        for (var f = 0; f < reader.FieldCount; f++)
-                        {
-                            var resultName = reader.GetName(f);
-                        }
-                    }
-                }
-            }
-            return outVal;
+            throw new NotImplementedException("coming soon");
         }
 
         public Task<T> GetAsync<T>(string filename){ throw new NotImplementedException("coming soon");}
