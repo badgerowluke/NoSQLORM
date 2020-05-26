@@ -18,8 +18,7 @@ namespace com.brgs.orm.test
         public RiverData[] RiverData { get; set; }
         public string State { get; set; }
         public string StateCode { get; set; }
-		public River() {
-		}
+
     }
     public class RiverData
     {
