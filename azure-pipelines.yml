@@ -83,6 +83,7 @@ steps:
     summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/*cobertura.xml
     reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
 
+#TODO: need to turn these tasks off for Pull Requests
 - task: DotNetCoreCLI@2
   displayName: package the assembly
   inputs:
