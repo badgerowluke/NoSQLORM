@@ -19,7 +19,7 @@ variables:
 
 steps:
 
-- task: SonarCloudPrepare@1
+- task: SonarCloudPrepare@2
   displayName: 'Prepare SonarCloud analysis'
   inputs:
     SonarCloud: 'SonarCloudService'
@@ -53,7 +53,7 @@ steps:
 
 
 
-- task: SonarCloudAnalyze@1
+- task: SonarCloudAnalyze@2
   displayName: 'Run SonarCloud code analysis'
   # condition: |
   #   and
@@ -63,7 +63,7 @@ steps:
   #     eq(variables['System.PullRequest.TargetBranch'], 'master')
   #   )  
   
-- task: SonarCloudPublish@1
+- task: SonarCloudPublish@2
   displayName: 'Publish SonarCloud quality gate results'  
   # condition: |
   #   and
