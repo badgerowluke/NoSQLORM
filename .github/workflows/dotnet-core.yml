@@ -25,4 +25,11 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   
+    - id: next_ver
+      uses: zwaldowski/semver-release-action@1
+      with:
+        allowed: major,minor,patch
+    - run: edho "${{steps.next_ver.outputs.version }}"
+    - name: Pack
+      run: dotnet pack --no-build --configuration Release
 
