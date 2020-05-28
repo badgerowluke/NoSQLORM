@@ -19,7 +19,7 @@ variables:
 
 steps:
 
-- task: SonarCloudPrepare@2
+- task: SonarCloudPrepare@1
   displayName: 'Prepare SonarCloud analysis'
   inputs:
     SonarCloud: 'SonarCloudService'
@@ -51,9 +51,13 @@ steps:
     projects: '**/*[Tt]est/*.csproj'
     arguments:  '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
 
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/*cobertura.xml
+    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
 
-
-- task: SonarCloudAnalyze@2
+- task: SonarCloudAnalyze@1
   displayName: 'Run SonarCloud code analysis'
   # condition: |
   #   and
@@ -63,7 +67,7 @@ steps:
   #     eq(variables['System.PullRequest.TargetBranch'], 'master')
   #   )  
   
-- task: SonarCloudPublish@2
+- task: SonarCloudPublish@1
   displayName: 'Publish SonarCloud quality gate results'  
   # condition: |
   #   and
@@ -77,11 +81,7 @@ steps:
   displayName: 'Run WhiteSource Bolt'
   
 
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/*cobertura.xml
-    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
+
 
 #TODO: need to turn these tasks off for Pull Requests
 - task: DotNetCoreCLI@2
