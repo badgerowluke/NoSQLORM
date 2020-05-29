@@ -33,7 +33,7 @@ jobs:
       env: 
         version_tag: ""
       run: |
-        $VERSION_TAG=$(git describe --tags)
+        VERSION_TAG=$(git describe --tags)
 
     - run: |
         echo "$VERSION_TAG"
