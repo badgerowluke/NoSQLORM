@@ -33,7 +33,8 @@ jobs:
 
       run: |
         VERSION_TAG=$(git describe --tags)
-        echo $VERSION_TAG
+        echo ::set-env name=VERSION_TAG::$VERSION_TAG
+
 
     - name: spit version
 
