@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 2.1.806
 
-    - name: Install dependencies
-      run: dotnet restore
+    # - name: Install dependencies
+    #   run: dotnet restore
 
     # - name: Build
     #   run: dotnet build --configuration Release --no-restore
@@ -35,5 +35,5 @@ jobs:
         VERSION_TAG=$(git describe --tags)
 
     - run: |
-        echo "${{steps.get_version.outputs.version_tag}}"
+        echo "${{steps.get_version.outputs}}"
 
