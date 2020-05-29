@@ -40,5 +40,6 @@ jobs:
 
     - name: publish
       run: |
+        sed '/s/TOKEN/${{secrets.GITHUB_TOKEN}}' nuget.config
         dotnet nuget push ../packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.NUGET_AUTH }}
 
