@@ -36,10 +36,9 @@ jobs:
 
 
     - name: package
-      run: dotnet pack -p:PackageVersion=$VERSION_TAG --configuration Release --no-restore
+      run: dotnet pack -p:PackageVersion=$VERSION_TAG --configuration Release --no-restore -o "./packages"
 
     - name: publish
       run: |
-        filepath="/home/runner/work/NoSQLORM/NoSQLORM/com.brgs.orm/bin/Release/com.brgs.orm.$VERSION_TAG.nupkg"
-        dotnet nuget push $filepath --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget push ./packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.GITHUB_TOKEN }}
 
