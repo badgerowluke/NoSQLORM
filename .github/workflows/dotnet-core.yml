@@ -33,5 +33,5 @@ jobs:
         git describe --tags
 
     - run: |
-        echo "${{ steps.get_version.outputs }}""
+        echo "${{ steps.get_version.outputs }}"
 
