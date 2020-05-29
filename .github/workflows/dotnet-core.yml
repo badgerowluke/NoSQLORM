@@ -21,14 +21,14 @@ jobs:
       with:
         dotnet-version: 2.1.806
 
-    # - name: Install dependencies
-    #   run: dotnet restore
+    - name: Install dependencies
+      run: dotnet restore
 
-    # - name: Build
-    #   run: dotnet build --configuration Release --no-restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
 
-    # - name: Test
-    #   run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   
     - name: get_version
 
       run: |
@@ -36,8 +36,6 @@ jobs:
         echo ::set-env name=VERSION_TAG::$VERSION_TAG
 
 
-    - name: spit version
-
-      run: |
-        echo "$VERSION_TAG"
+    - name: package
+      run: dotnet pack -p:PackageVersion=$VERSION_TAG
 
