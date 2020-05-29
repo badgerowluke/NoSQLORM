@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -29,9 +30,11 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   
     - name: get_version
+      env: 
+        version_tag: ""
       run: |
-        git describe --tags
+        $VERSION_TAG= git describe --tags
 
     - run: |
-        echo "${{ steps.get_version.outputs }}"
+        echo "$VERSION_TAG"
 
