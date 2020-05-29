@@ -40,5 +40,5 @@ jobs:
 
     - name: publish
       run: |
-        dotnet nuget push ../packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget push ../packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.NUGET_AUTH }}
 
