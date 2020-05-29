@@ -39,5 +39,5 @@ jobs:
     - name: spit version
 
       run: |
-        echo "${{steps.get_version.outputs.VERSION_TAG}}"
+        echo "$VERSION_TAG"
 
