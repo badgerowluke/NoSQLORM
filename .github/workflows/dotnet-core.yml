@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 2.1.806
 
-    - run: sed '/s/TOKEN/${{secrets.GITHUB_TOKEN}}' nuget.config
+    - run: sed 's/TOKEN/${{secrets.GITHUB_TOKEN}}/' Nuget.config
 
     - name: Install dependencies
       run: dotnet restore
