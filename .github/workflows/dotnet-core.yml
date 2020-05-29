@@ -41,5 +41,5 @@ jobs:
     - name: publish
       run: |
         filepath="/home/runner/work/NoSQLORM/NoSQLORM/com.brgs.orm/bin/Release/com.brgs.orm.$VERSION_TAG.nupkg"
-        dotnet nuget push $filepath --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget push $filepath --source "https://nuget.pkg.github.com/badgerowluke/NOSQLORM/index.json" -k ${{ secrets.GITHUB_TOKEN }}
 
