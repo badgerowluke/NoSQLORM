@@ -21,9 +21,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.806
-    - name: Set Nuget Config
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Set Nuget Config
     - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
 
     - name: Install dependencies
