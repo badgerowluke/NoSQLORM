@@ -50,5 +50,3 @@ jobs:
         dotnet nuget push ../packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" --source "github"
 
 
-]=
-
