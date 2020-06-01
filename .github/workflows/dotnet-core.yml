@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 2.1.806
 
-    - run: sed 's/TOKEN/${{secrets.GITHUB_TOKEN}}/'  ./nuget.config
+
 
     - name: Install dependencies
       run: dotnet restore
@@ -40,8 +40,4 @@ jobs:
     - name: package
       run: dotnet pack -p:PackageId=NOSQLORM -p:PackageVersion=$VERSION_TAG --configuration Release --no-restore -o "../../packages"
 
-    - name: publish
-      run: |
-
-        dotnet nuget push ../packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" -k ${{ secrets.GITHUB_TOKEN }}
 
