@@ -47,6 +47,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
 
-        dotnet nuget push ../packages/*.nupkg --source "https://nuget.pkg.github.com/badgerowluke/index.json" --source "github"
+        dotnet nuget push ../packages/*.nupkg  --source "github"
 
 
