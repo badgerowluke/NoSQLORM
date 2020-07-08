@@ -6,7 +6,7 @@ namespace com.brgs.orm.Azure
 {
     public interface IAzureQueueBuilder 
     {
-        string Post<T>(T value, string container);
+        Task<string> Post<T>(T value, string container);
         Task<T> GetAsync<T>(string container);
         string Peek(string container);
         Task<int> GetApproximateQueueMessageCount(string container);

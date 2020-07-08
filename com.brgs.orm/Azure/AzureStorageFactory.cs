@@ -87,14 +87,14 @@ namespace com.brgs.orm.Azure
         ///<param name="Value">The object to be converted to a queue message</param>
         ///<param name="container">The Queue to post into</param>
         ///</summary>
-        public virtual string Post<T>(T value, string container)
+        public virtual async Task<string> Post<T>(T value, string container)
         {
             var queue = _queueClient.GetQueueReference(container);
-            queue.CreateIfNotExistsAsync().GetAwaiter().GetResult();
+            await queue.CreateIfNotExistsAsync();
             var obj = JsonConvert.SerializeObject(value);
             var message = new CloudQueueMessage(obj);
-            queue.AddMessageAsync(message).GetAwaiter().GetResult();
-            queue.FetchAttributesAsync().GetAwaiter().GetResult();
+            await queue.AddMessageAsync(message);
+            await queue.FetchAttributesAsync();
             
             return queue.ApproximateMessageCount.ToString();
         }        

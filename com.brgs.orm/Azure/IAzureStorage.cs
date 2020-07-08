@@ -15,7 +15,7 @@ namespace com.brgs.orm.Azure
         Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
         Task<int> PostBatchAsync<T>(IEnumerable<T> records);     
 
-        string Post<T>(T value, string container);
+        Task<string> Post<T>(T value, string container);
         Task<string> PostAsync<T>(T value);
         string Peek(string container);
         Task<int> GetApproximateQueueMessageCount(string container);
