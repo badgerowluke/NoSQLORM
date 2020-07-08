@@ -3,8 +3,8 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-trigger:
-- '*'
+
+trigger: none
 
 pool:
   vmImage: 'Ubuntu-16.04'
@@ -12,7 +12,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   majorVersion: 0
-  minorVersion: 2
+  minorVersion: 3
   #NOTE: this allows for auto incrementing on the patch number each time it runs... reset when the major minor is updated...
   #https://kasunkodagoda.com/2019/04/03/hidden-gems-in-azure-pipelines-creating-your-own-rev-variable-using-counter-expression-in-azure-pipelines/
   patchVersion: $[counter(format('{0}.{1}', variables['majorVersion'], variables['minorVersion'], 0))]  
@@ -32,13 +32,13 @@ steps:
       sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/TestResults/Coverage/coverage.opencover.xml
       sonar.exclusions=**/wwwroot/lib/**/*
       
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.Reason'], 'PullRequest'),
-      eq(variables['System.PullRequest.TargetBranch'], 'master')
-    )
+  # condition: |
+  #   and
+  #   (
+  #     succeeded(),
+  #     eq(variables['Build.Reason'], 'PullRequest'),
+  #     eq(variables['System.PullRequest.TargetBranch'], 'master')
+  #   )
 
 
 - script: dotnet build --configuration $(buildConfiguration)
@@ -51,38 +51,39 @@ steps:
     projects: '**/*[Tt]est/*.csproj'
     arguments:  '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura   /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
 
-
-
-- task: SonarCloudAnalyze@1
-  displayName: 'Run SonarCloud code analysis'
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.Reason'], 'PullRequest'),
-      eq(variables['System.PullRequest.TargetBranch'], 'master')
-    )  
-  
-- task: SonarCloudPublish@1
-  displayName: 'Publish SonarCloud quality gate results'  
-  condition: |
-    and
-    (
-      succeeded(),
-      eq(variables['Build.Reason'], 'PullRequest'),
-      eq(variables['System.PullRequest.TargetBranch'], 'master')
-    )  
-
-- task: WhiteSource Bolt@20
-  displayName: 'Run WhiteSource Bolt'
-  
-
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/*cobertura.xml
     reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
 
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud code analysis'
+  # condition: |
+  #   and
+  #   (
+  #     succeeded(),
+  #     eq(variables['Build.Reason'], 'PullRequest'),
+  #     eq(variables['System.PullRequest.TargetBranch'], 'master')
+  #   )  
+  
+- task: SonarCloudPublish@1
+  displayName: 'Publish SonarCloud quality gate results'  
+  # condition: |
+  #   and
+  #   (
+  #     succeeded(),
+  #     eq(variables['Build.Reason'], 'PullRequest'),
+  #     eq(variables['System.PullRequest.TargetBranch'], 'master')
+  #   )  
+
+- task: WhiteSource Bolt@20
+  displayName: 'Run WhiteSource Bolt'
+  
+
+
+
+#TODO: need to turn these tasks off for Pull Requests
 - task: DotNetCoreCLI@2
   displayName: package the assembly
   inputs:
