@@ -7,7 +7,7 @@ namespace com.brgs.orm.Azure
 {
     public interface IAzureBlobBuilder
     {
-        Task<T> GetAsync<T>(string containerName);
+        Task<T> GetAsync<T>(string fileName);
         Task<string> PostAsync<T>(T value);
     }
     

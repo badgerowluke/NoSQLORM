@@ -13,8 +13,8 @@ namespace com.brgs.orm.Azure
         string KeyDelimiter { get; set; }
         
         Task<T> GetAsync<T>(TableQuery query);   
-        Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
         Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection = null);
+        Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate);
         Task<T> GetQueueMessageAsync<T>(string fileName);
 
         Task<string> PostAsync<T>(T value);

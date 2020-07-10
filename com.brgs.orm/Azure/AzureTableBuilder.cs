@@ -38,19 +38,26 @@ namespace com.brgs.orm.Azure
             return await InternalGetAsync<T>(query, CollectionName);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
+        public virtual async Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate)
         {
-            if(string.IsNullOrEmpty(CollectionName)) { throw new ArgumentNullException(CollectionName, "Collection cannot be null"); }
-            // var query = new TableQuery().Where(BuildQueryFilter(predicate));
+            
+            var query = new TableQuery().Where(BuildQueryFilter(predicate));
 
-            // return await InternalGetAsync<List<T>>(query, CollectionName);
-            throw new NotImplementedException("breaking this because it errors out when touching Table Storage");
+            return await InternalGetAsync<List<T>>(query, CollectionName);
+
         }        
 
 
         protected async Task<T> InternalGetAsync<T>(TableQuery query, string collection)
         {
+
             var table = _tableclient.GetTableReference(collection);
+            var tableExists = await table.ExistsAsync();
+
+            if(!tableExists)
+                return default(T);
+
+                
             var outVal = (T)Activator.CreateInstance(typeof(T));
             var content = outVal.GetType().GetGenericArguments().Length > 0 ? outVal.GetType().GetGenericArguments()[0] : null ;            
             TableContinuationToken token = null;
@@ -104,14 +111,6 @@ namespace com.brgs.orm.Azure
         ///<summary>each individual batch needs to be less than or equal to 100</summary>
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
         {
-            if(string.IsNullOrEmpty(CollectionName))
-            {
-                throw new ArgumentException("we need to have a collection");
-            }
-            if(string.IsNullOrEmpty(PartitionKey))
-            {
-                throw new ArgumentException("we need to hava a partition Key");
-            }
 
             var table = _tableclient.GetTableReference(CollectionName);
 

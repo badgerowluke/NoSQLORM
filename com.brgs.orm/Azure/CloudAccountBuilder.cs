@@ -57,8 +57,9 @@ namespace com.brgs.orm.Azure
         }
         public IDocumentClient CreateDocumentClient()
         {
-            if(string.IsNullOrEmpty(_url)) { throw new ArgumentException("need a collection url"); }
-            if(string.IsNullOrEmpty(_authKey)) { throw new ArgumentException("need an authorization key"); }
+            if(string.IsNullOrEmpty(_url)) { return null; }
+            if(string.IsNullOrEmpty(_authKey)) { return null; }
+            
             return new DocumentClient(new Uri(_url), _authKey);
         }
     }

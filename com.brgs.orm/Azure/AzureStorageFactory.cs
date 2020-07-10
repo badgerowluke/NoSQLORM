@@ -36,16 +36,6 @@ namespace com.brgs.orm.Azure
             _client = _account.CreateDocumentClient();
         }
 
-
-       
-      
-
-
-     
-
-
-
-             
         public T Put<T>(T record)
         {
             throw new NotImplementedException("coming soon");

@@ -20,15 +20,6 @@ namespace com.brgs.orm.Azure
     }
     public partial class  AzureStorageFactory: ICosmosDbBuilder
     {
-
-
-        // public CosmosDbBuilder(ICloudStorageAccount account, string database, string collection)
-        // {
-        //     _account = account;
-        //     _client = _account.CreateDocumentClient();
-        //     DatabaseId = database;
-        //     CollectionId = collection;
-        // }
         public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection = null)
         {
             var query = _client.CreateDocumentQuery<T>(
