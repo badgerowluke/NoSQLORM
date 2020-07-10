@@ -39,7 +39,7 @@ namespace com.brgs.orm.test.Azure.Blobs
 
                 acc.Setup(c => c.CreateCloudBlobClient()).Returns(blobClient.Object);
 
-                var fac = new AzureBlobBuilder(acc.Object)
+                var fac = new AzureStorageFactory(acc.Object)
                 {
                     CollectionName ="PIZZA"
                 };

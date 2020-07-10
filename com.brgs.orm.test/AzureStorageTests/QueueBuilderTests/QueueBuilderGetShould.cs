@@ -18,13 +18,13 @@ namespace com.brgs.orm.test.Azure.Queues
             
             CloudQueueMock.Setup(m => m.GetMessageAsync()).Returns(Task.FromResult(new CloudQueueMessage(riverString)));
 
-            var msg = await Builder.GetAsync<River>("favorite-river-queue");
+            var msg = await Builder.GetQueueMessageAsync<River>("favorite-river-queue");
             Assert.IsType<River>(msg);
         }
         [Fact]
         public async void ReturnNullIfNoMessage()
         {
-            var msg = await Builder.GetAsync<River>("favorite-river-queue");
+            var msg = await Builder.GetQueueMessageAsync<River>("favorite-river-queue");
             Assert.Null(msg);
 
         }

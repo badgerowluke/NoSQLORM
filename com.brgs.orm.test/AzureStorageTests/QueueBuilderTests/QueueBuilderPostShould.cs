@@ -11,7 +11,7 @@ namespace com.brgs.orm.test.Azure.Queues
         {
             //TODO: NEED A WAY TO FAKE THE ApproximateMessageCount
 
-            var one = await Builder.Post<River>(new River(), "favorite-river-queue");
+            var one = await Builder.PostQueueMessageAsync<River>(new River(), "favorite-river-queue");
             Assert.Equal("", one);
 
         }

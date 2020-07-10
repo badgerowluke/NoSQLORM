@@ -9,10 +9,10 @@ namespace com.brgs.orm.test.Azure.Tables
         [Fact(Skip="another weird flakey test to investifart")]
         public void ConvertITableEntityIntoDomainObject()
         {
-            var entity = Builder.BuildTableEntity(ARiver);
+            var entity = Fac.BuildTableEntity(ARiver);
 
 
-            var testVal = (River)Builder.RecastEntity(entity, typeof(River));
+            var testVal = (River)Fac.RecastEntity(entity, typeof(River));
             Assert.Equal(ARiver.Name, testVal.Name);
             Assert.Equal(ARiver.RiverId, testVal.RiverId);
         }
@@ -23,8 +23,8 @@ namespace com.brgs.orm.test.Azure.Tables
             {
                 DateProp = DateTime.UtcNow
             };
-            var entity = Builder.BuildTableEntity(demo);
-            var testVal = (DemoEntity)Builder.RecastEntity(entity, typeof(DemoEntity));
+            var entity = Fac.BuildTableEntity(demo);
+            var testVal = (DemoEntity)Fac.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DateProp, testVal.DateProp);
 
         }        

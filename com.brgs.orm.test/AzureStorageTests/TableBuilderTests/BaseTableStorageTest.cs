@@ -20,7 +20,7 @@ namespace com.brgs.orm.test.Azure
         public RiverEntity Entity { get; private set; }
         public River ARiver { get; private set; }
         public AzureStorageFactory Fac { get; private set; }
-        internal AzureTableBuilder Builder { get; private set; }
+
         public BaseAzureTableStorageTester()
         {
 
@@ -33,12 +33,12 @@ namespace com.brgs.orm.test.Azure
             TableClientMock.Setup(tc => tc.GetTableReference(It.IsAny<string>())).Returns(TableMock.Object);
 
             AccountMock.Setup(c => c.CreateCloudTableClient()).Returns(TableClientMock.Object);
-            Fac = new AzureTableBuilder(AccountMock.Object)
+            Fac = new AzureStorageFactory(AccountMock.Object)
             {
                 PartitionKey = "TACOS",
                 CollectionName = "Pizza"                
             };
-            Builder = new AzureTableBuilder(AccountMock.Object);
+
         }
         public virtual TableQuerySegment GetTableQuerySegments(int count = 1)
         {

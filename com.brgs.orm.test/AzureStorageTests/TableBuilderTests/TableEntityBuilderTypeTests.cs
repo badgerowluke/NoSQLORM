@@ -15,7 +15,7 @@ namespace com.brgs.orm.test.Azure.Tables
                 BoolProp = true
             };
 
-            var entity = Builder.BuildTableEntity(demo);
+            var entity = Fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("BoolProp"));
         }
         [Fact]
@@ -26,7 +26,7 @@ namespace com.brgs.orm.test.Azure.Tables
                 BoolProp = true
             };
   
-            var entity = Builder.BuildTableEntity(demo);
+            var entity = Fac.BuildTableEntity(demo);
             Assert.True(entity.Properties["BoolProp"].BooleanValue);            
         }
         [Fact]
@@ -37,7 +37,7 @@ namespace com.brgs.orm.test.Azure.Tables
                 BoolProp = true,
                 DoubleProp = Convert.ToDouble(42)
             };
-            var entity = Builder.BuildTableEntity(demo);
+            var entity = Fac.BuildTableEntity(demo);
 
             Assert.True(entity.Properties.ContainsKey("DoubleProp"));
         }
@@ -48,8 +48,8 @@ namespace com.brgs.orm.test.Azure.Tables
             {
                 DoubleProp = Convert.ToDouble(42)
             };
-            var entity = Builder.BuildTableEntity(demo);
-            var testVal = (DemoEntity)Builder.RecastEntity(entity, typeof(DemoEntity));
+            var entity = Fac.BuildTableEntity(demo);
+            var testVal = (DemoEntity)Fac.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DoubleProp, testVal.DoubleProp);            
         }
         [Fact]
@@ -59,7 +59,7 @@ namespace com.brgs.orm.test.Azure.Tables
             {
                 IntProp = 42
             };
-            var entity = Builder.BuildTableEntity(demo);
+            var entity = Fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("IntProp"));
         }
         [Fact]
@@ -69,7 +69,7 @@ namespace com.brgs.orm.test.Azure.Tables
             {
                 LongProp = Convert.ToInt64(42)
             };
-            var entity = Builder.BuildTableEntity(demo);
+            var entity = Fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("LongProp"));            
         }
         [Fact]
@@ -79,7 +79,7 @@ namespace com.brgs.orm.test.Azure.Tables
             {
                 DateProp = DateTime.Now
             };
-            var entity = Builder.BuildTableEntity(demo);
+            var entity = Fac.BuildTableEntity(demo);
             Assert.True(entity.Properties.ContainsKey("DateProp"));
         }
         [Fact]
@@ -90,8 +90,8 @@ namespace com.brgs.orm.test.Azure.Tables
                 DateProp = DateTime.UtcNow
             };
             var date = DateTime.Now.ToUniversalTime();
-            var entity = Builder.BuildTableEntity(demo);
-            var testVal = (DemoEntity)Builder.RecastEntity(entity, typeof(DemoEntity));
+            var entity = Fac.BuildTableEntity(demo);
+            var testVal = (DemoEntity)Fac.RecastEntity(entity, typeof(DemoEntity));
             Assert.Equal(demo.DateProp, testVal.DateProp);
         }
 

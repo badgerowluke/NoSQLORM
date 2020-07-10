@@ -15,7 +15,7 @@ namespace com.brgs.orm.test.Azure.Queues
         public Mock<ICloudStorageAccount> AccountMock { get; private set; }
         public Mock<CloudQueueClient> QueueClientMock { get; private set; }
         public Mock<CloudQueue> CloudQueueMock { get; private set; }
-        internal AzureQueueBuilder Builder { get; private set; }
+        internal AzureStorageFactory Builder { get; private set; }
         public BaseAzureQueueBuilderTester()
         {
             AccountMock = new Mock<ICloudStorageAccount>();
@@ -23,7 +23,7 @@ namespace com.brgs.orm.test.Azure.Queues
             CloudQueueMock = new Mock<CloudQueue>(new Uri("https://www.google.com"));
             QueueClientMock.Setup(qc => qc.GetQueueReference(It.IsAny<string>())).Returns(CloudQueueMock.Object);
             AccountMock.Setup(c => c.CreateCloudQueueClient()).Returns(QueueClientMock.Object);
-            Builder = new AzureQueueBuilder(AccountMock.Object);
+            Builder = new AzureStorageFactory(AccountMock.Object);
         }
     }
 

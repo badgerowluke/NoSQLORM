@@ -11,11 +11,11 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
 {
     public class LamdaExpressionParsingShould
     {
-        private readonly AzureTableBuilder _builder;
+        private readonly AzureStorageFactory _builder;
         public LamdaExpressionParsingShould()
         {
             var mock = new Mock<ICloudStorageAccount>();
-            _builder = new AzureTableBuilder(mock.Object);
+            _builder = new AzureStorageFactory(mock.Object);
         }
         [Fact]
         public void BuildQueryFilter()

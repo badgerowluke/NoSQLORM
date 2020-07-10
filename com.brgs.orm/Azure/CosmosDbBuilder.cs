@@ -18,21 +18,17 @@ namespace com.brgs.orm.Azure
         Task DeleteAsync<T>(string id, string partiton = null);
         void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey);
     }
-    public class CosmosDbBuilder : AzureStorageFactory, ICosmosDbBuilder
+    public partial class  AzureStorageFactory: ICosmosDbBuilder
     {
 
-        public CosmosDbBuilder(ICloudStorageAccount account )
-        {
-            _account = account;
-            _client = _account.CreateDocumentClient();
-        }
-        public CosmosDbBuilder(ICloudStorageAccount account, string database, string collection)
-        {
-            _account = account;
-            _client = _account.CreateDocumentClient();
-            DatabaseId = database;
-            CollectionId = collection;
-        }
+
+        // public CosmosDbBuilder(ICloudStorageAccount account, string database, string collection)
+        // {
+        //     _account = account;
+        //     _client = _account.CreateDocumentClient();
+        //     DatabaseId = database;
+        //     CollectionId = collection;
+        // }
         public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection = null)
         {
             var query = _client.CreateDocumentQuery<T>(
@@ -51,12 +47,31 @@ namespace com.brgs.orm.Azure
             return results;
         }         
 
-        public override async Task<string> PostAsync<T>(T value)
+        public async Task<string> PostAsync<T>(T value)
         {
 
             var result = await _client.UpsertDocumentAsync(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), value);
             return result.StatusCode.ToString();
+        }
+
+        public virtual async Task DeleteAsync<T>(string id, string partiton = null)
+        {
+            if(partiton == null)
+            {
+
+                await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), new RequestOptions
+                {
+                    PartitionKey = new PartitionKey(Undefined.Value)
+                });          
+            }
+
+
+            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), new RequestOptions
+            {
+                PartitionKey = new PartitionKey(partiton)
+            });          
+
         }
         ///<summary>
         ///In order to affect a batch operation against Cosmos, you'll need to create a stored procedure (js) 
@@ -71,6 +86,16 @@ namespace com.brgs.orm.Azure
             }, records);
             
         }
+
+        public virtual async void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
+        {
+            await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),
+            new RequestOptions()
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(partitionKey)
+            }, records);            
+            
+        }  
 
 
     }

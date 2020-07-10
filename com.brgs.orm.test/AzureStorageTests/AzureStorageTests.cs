@@ -12,7 +12,7 @@ namespace com.brgs.orm.test.Azure.Tables
         [Fact]
         public void Instantiate()
         {
-            var fac = new AzureTableBuilder(AccountMock.Object);
+            var fac = new AzureStorageFactory(AccountMock.Object);
             Assert.NotNull(fac);
         }
         [Fact]
@@ -22,13 +22,13 @@ namespace com.brgs.orm.test.Azure.Tables
 
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
-            var fac = new AzureTableBuilder(AccountMock.Object)
+            var fac = new AzureStorageFactory(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = await fac.Get<List<River>>(query);
+            var stuff = await fac.GetAsync<List<River>>(query);
             Assert.NotEmpty(stuff);
 
         }
@@ -41,14 +41,14 @@ namespace com.brgs.orm.test.Azure.Tables
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
 
-            var fac = new AzureTableBuilder(AccountMock.Object)
+            var fac = new AzureStorageFactory(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
 
-            var stuff = await fac.Get<List<River>>(query);
+            var stuff = await fac.GetAsync<List<River>>(query);
 
             Assert.InRange(stuff.Count, 1, 4);
         }
@@ -62,13 +62,13 @@ namespace com.brgs.orm.test.Azure.Tables
                 .ReturnsAsync(mock);
 
 
-            var fac = new AzureTableBuilder(AccountMock.Object)
+            var fac = new AzureStorageFactory(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = await fac.Get<River>(query);
+            var stuff = await fac.GetAsync<River>(query);
             Assert.IsType<River>(stuff);
         }
         [Fact]
@@ -78,13 +78,13 @@ namespace com.brgs.orm.test.Azure.Tables
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
-            var fac = new AzureTableBuilder(AccountMock.Object)
+            var fac = new AzureStorageFactory(AccountMock.Object)
             {
                 CollectionName = "RiversUnitedStates"
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = await fac.Get<List<KeyValuePair<string,string>>>(query);
+            var stuff = await fac.GetAsync<List<KeyValuePair<string,string>>>(query);
             Assert.IsType<List<KeyValuePair<string, string>>> (stuff);
         }
     }

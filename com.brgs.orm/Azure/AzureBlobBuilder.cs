@@ -8,25 +8,25 @@ namespace com.brgs.orm.Azure
     public interface IAzureBlobBuilder
     {
         Task<T> GetAsync<T>(string containerName);
+        Task<string> PostAsync<T>(T value);
     }
     
-    public class AzureBlobBuilder : AzureStorageFactory
+    public partial class  AzureStorageFactory: IAzureBlobBuilder 
     {
 
-
-        public AzureBlobBuilder(ICloudStorageAccount acc)
+        public async Task<T> GetAsync<T>(string fileName)
         {
-            _account = acc;
-            _blobClient = _account.CreateCloudBlobClient();
-
+            var container = _blobClient.GetContainerReference(_containerName);
+            var blob = container.GetBlobReference(fileName);
+            var blobStream = await blob.OpenReadAsync();
+            using(StreamReader reader = new StreamReader(blobStream))
+            {
+                string json = reader.ReadToEnd();
+                return JsonConvert.DeserializeObject<T>(json);
+            }
         }
 
-        public override async Task<T> GetAsync<T>(string fileName)
-        {
-            return await base.GetAsync<T>(fileName);
-        }
-
-        public override async Task<string> PostAsync<T>(T value)
+        public async Task<string> PostBlobAsync<T>(T value)
         {
             int count = 0;
             var container = _blobClient.GetContainerReference(CollectionName);
