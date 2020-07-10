@@ -16,7 +16,7 @@ namespace com.brgs.orm.test.Azure.Tables
             Assert.NotNull(fac);
         }
         [Fact]
-        public void ReturnResults()
+        public async void ReturnResults()
         {
             var mock = GetTableQuerySegments();
 
@@ -28,13 +28,13 @@ namespace com.brgs.orm.test.Azure.Tables
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = fac.Get<List<River>>(query);
+            var stuff = await fac.Get<List<River>>(query);
             Assert.NotEmpty(stuff);
 
         }
 
         [Fact]
-        public void UseTheSearchContextFromUser()
+        public async void UseTheSearchContextFromUser()
         {
             var mock = GetTableQuerySegments();
             
@@ -48,12 +48,12 @@ namespace com.brgs.orm.test.Azure.Tables
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
 
-            var stuff = fac.Get<List<River>>(query);
+            var stuff = await fac.Get<List<River>>(query);
 
             Assert.InRange(stuff.Count, 1, 4);
         }
         [Fact]
-        public void DoesReturnSingleEntity()
+        public async void DoesReturnSingleEntity()
         {
 
             var mock = GetTableQuerySegments();
@@ -68,11 +68,11 @@ namespace com.brgs.orm.test.Azure.Tables
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = fac.Get<River>(query);
+            var stuff = await fac.Get<River>(query);
             Assert.IsType<River>(stuff);
         }
         [Fact]
-        public void ReturnsListKeyValuePair()
+        public async void ReturnsListKeyValuePair()
         {
             var mock = GetTableQuerySegments();
             
@@ -84,7 +84,7 @@ namespace com.brgs.orm.test.Azure.Tables
             };
             var query = new TableQuery()
               .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "search"));
-            var stuff = fac.Get<List<KeyValuePair<string,string>>>(query);
+            var stuff = await fac.Get<List<KeyValuePair<string,string>>>(query);
             Assert.IsType<List<KeyValuePair<string, string>>> (stuff);
         }
     }

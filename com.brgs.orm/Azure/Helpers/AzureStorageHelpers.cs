@@ -11,6 +11,7 @@ namespace com.brgs.orm.Azure.helpers
     {
         public string PartitionKey { get; set; }
         public string CollectionName { get; set; }
+        public string KeyDelimiter { get; set; }
 
         public object RecastEntity(DynamicTableEntity entity, Type type)
         {
@@ -27,7 +28,7 @@ namespace com.brgs.orm.Azure.helpers
             var props = new Dictionary<string, EntityProperty>();
             var fac = new TableEntityBuilder(props);
             string rowKey = string.Empty;
-            string delimiter = "||";
+            string delimiter = string.IsNullOrEmpty(KeyDelimiter) ? "||" : KeyDelimiter;
 
             foreach (var prop in record.GetType().GetProperties())
             {

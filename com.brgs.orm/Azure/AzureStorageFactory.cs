@@ -75,13 +75,13 @@ namespace com.brgs.orm.Azure
             return outVal; 
         }        
 
-        public T Get<T>(TableQuery query) 
+        public async Task<T> Get<T>(TableQuery query) 
         {
             if(string.IsNullOrEmpty(CollectionName))
             {
                 throw new ArgumentException("we need to have a collection");
             }            
-            return InternalGetAsync<T>(query, CollectionName).GetAwaiter().GetResult();
+            return await InternalGetAsync<T>(query, CollectionName);
         }
         ///<summary>
         ///<param name="Value">The object to be converted to a queue message</param>
@@ -102,6 +102,7 @@ namespace com.brgs.orm.Azure
         {
             
             var table = _tableclient.GetTableReference(CollectionName);
+            await table.CreateIfNotExistsAsync();
 
             TableOperation insert = null;
             if(value is ITableEntity)

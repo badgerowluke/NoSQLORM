@@ -1,6 +1,7 @@
 
+using System;
 using System.Collections.Generic;
-
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -17,13 +18,19 @@ namespace com.brgs.orm.Azure
         Task<int> PostBatchAsync<T>(IEnumerable<T> records, string partition);
         Task DeleteBatchAsync<T>(IEnumerable<T> records);
     }
-    public class AzureTableBuilder: AzureStorageFactory,  IAzureTableBuilder
+    public class AzureTableBuilder: AzureStorageFactory, IAzureTableBuilder
     {
         public AzureTableBuilder(ICloudStorageAccount acc)
         {
             _account = acc;
             _tableclient = _account.CreateCloudTableClient();
         }
+
+        public override async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
+        {
+            return await base.GetAsync(predicate);
+        }
+
         public async Task<T> GetAsync<T>(TableQuery query, string collection)
         {
            return await InternalGetAsync<T>(query, collection);  

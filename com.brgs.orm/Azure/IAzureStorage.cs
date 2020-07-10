@@ -10,7 +10,8 @@ namespace com.brgs.orm.Azure
     {
         string CollectionName { get; set; }
         string PartitionKey { get; set; } 
-        T Get<T>(TableQuery query);   
+        string KeyDelimiter { get; set; }
+        Task<T> Get<T>(TableQuery query);   
         
         Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate);
         Task<int> PostBatchAsync<T>(IEnumerable<T> records);     
