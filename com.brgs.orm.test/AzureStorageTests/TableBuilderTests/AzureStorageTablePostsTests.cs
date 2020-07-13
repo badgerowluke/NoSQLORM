@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Microsoft.WindowsAzure.Storage.Table;
 using Xunit;
+using Moq;
 
 namespace com.brgs.orm.test.Azure.Tables
 {
@@ -34,9 +36,19 @@ namespace com.brgs.orm.test.Azure.Tables
         public async  void PostABatchOperation(int listCount)
         {
             var list = BuildRiverEnumerable(listCount);
+            var x = new TableResult();
+            x.Result = list;
+            x.HttpStatusCode = 200;
+
+
+            TableMock.Setup(tt => tt.ExecuteBatchAsync(It.IsAny<TableBatchOperation>()))
+            .ReturnsAsync(
+                new List<TableResult>
+                {
+                    x
+                });
             var val = await Fac.PostBatchAsync(list);
 
-            var x = new TableResult();
             
 
 

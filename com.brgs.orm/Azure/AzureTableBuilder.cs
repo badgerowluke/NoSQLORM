@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -122,7 +123,9 @@ namespace com.brgs.orm.Azure
             {
                 var batch = BuildBatch<T>(records, PartitionKey);
                 result = await table.ExecuteBatchAsync(batch);
-                return result.Count();
+                var resultSets = (IList)result[0].Result;
+
+                return resultSets.Count;
             }
             else
             {
