@@ -19,6 +19,7 @@ namespace com.brgs.orm.test.Azure.Tables
         public async void ReturnResults()
         {
             var mock = GetTableQuerySegments();
+            TableMock.Setup(tt => tt.ExistsAsync()).ReturnsAsync(true);
 
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
@@ -37,6 +38,7 @@ namespace com.brgs.orm.test.Azure.Tables
         public async void UseTheSearchContextFromUser()
         {
             var mock = GetTableQuerySegments();
+            TableMock.Setup(tt => tt.ExistsAsync()).ReturnsAsync(true);
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
@@ -57,6 +59,8 @@ namespace com.brgs.orm.test.Azure.Tables
         {
 
             var mock = GetTableQuerySegments();
+
+            TableMock.Setup(tt => tt.ExistsAsync()).ReturnsAsync(true);
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);
@@ -75,6 +79,7 @@ namespace com.brgs.orm.test.Azure.Tables
         public async void ReturnsListKeyValuePair()
         {
             var mock = GetTableQuerySegments();
+            TableMock.Setup(tt => tt.ExistsAsync()).ReturnsAsync(true);
             
             TableMock.Setup(tt =>tt.ExecuteQuerySegmentedAsync(It.IsAny<TableQuery>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(mock);

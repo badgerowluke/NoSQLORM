@@ -122,7 +122,7 @@ namespace com.brgs.orm.Azure
             {
                 var batch = BuildBatch<T>(records, PartitionKey);
                 result = await table.ExecuteBatchAsync(batch);
-                return result.Count;
+                return result.Count();
             }
             else
             {
