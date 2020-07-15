@@ -37,11 +37,13 @@ namespace com.brgs.orm.Azure
         public async Task<string> PostQueueMessageAsync<T>(T value, string container)
         {
             var queue = _queueClient.GetQueueReference(container);
-            await queue.CreateIfNotExistsAsync();
+
             var obj = JsonConvert.SerializeObject(value);
             var message = new CloudQueueMessage(obj);
             await queue.AddMessageAsync(message);
             await queue.FetchAttributesAsync();
+
+
             
             return queue.ApproximateMessageCount.ToString();
         }   

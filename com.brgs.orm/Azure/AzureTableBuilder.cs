@@ -31,11 +31,7 @@ namespace com.brgs.orm.Azure
         }
 
         public async Task<T> GetAsync<T>(TableQuery query) 
-        {
-            if(string.IsNullOrEmpty(CollectionName))
-            {
-                throw new ArgumentException("we need to have a collection");
-            }            
+        {         
             return await InternalGetAsync<T>(query, CollectionName);
         }
 
