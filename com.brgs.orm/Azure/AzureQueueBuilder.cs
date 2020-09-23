@@ -34,6 +34,7 @@ namespace com.brgs.orm.Azure
         ///<param name="Value">The object to be converted to a queue message</param>
         ///<param name="container">The Queue to post into</param>
         ///</summary>
+        ///<returns>the approximate message count of the current queue</returns>
         public async Task<string> PostQueueMessageAsync<T>(T value, string container)
         {
             var queue = _queueClient.GetQueueReference(container);
