@@ -35,6 +35,12 @@ namespace com.brgs.orm.Azure
             return await InternalGetAsync<T>(query, CollectionName);
         }
 
+        public async Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate)
+        {
+            var query = new TableQuery().Where(BuildQueryFilter(predicate));
+            return await InternalGetAsync<List<T>>(query, CollectionName);
+        }
+
         public virtual async Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate)
         {
             
