@@ -124,7 +124,7 @@ namespace com.brgs.orm.Azure
             return val.HttpStatusCode.ToString();      
         }   
 
-        public async Task<string> DeleteStoraeTableRecordAsync<T>(T value)
+        public async Task<string> DeleteStorageTableRecordAsync<T>(T value)
         {
             var table = _tableclient.GetTableReference(CollectionName);
             await table.CreateIfNotExistsAsync();
