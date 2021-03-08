@@ -22,13 +22,18 @@ namespace com.brgs.orm.Azure
 
          ///<summary></summary>
         Task<T> GetAsync<T>(TableQuery query, string collection);
+        
+        ///<summary></summary>
+        Task<string> DeleteStorageTableRecordAsync<T>(T value);
 
         ///<summary></summary>
         Task<int> PostBatchAsync<T>(IEnumerable<T> records);
 
         ///<summary></summary>
         Task<string> PostStorageTableAsync<T>(T value);
+
         Task DeleteBatchAsync<T>(IEnumerable<T> records);
+
     }
 
     public partial class AzureStorageFactory: IAzureTableBuilder
