@@ -45,6 +45,30 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
 
         }
         [Fact]
+        public void EncodeNullOrEmptyAndEquals()
+        {
+            var query = _builder.BuildQueryFilter<River>(r => !r.StateCode.Equals("") 
+                                                            && r.StateCode == "WV");
+            query.Should().BeEquivalentTo("StateCode ne '' and StateCode eq 'WV'");
+        }
+
+        [Fact]
+        public void EncodeNullOrEmptyWithoutMethodCall()
+        {
+            var query = _builder.BuildQueryFilter<River>(r => r.StateCode != ""  
+                                                            && r.StateCode == "WV");
+            query.Should().BeEquivalentTo("StateCode ne '' and StateCode eq 'WV'");            
+        }
+
+        [Fact]
+        public void EncodeNullOrEmptyUsingStringNullOrEmpty() 
+        {
+            var query = _builder.BuildQueryFilter<River>(r => (r.StateCode != null || r.StateCode != "")
+                                                            && r.StateCode == "WV");
+            query.Should().BeEquivalentTo("StateCode ne '' or StateCode ne '' and StateCode eq 'WV'");   
+        }
+
+        [Fact]
         public void EncodeGreaterThanCorrectly()
         {
             var query = _builder.BuildQueryFilter<River>(r => r.Latitude > 36);
@@ -55,9 +79,8 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
         {
             var query = _builder.BuildQueryFilter<River>(r => r.Latitude >= 36);
             query.Should().BeEquivalentTo("Latitude ge 36");
-
-
         }
+
         [Fact]
         public void EncodeLessThanCorrectly()
         {
@@ -69,7 +92,7 @@ namespace com.brgs.orm.test.Azure.LamdaExpressionParsingTests
         public void EncodeLessThanOrEqualCorrectly()
         {
             var query = _builder.BuildQueryFilter<River>(r => r.Latitude <= 36);
-            Assert.Equal("Latitude le 36", query);
+            query.Should().BeEquivalentTo("Latitude le 36");
 
         }
         [Fact]

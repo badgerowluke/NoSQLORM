@@ -102,6 +102,8 @@ So a couple of usage examples, below we're doing dependency injection on an Azur
         * this also allows us to mix data sources simply 
         * in this example, we're mixing between Azure Table Storage and Azure Search (REST endpoint)
 
+     
+
 ```csharp
     public async Task<IEnumerable<River>> GetRivers(string partName)
     {
@@ -117,22 +119,52 @@ So a couple of usage examples, below we're doing dependency injection on an Azur
         }
     }
 
-        public async Task<IEnumerable<River>> GetRiversByState(string stateCode)
+    public async Task<IEnumerable<River>> GetRiversByState(string stateCode)
+    {
+        ... 
+        
+        folders.CollectionName = _riverTable;
+
+        var entities = await folders.GetAsync<RiverEntity>(r => r.PartitionKey.Equals(stateCode));
+        var outList = new List<River>();
+        foreach(var entity in entities)
         {
-            ... 
-            
-            folders.CollectionName = _riverTable;
+            var river = entity.ToRiver();
+            outList.Add(river);
+        }
 
-            var entities = await folders.GetAsync<RiverEntity>(r => r.PartitionKey.Equals(stateCode));
-            var outList = new List<River>();
-            foreach(var entity in entities)
-            {
-                var river = entity.ToRiver();
-                outList.Add(river);
-            }
+        return outList;
+    }   
 
-            return outList;
-        }    
+
+```
+5. a caveat with respect to utilizing a lamba expression to filter your query of the Azure Table. You should avoid utilizing the string convienence methods `isNullOrEmpty` or `isNullOrWhitespace` as this iteration of the ORM struggles with transposing that to the appropriate value in the Table Query Syntax
+
+```csharp
+    [Fact]
+    public void EncodeNullOrEmptyAndEquals()
+    {
+        var query = _builder.BuildQueryFilter<River>(r => !r.StateCode.Equals("") 
+                                                        && r.StateCode == "WV");
+        query.Should().BeEquivalentTo("StateCode ne '' and StateCode eq 'WV'");
+    }
+
+    [Fact]
+    public void EncodeNullOrEmptyWithoutMethodCall()
+    {
+        var query = _builder.BuildQueryFilter<River>(r => r.StateCode != ""  
+                                                        && r.StateCode == "WV");
+        query.Should().BeEquivalentTo("StateCode ne '' and StateCode eq 'WV'");            
+    }
+
+    [Fact]
+    public void EncodeNullOrEmptyUsingStringNullOrEmpty() 
+    {
+        var query = _builder.BuildQueryFilter<River>(r => (r.StateCode != null || r.StateCode != "")
+                                                        && r.StateCode == "WV");
+        query.Should().BeEquivalentTo("StateCode ne '' or StateCode ne '' and StateCode eq 'WV'");   
+    }
+
 ```
 
 

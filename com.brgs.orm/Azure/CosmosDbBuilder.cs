@@ -31,6 +31,7 @@ namespace com.brgs.orm.Azure
                 .AsDocumentQuery();
             
             var results = new List<T>();
+
             while(query.HasMoreResults)
             {
                 results.AddRange(await query.ExecuteNextAsync<T>());
@@ -78,6 +79,10 @@ namespace com.brgs.orm.Azure
             
         }
 
+        ///<summary>
+        ///In order to affect a batch operation against Cosmos, you'll need to create a stored procedure (js) 
+        ///and host it in your CosmosDB instance.
+        ///</summary>
         public virtual async void DeleteBatchAsync<T>(IEnumerable<T> records, string procName, string partitionKey)
         {
             await _client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(DatabaseId,CollectionId, procName),

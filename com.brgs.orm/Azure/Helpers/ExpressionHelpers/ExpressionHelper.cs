@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 namespace com.brgs.orm.AzureHelpers.ExpressionHelpers
 {
-        internal abstract class ExpressionHelper
+    internal abstract class ExpressionHelper
     {
         protected Tuple<Type, object> processArgument(Expression element)
         {

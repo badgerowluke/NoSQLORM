@@ -42,7 +42,7 @@ namespace com.brgs.orm.Azure.helpers
             /* 
                 TODO lift the delimiter between the partition and entity id (row id).
                 this needs to be lifted up somewhere much closer to the ultimate
-                domain context deveveloper.
+                domain context developer.
             */
             return new DynamicTableEntity(PartitionKey, $"{PartitionKey}{delimiter}{rowKey}", "*", fac.Properties);
         }
@@ -80,7 +80,17 @@ namespace com.brgs.orm.Azure.helpers
             if(e.NodeType == ExpressionType.LessThanOrEqual)
             {
                 return new ExpressionTypeLessThanHelper(e, true).ToString();
-            }            
+            } 
+
+            if(e.NodeType == ExpressionType.Equal)
+            {
+                return new ExpressionTypeEqualHelper(e).ToString();
+            } 
+
+            if(e.NodeType ==  ExpressionType.NotEqual)
+            {
+                return new ExpressionTypeEqualHelper(e, true).ToString();
+            }
             if(e.NodeType == ExpressionType.AndAlso)
             {
                 var body = (BinaryExpression)e;
