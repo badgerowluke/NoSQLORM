@@ -58,11 +58,24 @@ namespace com.brgs.orm.Azure
             var query = new TableQuery().Where(BuildQueryFilter(predicate));
             return await InternalGetAsync<List<T>>(query, CollectionName);
         }
+
          ///<summary></summary>
-        public virtual async Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate)
+        public virtual async Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate = null)
         {
-            
-            var query = new TableQuery().Where(BuildQueryFilter(predicate));
+            TableQuery query = null;
+            if(predicate == null )
+            {
+                if(string.IsNullOrEmpty(PartitionKey))
+                {
+                    throw new ArgumentException("partition cannot be null");
+                }
+
+                query = new TableQuery().Where($"PartitionKey eq '{PartitionKey}'");
+
+            } else 
+            {
+                query = new TableQuery().Where(BuildQueryFilter(predicate));
+            }
 
             return await InternalGetAsync<List<T>>(query, CollectionName);
 
@@ -102,7 +115,8 @@ namespace com.brgs.orm.Azure
             } while (token != null);
 
             return outVal; 
-        }        
+        }   
+     
         ///<summary></summary>
         public async Task<string> PostStorageTableAsync<T>(T value)
         {
@@ -127,7 +141,7 @@ namespace com.brgs.orm.Azure
             }
             var val =  await table.ExecuteAsync(insert);
             return val.HttpStatusCode.ToString();      
-        }   
+        }
 
         public async Task<string> DeleteStorageTableRecordAsync<T>(T value)
         {
@@ -152,7 +166,7 @@ namespace com.brgs.orm.Azure
 
             var val = await table.ExecuteAsync(delete);
             return val.HttpStatusCode.ToString();
-        }     
+        }
 
         ///<summary>each individual batch needs to be less than or equal to 100</summary>
         public async Task<int> PostBatchAsync<T>(IEnumerable<T> records)
