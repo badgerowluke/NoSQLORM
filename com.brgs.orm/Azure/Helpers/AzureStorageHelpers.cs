@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using com.brgs.orm.AzureHelpers.ExpressionHelpers;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -55,7 +54,7 @@ namespace com.brgs.orm.Azure.helpers
             }
             return string.Empty;
         }
-        private  string BuildQueryFilter(Expression e)
+        private string BuildQueryFilter(Expression e)
         {
             if(e.NodeType == ExpressionType.Call)
             {

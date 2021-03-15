@@ -1,4 +1,5 @@
 using System;
+using com.brgs.orm.Azure.helpers;
 using Xunit;
 
 
@@ -6,6 +7,12 @@ namespace com.brgs.orm.test.Azure.Tables
 {
     public class TableEntityDecoderShould: BaseAzureTableStorageTester
     {
+        [Fact]
+        public void GiveUsABuilder()
+        {
+            var builder = new TableEntityBuilder();
+            Assert.NotNull(builder);
+        }
         [Fact(Skip="another weird flakey test to investifart")]
         public void ConvertITableEntityIntoDomainObject()
         {

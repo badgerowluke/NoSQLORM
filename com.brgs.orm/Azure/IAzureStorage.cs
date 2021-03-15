@@ -14,7 +14,7 @@ namespace com.brgs.orm.Azure
         
         Task<T> GetAsync<T>(TableQuery query);   
         Task<IEnumerable<T>> GetAsync<T>(Expression<Func<T,bool>> predicate, string collection = null);
-        Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate);
+        Task<IEnumerable<T>> GetFromStorageTableAsync<T>(Expression<Func<T,bool>> predicate = null);
 
         Task<string> DeleteStorageTableRecordAsync<T>(T value);
         Task<T> GetQueueMessageAsync<T>(string fileName);
