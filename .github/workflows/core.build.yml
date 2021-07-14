@@ -20,7 +20,7 @@ jobs:
       with:
         dotnet-version: 2.1.806
 
-      env
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
 
