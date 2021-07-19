@@ -34,6 +34,9 @@ namespace com.brgs.orm.Azure
 
         Task DeleteBatchAsync<T>(IEnumerable<T> records);
 
+        string PartitionKey { get; set; }
+        string CollectionName { get; set; }
+
     }
 
     public partial class AzureStorageFactory: IAzureTableBuilder
