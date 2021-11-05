@@ -285,3 +285,4 @@ com.brgs.orm.sandbox/
 com.brgs.orm.test/.lcov.info
 com.brgs.orm.test/coverage.xml
 com.brgs.orm.test/coverage.opencover.xml
+com.brgs.orm.test/coverage.cobertura.xml
