@@ -16,20 +16,19 @@ jobs:
         fetch-depth: 0
 
 
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.6
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB }}
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-
-
-    # - name: Setup .NET 5
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: '5.0.x'
-
+    - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
 
     - name: build and test and publish
       env: 
