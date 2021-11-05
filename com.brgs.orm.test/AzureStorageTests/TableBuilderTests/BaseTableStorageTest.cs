@@ -72,6 +72,39 @@ namespace com.brgs.orm.test.Azure
             return list;
         }
 
+        public virtual IEnumerable<DynamicTableEntity> BuildRiverTableEntities(int num, string partitionKey = "TACOS", bool addPartitionKey = true)
+        {
+            var list = new List<DynamicTableEntity>();
+            for(var x=0; x <num; x++)
+            {
+                var r = new DynamicTableEntity();
+                if(addPartitionKey)
+                {
+                    r.PartitionKey = partitionKey;
+                }
+                r.RowKey = x.ToString();
+            
+                list.Add(r);
+            }
+            return list;
+        }
 
+        public virtual IEnumerable<DynamicTableEntity> BuildRiverTableEntitiesForDelete(int num, string partitionKey = "TACOS", bool addPartitionKey = true)
+        {
+            var list = new List<DynamicTableEntity>();
+            for(var x=0; x <num; x++)
+            {
+                var r = new DynamicTableEntity();
+                if(addPartitionKey)
+                {
+                    r.PartitionKey = partitionKey;
+                }
+                r.ETag = "*";
+                r.RowKey = x.ToString();
+            
+                list.Add(r);
+            }
+            return list;            
+        }
     }
 }

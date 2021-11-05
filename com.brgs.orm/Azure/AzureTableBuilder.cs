@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents.Client;
+
 using Microsoft.WindowsAzure.Storage.Table;
 
 [assembly:InternalsVisibleTo("com.brgs.orm.test")]
@@ -32,7 +32,7 @@ namespace com.brgs.orm.Azure
         ///<summary></summary>
         Task<string> PostStorageTableAsync<T>(T value);
 
-        Task DeleteBatchAsync<T>(IEnumerable<T> records);
+        Task<int> DeleteBatchAsync<T>(IEnumerable<T> records);
 
         string PartitionKey { get; set; }
         string CollectionName { get; set; }
@@ -142,6 +142,7 @@ namespace com.brgs.orm.Azure
                 var obj = BuildTableEntity(value);
                 insert = TableOperation.InsertOrMerge((ITableEntity) obj);
             }
+            
             var val =  await table.ExecuteAsync(insert);
             return val.HttpStatusCode.ToString();      
         }
@@ -202,8 +203,36 @@ namespace com.brgs.orm.Azure
                 } while (recordCount < records.Count());
                 return recordCount;
             }
-        }   
-        private TableBatchOperation BuildBatch<T>(IEnumerable<T> records, string partition)
+        } 
+
+        
+        public virtual async Task<int> DeleteBatchAsync<T>(IEnumerable<T> records)
+        {         
+            var table = _tableclient.GetTableReference(CollectionName);
+            IList<TableResult> resultX = null;
+            if(records.Count() <= 100)
+            {
+                var batch = BuildBatch<T>(records, PartitionKey, true);
+                resultX = await table.ExecuteBatchAsync(batch);
+                var resultSets = (IList)resultX[0].Result;
+                return resultSets.Count;
+
+            } else 
+            {
+                int recordCount = 0;
+                do
+                {
+                    var partial = records.Skip(recordCount).Take(100);
+                    var batch = BuildBatch(partial, PartitionKey, true);
+                    await table.ExecuteBatchAsync(batch);
+                    recordCount = recordCount + partial.Count();
+
+                } while (recordCount < records.Count());
+                return recordCount;
+            }
+        } 
+
+        private TableBatchOperation BuildBatch<T>(IEnumerable<T> records, string partition, bool isDelete = false)
         {
             TableBatchOperation batch = new TableBatchOperation();
             foreach (var record in records)
@@ -213,13 +242,31 @@ namespace com.brgs.orm.Azure
                     if(string.IsNullOrEmpty((record as ITableEntity).PartitionKey))
                     {
                         (record as ITableEntity).PartitionKey = partition;
+                        if(isDelete)
+                        {
+                            (record as ITableEntity).ETag = "*";
+                        }
                     }
-                    batch.InsertOrReplace((ITableEntity)record);
+                    if(!isDelete)
+                    {
+                        batch.InsertOrReplace((ITableEntity)record);
+                    }
+                    if(isDelete)
+                    {
+                        batch.Delete((ITableEntity)record);
+                    }
                 }
                 else
                 {
                     var obj = BuildTableEntity(record);
-                    batch.InsertOrReplace((ITableEntity)obj);
+                    if(!isDelete)
+                    {
+                        batch.InsertOrReplace((ITableEntity)obj);
+                    }
+                    if(isDelete)
+                    {
+                        batch.Delete((ITableEntity)obj);
+                    }
                 }
             }
             return batch;
@@ -227,29 +274,5 @@ namespace com.brgs.orm.Azure
 
 
 
-        public virtual async Task DeleteBatchAsync<T>(IEnumerable<T> records)
-        {         
-            var table = _tableclient.GetTableReference(CollectionName);
-            Action<TableBatchOperation, ITableEntity> batchOperationAction = null;
-            batchOperationAction = (bo, entity) => bo.Delete(entity);
-
-            var tasks = new List<Task<IList<TableResult>>>();
-            var entitiesOffset = 0;
-            while (entitiesOffset < records?.Count())
-            {
-                var entitiesToAdd = records.Skip(entitiesOffset).Take(100).ToList();
-                entitiesOffset += entitiesToAdd.Count;
-
-                TableBatchOperation batchOperation = new TableBatchOperation();
-
-                entitiesToAdd.ForEach(entity => batchOperationAction(batchOperation, (ITableEntity)entity));
-
-                tasks.Add(table.ExecuteBatchAsync(batchOperation));
-            }
-
-            await Task.WhenAll(tasks).ConfigureAwait(false);            
-
-
-        } 
     }
 }
