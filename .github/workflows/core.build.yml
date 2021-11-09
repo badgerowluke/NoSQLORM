@@ -50,7 +50,7 @@ jobs:
       # The --version argument is optional. If it is omitted the latest version will be installed.
       run: |
         New-Item -Path ./.sonar/scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner --version 4.8.0
+        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
 
 
@@ -60,7 +60,7 @@ jobs:
 
       run: |
         dotnet restore
-        ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ secrets.SONAT_PRJ_KEY }}" /o:"sonarsource" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+        ./.sonar/scanner/dotnet-sonarscanner begin /n:"NoSQLORM" /key:"${{ secrets.SONAT_PRJ_KEY }}" /o:"sonarsource" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
         
         dotnet build --configuration Release --no-restore
         dotnet test --no-restore --verbosity normal  /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/Coverage/coverage.cobertura.xml
