@@ -16,8 +16,9 @@ jobs:
         fetch-depth: 0
 
 
-
-
+    - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
@@ -48,13 +49,10 @@ jobs:
       shell: pwsh
       # The --version argument is optional. If it is omitted the latest version will be installed.
       run: |
-        New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner   
+        New-Item -Path ./.sonar/scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner --version 4.8.0
 
 
-    - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: build 
       env: 
