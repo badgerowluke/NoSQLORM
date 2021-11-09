@@ -15,16 +15,14 @@ jobs:
       with:
         fetch-depth: 0
 
+
+
+
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-
-
-    - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 
     # Speed-up analysis by caching the scanner workspace
     - name: Cache SonarCloud workspace
@@ -51,7 +49,12 @@ jobs:
       # The --version argument is optional. If it is omitted the latest version will be installed.
       run: |
         New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner     
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner   
+
+
+    - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: build 
       env: 
