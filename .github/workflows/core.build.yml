@@ -36,6 +36,7 @@ jobs:
         dotnet pack -p:PackageId=NOSQLORM -p:PackageVersion=$VERSION_TAG --configuration Release --no-restore -o "../../packages"
 
         dotnet nuget push ../../packages/*.nupkg  --source "github" -k $GITHUB_TOKEN
+        ls
 
 
     - name: SonarCloud Scan
