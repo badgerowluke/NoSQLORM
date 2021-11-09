@@ -49,7 +49,7 @@ jobs:
           -Dsonar.organization=hucklebe
           -Dsonar.projectKey=${{ secrets.SONAR_PRJ_KEY }}
           -Dsonar.verbose=true
-
-
+          -Dsonar.cs.opencover.reportsPaths=./TestResults/Coverage/coverage.cobertura.xml
+          -Dsonar.exclusions=**/wwwroot/lib/**/*
           -Dsonar.verbose=true
           -Dsonar.sources=.
