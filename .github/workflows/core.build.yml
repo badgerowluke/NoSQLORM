@@ -39,16 +39,16 @@ jobs:
         ls
 
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v1.6
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.organization=hucklebe
-          -Dsonar.projectKey=${{ secrets.SONAR_PRJ_KEY }}
-          -Dsonar.verbose=true
-          -Dsonar.cs.xunit.reportPaths=./TestResults
-          -Dsonar.verbose=true
-          -Dsonar.sources=.
+    # - name: SonarCloud Scan
+    #   uses: SonarSource/sonarcloud-github-action@v1.6
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #   with:
+    #     args: >
+    #       -Dsonar.organization=hucklebe
+    #       -Dsonar.projectKey=${{ secrets.SONAR_PRJ_KEY }}
+    #       -Dsonar.verbose=true
+    #       -Dsonar.cs.xunit.reportPaths=./TestResults
+    #       -Dsonar.verbose=true
+    #       -Dsonar.sources=.
