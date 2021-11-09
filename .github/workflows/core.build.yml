@@ -15,13 +15,12 @@ jobs:
       with:
         fetch-depth: 0
 
-
-
-
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
+
+
     - run: sed 's/TOKEN/%GITHUB_TOKEN%/'  ./nuget.config
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,3 +49,5 @@ jobs:
           -Dsonar.projectKey=${{ secrets.SONAR_PRJ_KEY }}
           -Dsonar.verbose=true
           -Dsonar.cs.xunit.reportPaths=./TestResults
+          -Dsonar.verbose=true
+          -Dsonar.sources=.
