@@ -49,7 +49,7 @@ jobs:
           -Dsonar.organization=hucklebe
           -Dsonar.projectKey=${{ secrets.SONAR_PRJ_KEY }}
           -Dsonar.verbose=true
-          -Dsonar.tests=com.brgs.orm.test/
+
 
           -Dsonar.verbose=true
           -Dsonar.sources=.
