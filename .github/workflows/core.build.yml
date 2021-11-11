@@ -63,7 +63,7 @@ jobs:
         ./.sonar/scanner/dotnet-sonarscanner begin  /key:"${{ secrets.SONAR_PRJ_KEY }}" /o:"hucklebe" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
         
         dotnet build --configuration Release --no-restore
-        dotnet test --no-restore --verbosity normal  /p:CollectCoverage=true  /p:CoverletOutputFormat=cobertura /p:CoverletOutput=../TestResults/Coverage/coverage.cobertura.xml
+        dotnet test --no-restore --verbosity normal  /p:CollectCoverage=true  /p:CoverletOutputFormat=opencover /p:CoverletOutput=../TestResults/Coverage/ 
 
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         
