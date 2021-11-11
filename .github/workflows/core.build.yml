@@ -67,7 +67,12 @@ jobs:
           /d:sonar.cs.opencover.reportsPaths="../TestResults/Coverage/"
         
         dotnet build --configuration Release --no-restore
-        dotnet test --no-restore --verbosity normal  /p:CollectCoverage=true  /p:CoverletOutputFormat=opencover /p:CoverletOutput=../TestResults/Coverage/ 
+
+        dotnet test --no-restore --verbosity normal  \
+          --logger "trx;LogFileName=../../TestResults/testresults.trx" \
+          /p:CollectCoverage=true  \
+          /p:CoverletOutputFormat=opencover \
+          /p:CoverletOutput=../TestResults/Coverage/ 
 
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         
