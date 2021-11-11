@@ -60,10 +60,10 @@ jobs:
 
       run: |
         dotnet restore
-        ./.sonar/scanner/dotnet-sonarscanner begin  `
-          /key:"${{ secrets.SONAR_PRJ_KEY }}" /o:"hucklebe" `
-          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-          /d:sonar.host.url="https://sonarcloud.io" `
+        ./.sonar/scanner/dotnet-sonarscanner begin  \
+          /key:"${{ secrets.SONAR_PRJ_KEY }}" /o:"hucklebe" \
+          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.opencover.reportsPaths="../TestResults/Coverage/"
         
         dotnet build --configuration Release --no-restore
