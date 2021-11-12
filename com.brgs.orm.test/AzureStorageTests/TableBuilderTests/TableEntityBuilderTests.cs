@@ -7,7 +7,7 @@ namespace com.brgs.orm.test.Azure.Tables
         [Fact]
         public void FormatObjectIntoDynamicTableEntity()
         {
-
+            
             var entity = Fac.BuildTableEntity(ARiver);
             Assert.True(entity.Properties.ContainsKey("Name"));
         }

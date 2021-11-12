@@ -8,7 +8,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using Moq;
 using com.brgs.orm.Azure.helpers;
-using AutoFixture;
+
 
 namespace com.brgs.orm.test.Azure
 {
@@ -24,8 +24,8 @@ namespace com.brgs.orm.test.Azure
         public BaseAzureTableStorageTester()
         {
 
-            Entity = new Fixture().Create<RiverEntity>();
-            ARiver = new Fixture().Create<River>();
+            Entity = Mock.Of<RiverEntity>();
+            ARiver = Mock.Of<River>(r => r.Name == GetRandomRiverNameFroMock() );
             AccountMock = new Mock<ICloudStorageAccount>();
             TableClientMock = new Mock<CloudTableClient>(new Uri("https://www.google.com"), new StorageCredentials() );
             TableMock = new Mock<CloudTable>(new Uri("https://www.google.com"));
@@ -38,8 +38,19 @@ namespace com.brgs.orm.test.Azure
                 PartitionKey = "TACOS",
                 CollectionName = "Pizza"                
             };
+        }
+
+        private string GetRandomRiverNameFroMock()
+        {
+            var ran = new Random();
+            string[] riverNames = new string[10] {
+                "Aroostook River at Washburn, Maine", "river2", "river3", "river4", "river5", "river6", "river7",
+                "river8", "river9", "river10"
+            };
+            return riverNames[ran.Next(riverNames.Count())];
 
         }
+
         public virtual TableQuerySegment GetTableQuerySegments(int count = 1)
         {
             var ctor = typeof(TableQuerySegment).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -48,19 +59,7 @@ namespace com.brgs.orm.test.Azure
                 new DynamicTableEntity()
             }}) as TableQuerySegment;
         }
-        public virtual TableQuerySegment GetQuerySegmentsWithData<T>(T record)
-        {
-            var entity = BuildTableEntity(record);
 
-            var ctor = typeof(TableQuerySegment).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic)
-            .FirstOrDefault(c => c.GetParameters().Count() == 1);
-            return ctor.Invoke(new object[]
-            { new List<DynamicTableEntity>()
-            {
-                entity
-
-            }}) as TableQuerySegment;
-        }
         public virtual IEnumerable<River> BuildRiverEnumerable(int num)
         {
             var list = new List<River>();
@@ -106,5 +105,6 @@ namespace com.brgs.orm.test.Azure
             }
             return list;            
         }
+    
     }
 }
