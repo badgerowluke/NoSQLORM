@@ -44,8 +44,16 @@ namespace com.brgs.orm.test.Azure
         {
             var ran = new Random();
             string[] riverNames = new string[10] {
-                "Aroostook River at Washburn, Maine", "river2", "river3", "river4", "river5", "river6", "river7",
-                "river8", "river9", "river10"
+                "Aroostook River at Washburn, Maine", 
+                "GAULEY RIVER AT CAMDEN ON GAULEY, WV", 
+                "COTTONWOOD CR TRIB AB RANGEWOOD DR AT CO SPRGS, CO", 
+                "CLACKAMAS RIVER NEAR OREGON CITY, OR", 
+                "LITTLE RIVER AT NC581 NR GOLDSBORO, NC", 
+                "North Fork Licking River at Ohio Street, Newark OH", 
+                "FALCON CREEK 30TH ST. AT INDIANAPOLIS, IN",
+                "CUMBERLAND RIVER AT BARBOURVILLE, KY", 
+                "WIND RIVER NEAR KINNEAR, WY", 
+                "Armells Creek near Forsyth MT"
             };
             return riverNames[ran.Next(riverNames.Count())];
 
