@@ -5,7 +5,7 @@
     <Title>BRGS.ORM</Title>
     <Authors>Luke Badgerow</Authors>
     <Copyright>2019 Luke Badgerow</Copyright>
-    <TargetFramework>net7.0</TargetFramework>
+  <TargetFramework>net8.0</TargetFramework>
     <Version>0.4.6-alpha-5</Version>
     <RepositoryUrl>https://github.com/badgerowluke/NOSQLORM</RepositoryUrl>
 
@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.0.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.3" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
