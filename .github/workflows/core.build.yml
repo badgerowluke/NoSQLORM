@@ -20,10 +20,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     # this is needed for sonarcloud  
-    - name: .NET for SonarCloud
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '5.0.x'
+  # .NET 8 is sufficient for SonarCloud and build
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -52,10 +49,9 @@ jobs:
     - name: Install SonarCloud scanner
       if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
       shell: pwsh
-      # The --version argument is optional. If it is omitted the latest version will be installed.
       run: |
         New-Item -Path ./.sonar/scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner --version 5.3.2
+        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner --version 10.3.0
 
 
 
@@ -65,11 +61,11 @@ jobs:
 
       run: |
         dotnet restore
-         ./.sonar/scanner/dotnet-sonarscanner begin  \
-           /key:"${{ secrets.SONAR_PRJ_KEY }}" /o:"hucklebe" \
-           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-           /d:sonar.host.url="https://sonarcloud.io" \
-           /d:sonar.cs.opencover.reportsPaths="../TestResults/Coverage/*.xml"
+        # ./.sonar/scanner/dotnet-sonarscanner begin  \
+        #   /key:"${{ secrets.SONAR_PRJ_KEY }}" /o:"hucklebe" \
+        #   /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+        #   /d:sonar.host.url="https://sonarcloud.io" \
+        #   /d:sonar.cs.opencover.reportsPaths="../TestResults/Coverage/*.xml"
         
         dotnet build --configuration Release --no-restore
 
