@@ -14,11 +14,11 @@ namespace com.brgs.orm.test.Azure.Tables
         }
 
         [Fact]
-        public void ShouldThrowArgumentExceptionWhenPartitionIsNullOrEmpty()
+        public async Task ShouldThrowArgumentExceptionWhenPartitionIsNullOrEmpty()
         {
             Fac.PartitionKey = string.Empty;
 
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await Fac.GetFromStorageTableAsync<River>());
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await Fac.GetFromStorageTableAsync<River>());
         }
 
         [Fact]
