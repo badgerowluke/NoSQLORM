@@ -11,7 +11,7 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -20,35 +20,29 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     # this is needed for sonarcloud  
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '5.0.x'
-
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '8.0.x'
 
         
 
     # Speed-up analysis by caching the scanner workspace
     - name: Cache SonarCloud workspace
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
-        path: ~\.sonar\cache
+        path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar-cache
-        restore-keys: ${{ runner.os }}-sonar-cache        
-
+        restore-keys: ${{ runner.os }}-sonar-cache
 
     # Speed-up analysis by caching the scanner installation
     - name: Cache SonarCloud scanner
       id: cache-sonar-scanner
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
-        path: .\.sonar\scanner
+        path: ./.sonar/scanner
         key: ${{ runner.os }}-sonar-scanner
-        restore-keys: ${{ runner.os }}-sonar-scanner        
+        restore-keys: ${{ runner.os }}-sonar-scanner
 
 
     - name: Install SonarCloud scanner
